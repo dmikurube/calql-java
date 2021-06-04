@@ -1,0 +1,9 @@
+plugins {
+    id "checkstyle"
+    id "java"
+    id "maven-publish"
+    id "signing"
+}
+
+group = "org.calql"
+version = "0.1.0-SNAPSHOT"
