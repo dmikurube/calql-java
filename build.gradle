@@ -1,8 +1,8 @@
 plugins {
-    id "checkstyle"
     id "java"
     id "maven-publish"
     id "signing"
+    id "checkstyle"
 }
 
 group = "org.calql"
