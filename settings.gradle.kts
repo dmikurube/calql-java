@@ -1,3 +1,3 @@
 rootProject.name = "calql"
 
-include "calql-query"
+include(":calql-query")
