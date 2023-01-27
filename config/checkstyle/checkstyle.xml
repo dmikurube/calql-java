@@ -29,9 +29,8 @@
   </module>
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
   <module name="SuppressionFilter">
-    <property name="file" value="${org.checkstyle.google.suppressionfilter.config}"
-           default="checkstyle-suppressions.xml" />
-    <property name="optional" value="true"/>
+    <property name="file" value="${checkstyle.config.path}/checkstyle-suppressions.xml"/>
+    <property name="optional" value="false"/>
   </module>
 
   <module name="SuppressWarningsFilter" />
@@ -357,8 +356,7 @@
     </module>
     <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->
     <module name="SuppressionXpathFilter">
-      <property name="file" value="${org.checkstyle.google.suppressionxpathfilter.config}"
-             default="checkstyle-xpath-suppressions.xml" />
+      <property name="file" value="${checkstyle.config.path}/checkstyle-xpath-suppressions.xml"/>
       <property name="optional" value="true"/>
     </module>
     <module name="SuppressWarningsHolder" />
