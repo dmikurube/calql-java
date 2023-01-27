@@ -53,7 +53,6 @@ tasks.jar {
     }
 }
 
-
 tasks.named<Jar>("sourcesJar") {
     metaInf {
         from(rootProject.file("LICENSE"))
