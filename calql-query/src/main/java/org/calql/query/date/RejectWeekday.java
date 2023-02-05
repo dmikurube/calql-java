@@ -17,20 +17,26 @@
 package org.calql.query.date;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Objects;
-import org.calql.query.logic.Atom;
+import org.calql.query.date.DateAtom;
 
-public final class RejectWeekday extends Atom {
+public final class RejectWeekday extends DateAtom {
     private RejectWeekday(final DayOfWeek weekday) {
         this.weekday = weekday;
     }
 
-    public static Atom of(final DayOfWeek weekday) {
+    public static DateAtom of(final DayOfWeek weekday) {
         return new RejectWeekday(weekday);
     }
 
-    public static Atom of(final int weekday) {
+    public static DateAtom of(final int weekday) {
         return new RejectWeekday(DayOfWeek.of(weekday));
+    }
+
+    @Override
+    public boolean test(final LocalDate target) {
+        return this.weekday != target.getDayOfWeek();
     }
 
     /**
@@ -43,7 +49,7 @@ public final class RejectWeekday extends Atom {
      * @return the negated formula in Negation Normal Form (NNF)
      */
     @Override
-    public Atom negate() {
+    public DateAtom negate() {
         return ExactWeekday.of(this.weekday);
     }
 

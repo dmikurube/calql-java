@@ -16,7 +16,9 @@
 
 package org.calql.query.logic;
 
-public abstract class Atom extends NegationNormalFormula {
+import java.util.function.Predicate;
+
+public abstract class Atom<T> extends NegationNormalFormula implements Predicate<T> {
     protected Atom() {
         this.disjunctiveNormalForm = DisjunctiveNormalFormula.of(Conjunction.of(this));
     }
@@ -31,7 +33,7 @@ public abstract class Atom extends NegationNormalFormula {
         return this.disjunctiveNormalForm;
     }
 
-    public abstract Atom negate();
+    public abstract Atom<T> negate();
 
     public abstract boolean isTriviallyUnique();
 

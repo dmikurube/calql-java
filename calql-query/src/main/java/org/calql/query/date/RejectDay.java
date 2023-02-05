@@ -16,16 +16,22 @@
 
 package org.calql.query.date;
 
+import java.time.LocalDate;
 import java.util.Objects;
-import org.calql.query.logic.Atom;
+import org.calql.query.date.DateAtom;
 
-public final class RejectDay extends Atom {
+public final class RejectDay extends DateAtom {
     private RejectDay(final int day) {
         this.day = day;
     }
 
-    public static Atom of(final int day) {
+    public static DateAtom of(final int day) {
         return new RejectDay(day);
+    }
+
+    @Override
+    public boolean test(final LocalDate target) {
+        return this.day != target.getDayOfMonth();
     }
 
     /**
@@ -38,7 +44,7 @@ public final class RejectDay extends Atom {
      * @return the negated formula in Negation Normal Form (NNF)
      */
     @Override
-    public Atom negate() {
+    public DateAtom negate() {
         return ExactDay.of(this.day);
     }
 

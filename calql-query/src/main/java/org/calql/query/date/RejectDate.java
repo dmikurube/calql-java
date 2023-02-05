@@ -18,19 +18,24 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import org.calql.query.logic.Atom;
+import org.calql.query.date.DateAtom;
 
-public final class RejectDate extends Atom {
+public final class RejectDate extends DateAtom {
     private RejectDate(final LocalDate date) {
         this.date = date;
     }
 
-    public static Atom of(final LocalDate date) {
+    public static DateAtom of(final LocalDate date) {
         return new RejectDate(date);
     }
 
-    public static Atom of(final int year, final int month, final int dayOfMonth) {
+    public static DateAtom of(final int year, final int month, final int dayOfMonth) {
         return new RejectDate(LocalDate.of(year, month, dayOfMonth));
+    }
+
+    @Override
+    public boolean test(final LocalDate target) {
+        return !this.date.equals(target);
     }
 
     /**
@@ -41,7 +46,7 @@ public final class RejectDate extends Atom {
      * @return the negated atom
      */
     @Override
-    public Atom negate() {
+    public DateAtom negate() {
         return ExactDate.of(this.date);
     }
 

@@ -16,16 +16,22 @@
 
 package org.calql.query.date;
 
+import java.time.LocalDate;
 import java.util.Objects;
-import org.calql.query.logic.Atom;
+import org.calql.query.date.DateAtom;
 
-public final class ExactMonth extends Atom {
+public final class ExactMonth extends DateAtom {
     private ExactMonth(final int month) {
         this.month = month;
     }
 
-    public static Atom of(final int month) {
+    public static DateAtom of(final int month) {
         return new ExactMonth(month);
+    }
+
+    @Override
+    public boolean test(final LocalDate target) {
+        return this.month == target.getMonthValue();
     }
 
     /**
@@ -38,7 +44,7 @@ public final class ExactMonth extends Atom {
      * @return the negated formula in Negation Normal Form (NNF)
      */
     @Override
-    public Atom negate() {
+    public DateAtom negate() {
         return RejectMonth.of(this.month);
     }
 

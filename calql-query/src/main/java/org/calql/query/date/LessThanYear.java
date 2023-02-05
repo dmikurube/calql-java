@@ -16,16 +16,22 @@
 
 package org.calql.query.date;
 
+import java.time.LocalDate;
 import java.util.Objects;
-import org.calql.query.logic.Atom;
+import org.calql.query.date.DateAtom;
 
-public final class LessThanYear extends Atom {
+public final class LessThanYear extends DateAtom {
     private LessThanYear(final int year) {
         this.year = year;
     }
 
-    public static Atom of(final int year) {
+    public static DateAtom of(final int year) {
         return new LessThanYear(year);
+    }
+
+    @Override
+    public boolean test(final LocalDate target) {
+        return this.year < target.getYear();
     }
 
     /**
@@ -38,7 +44,7 @@ public final class LessThanYear extends Atom {
      * @return the negated formula in Negation Normal Form (NNF)
      */
     @Override
-    public Atom negate() {
+    public DateAtom negate() {
         return GreaterThanOrEqualToYear.of(this.year);
     }
 
