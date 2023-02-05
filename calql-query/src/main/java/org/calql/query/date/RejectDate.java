@@ -47,7 +47,7 @@ public final class RejectDate extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return ExactDate.of(this.date);
+        return EqualToDate.of(this.date);
     }
 
     @Override

@@ -20,17 +20,17 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class ExactDate extends DateAtom {
-    private ExactDate(final LocalDate date) {
+public final class EqualToDate extends DateAtom {
+    private EqualToDate(final LocalDate date) {
         this.date = date;
     }
 
     public static DateAtom of(final LocalDate date) {
-        return new ExactDate(date);
+        return new EqualToDate(date);
     }
 
     public static DateAtom of(final int year, final int month, final int dayOfMonth) {
-        return new ExactDate(LocalDate.of(year, month, dayOfMonth));
+        return new EqualToDate(LocalDate.of(year, month, dayOfMonth));
     }
 
     @Override
@@ -64,12 +64,12 @@ public final class ExactDate extends DateAtom {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ExactDate.class, this.date);
+        return Objects.hash(EqualToDate.class, this.date);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == ExactDate.class && this.date.equals(((ExactDate) obj).date);
+        return obj.getClass() == EqualToDate.class && this.date.equals(((EqualToDate) obj).date);
     }
 
     @Override

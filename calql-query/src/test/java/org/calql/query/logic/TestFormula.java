@@ -18,23 +18,23 @@ package org.calql.query.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.calql.query.date.ExactDayOfMonth;
-import org.calql.query.date.ExactMonth;
-import org.calql.query.date.ExactYear;
+import org.calql.query.date.EqualToDayOfMonth;
+import org.calql.query.date.EqualToMonth;
+import org.calql.query.date.EqualToYear;
 import org.junit.jupiter.api.Test;
 
 public class TestFormula {
     @Test
     public void test() {
         final Formula and = And.of(
-                Not.of(ExactDayOfMonth.of(29)),
-                Or.of(Not.of(ExactMonth.of(12)), ExactMonth.of(11)),
-                Or.of(Not.of(ExactYear.of(1999)), And.of(ExactMonth.of(10), Not.of(ExactYear.of(2021)))));
+                Not.of(EqualToDayOfMonth.of(29)),
+                Or.of(Not.of(EqualToMonth.of(12)), EqualToMonth.of(11)),
+                Or.of(Not.of(EqualToYear.of(1999)), And.of(EqualToMonth.of(10), Not.of(EqualToYear.of(2021)))));
         assertEquals(
                 And.of(
-                        Not.of(ExactDayOfMonth.of(29)),
-                        Or.of(Not.of(ExactMonth.of(12)), ExactMonth.of(11)),
-                        Or.of(Not.of(ExactYear.of(1999)), And.of(ExactMonth.of(10), Not.of(ExactYear.of(2021))))),
+                        Not.of(EqualToDayOfMonth.of(29)),
+                        Or.of(Not.of(EqualToMonth.of(12)), EqualToMonth.of(11)),
+                        Or.of(Not.of(EqualToYear.of(1999)), And.of(EqualToMonth.of(10), Not.of(EqualToYear.of(2021))))),
                 and);
         System.out.println(and);
         final NegationNormalFormula nnAnd = and.toNegationNormalForm();
@@ -47,7 +47,7 @@ public class TestFormula {
 
     @Test
     public void test2() {
-        final Formula f = And.of(ExactDayOfMonth.of(29), ExactMonth.of(11), ExactYear.of(1999));
+        final Formula f = And.of(EqualToDayOfMonth.of(29), EqualToMonth.of(11), EqualToYear.of(1999));
         final NegationNormalFormula nnf = f.toNegationNormalForm();
         System.out.println(nnf);
         System.out.println(nnf.getDisjunctiveNormalForm());

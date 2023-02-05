@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Dai MIKURUBE
+ * Copyright 2021-2023 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,22 @@
 
 package org.calql.query.date;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class ExactWeekday extends DateAtom {
-    private ExactWeekday(final DayOfWeek weekday) {
-        this.weekday = weekday;
+public final class EqualToYear extends DateAtom {
+    private EqualToYear(final int year) {
+        this.year = year;
     }
 
-    public static DateAtom of(final DayOfWeek weekday) {
-        return new ExactWeekday(weekday);
-    }
-
-    public static DateAtom of(final int weekday) {
-        return new ExactWeekday(DayOfWeek.of(weekday));
+    public static DateAtom of(final int year) {
+        return new EqualToYear(year);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.weekday == target.getDayOfWeek();
+        return this.year == target.getYear();
     }
 
     /**
@@ -50,7 +45,7 @@ public final class ExactWeekday extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return RejectWeekday.of(this.weekday);
+        return RejectYear.of(this.year);
     }
 
     @Override
@@ -60,23 +55,23 @@ public final class ExactWeekday extends DateAtom {
 
     @Override
     public boolean isTriviallyFinite() {
-        return false;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ExactWeekday.class, this.weekday);
+        return Objects.hash(EqualToYear.class, this.year);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this.weekday.equals(obj);
+        return obj.getClass() == EqualToYear.class && this.year == ((EqualToYear) obj).year;
     }
 
     @Override
     public String toString() {
-        return String.format("weekday = %s", this.weekday.toString());
+        return String.format("year = %d", this.year);
     }
 
-    private final DayOfWeek weekday;
+    private final int year;
 }

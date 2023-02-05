@@ -20,18 +20,18 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class ExactMonth extends DateAtom {
-    private ExactMonth(final int month) {
-        this.month = month;
+public final class EqualToDayOfMonth extends DateAtom {
+    private EqualToDayOfMonth(final int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public static DateAtom of(final int month) {
-        return new ExactMonth(month);
+    public static DateAtom of(final int dayOfMonth) {
+        return new EqualToDayOfMonth(dayOfMonth);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.month == target.getMonthValue();
+        return this.dayOfMonth == target.getDayOfMonth();
     }
 
     /**
@@ -45,7 +45,7 @@ public final class ExactMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return RejectMonth.of(this.month);
+        return RejectDayOfMonth.of(this.dayOfMonth);
     }
 
     @Override
@@ -60,18 +60,18 @@ public final class ExactMonth extends DateAtom {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ExactMonth.class, this.month);
+        return Objects.hash(EqualToDayOfMonth.class, this.dayOfMonth);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == ExactMonth.class && this.month == ((ExactMonth) obj).month;
+        return obj.getClass() == EqualToDayOfMonth.class && this.dayOfMonth == ((EqualToDayOfMonth) obj).dayOfMonth;
     }
 
     @Override
     public String toString() {
-        return String.format("month = %d", this.month);
+        return String.format("dayOfMonth = %d", this.dayOfMonth);
     }
 
-    private final int month;
+    private final int dayOfMonth;
 }

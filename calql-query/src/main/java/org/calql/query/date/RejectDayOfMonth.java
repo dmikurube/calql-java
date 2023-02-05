@@ -45,7 +45,7 @@ public final class RejectDayOfMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return ExactDayOfMonth.of(this.dayOfMonth);
+        return EqualToDayOfMonth.of(this.dayOfMonth);
     }
 
     @Override
