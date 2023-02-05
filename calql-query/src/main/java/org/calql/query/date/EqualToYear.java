@@ -45,7 +45,7 @@ public final class EqualToYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return RejectYear.of(this.year);
+        return NotEqualToYear.of(this.year);
     }
 
     @Override

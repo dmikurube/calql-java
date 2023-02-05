@@ -20,13 +20,13 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class RejectMonth extends DateAtom {
-    private RejectMonth(final int month) {
+public final class NotEqualToMonth extends DateAtom {
+    private NotEqualToMonth(final int month) {
         this.month = month;
     }
 
     public static DateAtom of(final int month) {
-        return new RejectMonth(month);
+        return new NotEqualToMonth(month);
     }
 
     @Override
@@ -60,12 +60,12 @@ public final class RejectMonth extends DateAtom {
 
     @Override
     public int hashCode() {
-        return Objects.hash(RejectMonth.class, this.month);
+        return Objects.hash(NotEqualToMonth.class, this.month);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == RejectMonth.class && this.month == ((RejectMonth) obj).month;
+        return obj.getClass() == NotEqualToMonth.class && this.month == ((NotEqualToMonth) obj).month;
     }
 
     @Override

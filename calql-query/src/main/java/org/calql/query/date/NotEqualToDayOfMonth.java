@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Dai MIKURUBE
+ * Copyright 2021-2023 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,22 @@
 
 package org.calql.query.date;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class RejectWeekday extends DateAtom {
-    private RejectWeekday(final DayOfWeek weekday) {
-        this.weekday = weekday;
+public final class NotEqualToDayOfMonth extends DateAtom {
+    private NotEqualToDayOfMonth(final int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public static DateAtom of(final DayOfWeek weekday) {
-        return new RejectWeekday(weekday);
-    }
-
-    public static DateAtom of(final int weekday) {
-        return new RejectWeekday(DayOfWeek.of(weekday));
+    public static DateAtom of(final int dayOfMonth) {
+        return new NotEqualToDayOfMonth(dayOfMonth);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.weekday != target.getDayOfWeek();
+        return this.dayOfMonth != target.getDayOfMonth();
     }
 
     /**
@@ -50,7 +45,7 @@ public final class RejectWeekday extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return EqualToWeekday.of(this.weekday);
+        return EqualToDayOfMonth.of(this.dayOfMonth);
     }
 
     @Override
@@ -65,18 +60,18 @@ public final class RejectWeekday extends DateAtom {
 
     @Override
     public int hashCode() {
-        return Objects.hash(RejectWeekday.class, this.weekday);
+        return Objects.hash(NotEqualToDayOfMonth.class, this.dayOfMonth);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this.weekday.equals(obj);
+        return obj.getClass() == NotEqualToDayOfMonth.class && this.dayOfMonth == ((NotEqualToDayOfMonth) obj).dayOfMonth;
     }
 
     @Override
     public String toString() {
-        return String.format("weekday = %s", this.weekday.toString());
+        return String.format("dayOfMonth != %d", this.dayOfMonth);
     }
 
-    private final DayOfWeek weekday;
+    private final int dayOfMonth;
 }

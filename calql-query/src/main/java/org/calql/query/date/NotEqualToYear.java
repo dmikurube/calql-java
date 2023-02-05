@@ -20,60 +20,58 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class RejectDate extends DateAtom {
-    private RejectDate(final LocalDate date) {
-        this.date = date;
+public final class NotEqualToYear extends DateAtom {
+    private NotEqualToYear(final int year) {
+        this.year = year;
     }
 
-    public static DateAtom of(final LocalDate date) {
-        return new RejectDate(date);
-    }
-
-    public static DateAtom of(final int year, final int month, final int dayOfMonth) {
-        return new RejectDate(LocalDate.of(year, month, dayOfMonth));
+    public static DateAtom of(final int year) {
+        return new NotEqualToYear(year);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return !this.date.equals(target);
+        return this.year != target.getYear();
     }
 
     /**
-     * Negates this atom.
+     * Negates this formula.
      *
-     * <p>It negates the atom.
+     * <p>It negates the formula in Negation Normal Form (NNF).
      *
-     * @return the negated atom
+     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
+     *
+     * @return the negated formula in Negation Normal Form (NNF)
      */
     @Override
     public DateAtom negate() {
-        return EqualToDate.of(this.date);
+        return EqualToYear.of(this.year);
     }
 
     @Override
     public boolean isTriviallyUnique() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isTriviallyFinite() {
-        return true;
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(RejectDate.class, this.date);
+        return Objects.hash(NotEqualToYear.class, this.year);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == RejectDate.class && this.date.equals(((RejectDate) obj).date);
+        return obj.getClass() == NotEqualToYear.class && this.year == ((NotEqualToYear) obj).year;
     }
 
     @Override
     public String toString() {
-        return String.format("date != %s", this.date.toString());
+        return String.format("year != %d", this.year);
     }
 
-    private final LocalDate date;
+    private final int year;
 }

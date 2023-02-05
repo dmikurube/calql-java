@@ -49,7 +49,7 @@ public final class EqualToDate extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return RejectDate.of(this.date);
+        return NotEqualToDate.of(this.date);
     }
 
     @Override

@@ -20,58 +20,60 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class RejectDayOfMonth extends DateAtom {
-    private RejectDayOfMonth(final int dayOfMonth) {
-        this.dayOfMonth = dayOfMonth;
+public final class NotEqualToDate extends DateAtom {
+    private NotEqualToDate(final LocalDate date) {
+        this.date = date;
     }
 
-    public static DateAtom of(final int dayOfMonth) {
-        return new RejectDayOfMonth(dayOfMonth);
+    public static DateAtom of(final LocalDate date) {
+        return new NotEqualToDate(date);
+    }
+
+    public static DateAtom of(final int year, final int month, final int dayOfMonth) {
+        return new NotEqualToDate(LocalDate.of(year, month, dayOfMonth));
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.dayOfMonth != target.getDayOfMonth();
+        return !this.date.equals(target);
     }
 
     /**
-     * Negates this formula.
+     * Negates this atom.
      *
-     * <p>It negates the formula in Negation Normal Form (NNF).
+     * <p>It negates the atom.
      *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
+     * @return the negated atom
      */
     @Override
     public DateAtom negate() {
-        return EqualToDayOfMonth.of(this.dayOfMonth);
+        return EqualToDate.of(this.date);
     }
 
     @Override
     public boolean isTriviallyUnique() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isTriviallyFinite() {
-        return false;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(RejectDayOfMonth.class, this.dayOfMonth);
+        return Objects.hash(NotEqualToDate.class, this.date);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == RejectDayOfMonth.class && this.dayOfMonth == ((RejectDayOfMonth) obj).dayOfMonth;
+        return obj.getClass() == NotEqualToDate.class && this.date.equals(((NotEqualToDate) obj).date);
     }
 
     @Override
     public String toString() {
-        return String.format("dayOfMonth != %d", this.dayOfMonth);
+        return String.format("date != %s", this.date.toString());
     }
 
-    private final int dayOfMonth;
+    private final LocalDate date;
 }

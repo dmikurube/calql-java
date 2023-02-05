@@ -45,7 +45,7 @@ public final class EqualToMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return RejectMonth.of(this.month);
+        return NotEqualToMonth.of(this.month);
     }
 
     @Override

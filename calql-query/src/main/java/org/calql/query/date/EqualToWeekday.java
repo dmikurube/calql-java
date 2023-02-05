@@ -50,7 +50,7 @@ public final class EqualToWeekday extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return RejectWeekday.of(this.weekday);
+        return NotEqualToWeekday.of(this.weekday);
     }
 
     @Override
