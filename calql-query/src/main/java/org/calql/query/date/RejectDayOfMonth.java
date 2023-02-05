@@ -20,18 +20,18 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class RejectDay extends DateAtom {
-    private RejectDay(final int day) {
-        this.day = day;
+public final class RejectDayOfMonth extends DateAtom {
+    private RejectDayOfMonth(final int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public static DateAtom of(final int day) {
-        return new RejectDay(day);
+    public static DateAtom of(final int dayOfMonth) {
+        return new RejectDayOfMonth(dayOfMonth);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.day != target.getDayOfMonth();
+        return this.dayOfMonth != target.getDayOfMonth();
     }
 
     /**
@@ -45,7 +45,7 @@ public final class RejectDay extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return ExactDay.of(this.day);
+        return ExactDayOfMonth.of(this.dayOfMonth);
     }
 
     @Override
@@ -60,18 +60,18 @@ public final class RejectDay extends DateAtom {
 
     @Override
     public int hashCode() {
-        return Objects.hash(RejectDay.class, this.day);
+        return Objects.hash(RejectDayOfMonth.class, this.dayOfMonth);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == RejectDay.class && this.day == ((RejectDay) obj).day;
+        return obj.getClass() == RejectDayOfMonth.class && this.dayOfMonth == ((RejectDayOfMonth) obj).dayOfMonth;
     }
 
     @Override
     public String toString() {
-        return String.format("day != %d", this.day);
+        return String.format("dayOfMonth != %d", this.dayOfMonth);
     }
 
-    private final int day;
+    private final int dayOfMonth;
 }
