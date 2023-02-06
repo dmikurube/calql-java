@@ -14,31 +14,14 @@
  * limitations under the License.
  */
 
-package org.calql.query;
+package org.calql.query.date;
 
 import java.time.LocalDate;
-import java.util.function.Predicate;
+import java.util.stream.Stream;
 import org.calql.query.logic.Conjunction;
 
-/**
- * Filters dates from a stream of dates.
- */
-public final class DateFilter implements Predicate<LocalDate> {
-    private DateFilter(final Conjunction conjunction) {
-        this.conjunction = conjunction;
+public class DateConjunctionResolver {
+    public Stream<LocalDate> resolve(final Conjunction conjunction) {
+        return Stream.empty();
     }
-
-    public static DateFilter of(final Conjunction conjunction) {
-        return new DateFilter(conjunction);
-    }
-
-    @Override
-    public boolean test(final LocalDate date) {
-        /*
-         * Check |date| with all Atoms.
-         */
-        return true;
-    }
-
-    private final Conjunction conjunction;
 }

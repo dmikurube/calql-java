@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.calql.query;
+package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
