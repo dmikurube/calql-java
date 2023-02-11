@@ -49,16 +49,6 @@ public final class EqualToDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean isTriviallyUnique() {
-        return false;
-    }
-
-    @Override
-    public boolean isTriviallyFinite() {
-        return false;
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(EqualToDayOfMonth.class, this.dayOfMonth);
     }

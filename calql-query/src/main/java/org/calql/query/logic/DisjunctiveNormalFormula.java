@@ -55,14 +55,6 @@ public final class DisjunctiveNormalFormula extends AbstractList<Conjunction> {
         return this.with(Arrays.asList(additionalConjunctions));
     }
 
-    public boolean isTriviallyUnique() {
-        return false;
-    }
-
-    public boolean isTriviallyFinite() {
-        return false;
-    }
-
     @Override
     public int size() {
         return this.conjunctions.size();

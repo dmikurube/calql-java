@@ -53,14 +53,6 @@ public final class Conjunction extends AbstractList<Atom> {
         return this.with(Arrays.asList(additionalAtoms));
     }
 
-    public boolean isTriviallyUnique() {
-        return false;
-    }
-
-    public boolean isTriviallyFinite() {
-        return false;
-    }
-
     @Override
     public int size() {
         return this.atoms.size();

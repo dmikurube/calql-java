@@ -16,6 +16,7 @@
 
 package org.calql.query.logic;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public abstract class Atom<T> extends NegationNormalFormula implements Predicate<T> {
@@ -35,11 +36,13 @@ public abstract class Atom<T> extends NegationNormalFormula implements Predicate
 
     public abstract Class<T> unit();
 
+    public abstract Optional<T> earliest();
+
+    public abstract Optional<T> latest();
+
+    public abstract Optional<T> unique();
+
     public abstract Atom<T> negate();
-
-    public abstract boolean isTriviallyUnique();
-
-    public abstract boolean isTriviallyFinite();
 
     private final DisjunctiveNormalFormula disjunctiveNormalForm;
 }

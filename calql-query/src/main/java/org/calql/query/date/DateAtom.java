@@ -17,11 +17,27 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import org.calql.query.logic.Atom;
 
 public abstract class DateAtom extends Atom<LocalDate> {
     @Override
     public final Class<LocalDate> unit() {
         return LocalDate.class;
+    }
+
+    @Override
+    public Optional<LocalDate> earliest() {
+        return Optional.<LocalDate>empty();
+    }
+
+    @Override
+    public Optional<LocalDate> latest() {
+        return Optional.<LocalDate>empty();
+    }
+
+    @Override
+    public Optional<LocalDate> unique() {
+        return Optional.<LocalDate>empty();
     }
 }

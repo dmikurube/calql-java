@@ -54,16 +54,6 @@ public final class NotEqualToWeekday extends DateAtom {
     }
 
     @Override
-    public boolean isTriviallyUnique() {
-        return false;
-    }
-
-    @Override
-    public boolean isTriviallyFinite() {
-        return false;
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(NotEqualToWeekday.class, this.weekday);
     }

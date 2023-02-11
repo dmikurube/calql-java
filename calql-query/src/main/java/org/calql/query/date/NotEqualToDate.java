@@ -51,16 +51,6 @@ public final class NotEqualToDate extends DateAtom {
     }
 
     @Override
-    public boolean isTriviallyUnique() {
-        return true;
-    }
-
-    @Override
-    public boolean isTriviallyFinite() {
-        return true;
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(NotEqualToDate.class, this.date);
     }

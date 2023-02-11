@@ -18,6 +18,7 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
 public final class EqualToYear extends DateAtom {
@@ -27,6 +28,16 @@ public final class EqualToYear extends DateAtom {
 
     public static DateAtom of(final int year) {
         return new EqualToYear(year);
+    }
+
+    @Override
+    public Optional<LocalDate> earliest() {
+        return Optional.of(LocalDate.of(this.year, 1, 1));
+    }
+
+    @Override
+    public Optional<LocalDate> latest() {
+        return Optional.of(LocalDate.of(this.year, 12, 31));
     }
 
     @Override
@@ -46,16 +57,6 @@ public final class EqualToYear extends DateAtom {
     @Override
     public DateAtom negate() {
         return NotEqualToYear.of(this.year);
-    }
-
-    @Override
-    public boolean isTriviallyUnique() {
-        return false;
-    }
-
-    @Override
-    public boolean isTriviallyFinite() {
-        return true;
     }
 
     @Override

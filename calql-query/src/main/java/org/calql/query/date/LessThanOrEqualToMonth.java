@@ -49,16 +49,6 @@ public final class LessThanOrEqualToMonth extends DateAtom {
     }
 
     @Override
-    public boolean isTriviallyUnique() {
-        return false;
-    }
-
-    @Override
-    public boolean isTriviallyFinite() {
-        return false;
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(LessThanOrEqualToMonth.class, this.month);
     }
