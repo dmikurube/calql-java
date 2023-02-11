@@ -18,12 +18,13 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
+import org.calql.query.logic.Conjunction;
 import org.junit.jupiter.api.Test;
 
 public class TestNaiveDateGenerator {
     @Test
     public void dump() {
-        final Stream<LocalDate> stream = new NaiveDateGenerator().generate(null);
+        final Stream<LocalDate> stream = new NaiveDateGenerator().generate(Conjunction.of());
         stream.limit(100).forEach(date -> System.out.println(date.toString()));
     }
 }

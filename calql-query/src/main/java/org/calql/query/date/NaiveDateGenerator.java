@@ -18,10 +18,12 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.calql.query.logic.Atom;
 import org.calql.query.logic.Conjunction;
 
 /**
@@ -30,6 +32,9 @@ import org.calql.query.logic.Conjunction;
 public final class NaiveDateGenerator implements DateGeneratable {
     @Override
     public Stream<LocalDate> generate(final Conjunction conjunction) {
+        Objects.requireNonNull(conjunction, "conjunction is null.");
+        requireDate(conjunction);
+
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
                 new NaiveDateIterator(conjunction, LocalDate.of(1970, 1, 1)), Spliterator.NONNULL | Spliterator.IMMUTABLE), false);
     }
@@ -55,5 +60,13 @@ public final class NaiveDateGenerator implements DateGeneratable {
         private final Conjunction conjunction;
 
         private LocalDate cur;
+    }
+
+    private static void requireDate(final Conjunction conjunction) {
+        for (final Atom atom : conjunction) {
+            if (atom.unit() != LocalDate.class) {
+                throw new IllegalArgumentException("conjunction contains non-date.");
+            }
+        }
     }
 }
