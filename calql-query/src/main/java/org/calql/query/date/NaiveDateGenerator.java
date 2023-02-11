@@ -19,6 +19,7 @@ package org.calql.query.date;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -35,8 +36,15 @@ public final class NaiveDateGenerator implements DateGeneratable {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireDate(conjunction);
 
+        final Optional<LocalDate> earliestDate = earliest(conjunction);
+        if (!earliestDate.isPresent()) {
+            throw new IllegalArgumentException("conjunction does not have the earliest date.");
+        }
+
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                new NaiveDateIterator(conjunction, LocalDate.of(1970, 1, 1)), Spliterator.NONNULL | Spliterator.IMMUTABLE), false);
+                        new NaiveDateIterator(conjunction, earliestDate.get()),
+                        Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
+                false);
     }
 
     private static class NaiveDateIterator implements Iterator<LocalDate> {
@@ -68,5 +76,42 @@ public final class NaiveDateGenerator implements DateGeneratable {
                 throw new IllegalArgumentException("conjunction contains non-date.");
             }
         }
+    }
+
+    private static Optional<LocalDate> earliest(final Conjunction conjunction) {
+        Optional<LocalDate> earliestDate = Optional.empty();
+        for (final Atom atom : conjunction) {
+            if (atom.unit() != LocalDate.class) {
+                throw new IllegalArgumentException("conjunction contains non-date.");
+            }
+            final Optional<LocalDate> date = asDateAtom(atom).earliest();
+            if (date.isPresent()) {
+                if ((!earliestDate.isPresent()) || date.get().isAfter(earliestDate.get())) {
+                    earliestDate = date;
+                }
+            }
+        }
+        return earliestDate;
+    }
+
+    private static Optional<LocalDate> latest(final Conjunction conjunction) {
+        Optional<LocalDate> latestDate = Optional.empty();
+        for (final Atom atom : conjunction) {
+            if (atom.unit() != LocalDate.class) {
+                throw new IllegalArgumentException("conjunction contains non-date.");
+            }
+            final Optional<LocalDate> date = asDateAtom(atom).latest();
+            if (date.isPresent()) {
+                if ((!latestDate.isPresent()) || date.get().isBefore(latestDate.get())) {
+                    latestDate = date;
+                }
+            }
+        }
+        return latestDate;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Atom<LocalDate> asDateAtom(final Atom atom) {
+        return (Atom<LocalDate>) atom;
     }
 }

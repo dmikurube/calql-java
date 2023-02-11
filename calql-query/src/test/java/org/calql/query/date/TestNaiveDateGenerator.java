@@ -18,13 +18,14 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
+import org.calql.query.date.GreaterThanOrEqualToYear;
 import org.calql.query.logic.Conjunction;
 import org.junit.jupiter.api.Test;
 
 public class TestNaiveDateGenerator {
     @Test
     public void dump() {
-        final Stream<LocalDate> stream = new NaiveDateGenerator().generate(Conjunction.of());
+        final Stream<LocalDate> stream = new NaiveDateGenerator().generate(Conjunction.of(GreaterThanOrEqualToYear.of(1970)));
         stream.limit(100).forEach(date -> System.out.println(date.toString()));
     }
 }
