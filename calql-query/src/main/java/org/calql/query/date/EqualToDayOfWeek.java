@@ -21,22 +21,22 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class NotEqualToWeekday extends DateAtom {
-    private NotEqualToWeekday(final DayOfWeek weekday) {
-        this.weekday = weekday;
+public final class EqualToDayOfWeek extends DateAtom {
+    private EqualToDayOfWeek(final DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
-    public static DateAtom of(final DayOfWeek weekday) {
-        return new NotEqualToWeekday(weekday);
+    public static DateAtom of(final DayOfWeek dayOfWeek) {
+        return new EqualToDayOfWeek(dayOfWeek);
     }
 
-    public static DateAtom of(final int weekday) {
-        return new NotEqualToWeekday(DayOfWeek.of(weekday));
+    public static DateAtom of(final int dayOfWeek) {
+        return new EqualToDayOfWeek(DayOfWeek.of(dayOfWeek));
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.weekday != target.getDayOfWeek();
+        return this.dayOfWeek == target.getDayOfWeek();
     }
 
     /**
@@ -50,23 +50,23 @@ public final class NotEqualToWeekday extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return EqualToWeekday.of(this.weekday);
+        return NotEqualToDayOfWeek.of(this.dayOfWeek);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(NotEqualToWeekday.class, this.weekday);
+        return Objects.hash(EqualToDayOfWeek.class, this.dayOfWeek);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this.weekday.equals(obj);
+        return this.dayOfWeek.equals(obj);
     }
 
     @Override
     public String toString() {
-        return String.format("weekday = %s", this.weekday.toString());
+        return String.format("dayOfWeek = %s", this.dayOfWeek.toString());
     }
 
-    private final DayOfWeek weekday;
+    private final DayOfWeek dayOfWeek;
 }
