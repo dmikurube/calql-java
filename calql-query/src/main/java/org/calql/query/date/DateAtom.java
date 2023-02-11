@@ -20,4 +20,8 @@ import java.time.LocalDate;
 import org.calql.query.logic.Atom;
 
 public abstract class DateAtom extends Atom<LocalDate> {
+    @Override
+    public final Class<LocalDate> unit() {
+        return LocalDate.class;
+    }
 }

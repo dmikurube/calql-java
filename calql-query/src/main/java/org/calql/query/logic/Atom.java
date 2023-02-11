@@ -33,6 +33,8 @@ public abstract class Atom<T> extends NegationNormalFormula implements Predicate
         return this.disjunctiveNormalForm;
     }
 
+    public abstract Class<T> unit();
+
     public abstract Atom<T> negate();
 
     public abstract boolean isTriviallyUnique();
