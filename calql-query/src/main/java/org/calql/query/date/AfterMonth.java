@@ -20,18 +20,18 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class LessThanOrEqualToDayOfMonth extends DateAtom {
-    private LessThanOrEqualToDayOfMonth(final int dayOfMonth) {
-        this.dayOfMonth = dayOfMonth;
+public final class AfterMonth extends DateAtom {
+    private AfterMonth(final int month) {
+        this.month = month;
     }
 
-    public static DateAtom of(final int dayOfMonth) {
-        return new LessThanOrEqualToDayOfMonth(dayOfMonth);
+    public static DateAtom of(final int month) {
+        return new AfterMonth(month);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.dayOfMonth <= target.getDayOfMonth();
+        return this.month > target.getMonthValue();
     }
 
     /**
@@ -45,23 +45,23 @@ public final class LessThanOrEqualToDayOfMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return GreaterThanDayOfMonth.of(this.dayOfMonth);
+        return BeforeOrEqualToMonth.of(this.month);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(LessThanOrEqualToDayOfMonth.class, this.dayOfMonth);
+        return Objects.hash(AfterMonth.class, this.month);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == LessThanOrEqualToDayOfMonth.class && this.dayOfMonth == ((LessThanOrEqualToDayOfMonth) obj).dayOfMonth;
+        return obj.getClass() == AfterMonth.class && this.month == ((AfterMonth) obj).month;
     }
 
     @Override
     public String toString() {
-        return String.format("dayOfMonth <= %d", this.dayOfMonth);
+        return String.format("month > %d", this.month);
     }
 
-    private final int dayOfMonth;
+    private final int month;
 }

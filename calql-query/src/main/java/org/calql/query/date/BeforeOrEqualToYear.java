@@ -21,13 +21,13 @@ import java.util.Objects;
 import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
-public final class LessThanOrEqualToYear extends DateAtom {
-    private LessThanOrEqualToYear(final int year) {
+public final class BeforeOrEqualToYear extends DateAtom {
+    private BeforeOrEqualToYear(final int year) {
         this.year = year;
     }
 
     public static DateAtom of(final int year) {
-        return new LessThanOrEqualToYear(year);
+        return new BeforeOrEqualToYear(year);
     }
 
     @Override
@@ -51,17 +51,17 @@ public final class LessThanOrEqualToYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return GreaterThanYear.of(this.year);
+        return AfterYear.of(this.year);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(LessThanOrEqualToYear.class, this.year);
+        return Objects.hash(BeforeOrEqualToYear.class, this.year);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == LessThanOrEqualToYear.class && this.year == ((LessThanOrEqualToYear) obj).year;
+        return obj.getClass() == BeforeOrEqualToYear.class && this.year == ((BeforeOrEqualToYear) obj).year;
     }
 
     @Override

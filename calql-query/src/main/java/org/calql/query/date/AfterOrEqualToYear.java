@@ -18,20 +18,26 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
-public final class LessThanOrEqualToMonth extends DateAtom {
-    private LessThanOrEqualToMonth(final int month) {
-        this.month = month;
+public final class AfterOrEqualToYear extends DateAtom {
+    private AfterOrEqualToYear(final int year) {
+        this.year = year;
     }
 
-    public static DateAtom of(final int month) {
-        return new LessThanOrEqualToMonth(month);
+    public static DateAtom of(final int year) {
+        return new AfterOrEqualToYear(year);
+    }
+
+    @Override
+    public Optional<LocalDate> earliest() {
+        return Optional.of(LocalDate.of(this.year, 1, 1));
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.month <= target.getMonthValue();
+        return this.year >= target.getYear();
     }
 
     /**
@@ -45,23 +51,23 @@ public final class LessThanOrEqualToMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return GreaterThanMonth.of(this.month);
+        return BeforeYear.of(this.year);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(LessThanOrEqualToMonth.class, this.month);
+        return Objects.hash(AfterOrEqualToYear.class, this.year);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == LessThanOrEqualToMonth.class && this.month == ((LessThanOrEqualToMonth) obj).month;
+        return obj.getClass() == AfterOrEqualToYear.class && this.year == ((AfterOrEqualToYear) obj).year;
     }
 
     @Override
     public String toString() {
-        return String.format("month <= %d", this.month);
+        return String.format("year >= %d", this.year);
     }
 
-    private final int month;
+    private final int year;
 }

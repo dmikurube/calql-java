@@ -20,18 +20,18 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class GreaterThanMonth extends DateAtom {
-    private GreaterThanMonth(final int month) {
+public final class AfterOrEqualToMonth extends DateAtom {
+    private AfterOrEqualToMonth(final int month) {
         this.month = month;
     }
 
     public static DateAtom of(final int month) {
-        return new GreaterThanMonth(month);
+        return new AfterOrEqualToMonth(month);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.month > target.getMonthValue();
+        return this.month >= target.getMonthValue();
     }
 
     /**
@@ -45,22 +45,22 @@ public final class GreaterThanMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return LessThanOrEqualToMonth.of(this.month);
+        return BeforeMonth.of(this.month);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(GreaterThanMonth.class, this.month);
+        return Objects.hash(AfterOrEqualToMonth.class, this.month);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == GreaterThanMonth.class && this.month == ((GreaterThanMonth) obj).month;
+        return obj.getClass() == AfterOrEqualToMonth.class && this.month == ((AfterOrEqualToMonth) obj).month;
     }
 
     @Override
     public String toString() {
-        return String.format("month > %d", this.month);
+        return String.format("month >= %d", this.month);
     }
 
     private final int month;

@@ -18,26 +18,20 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
-public final class GreaterThanYear extends DateAtom {
-    private GreaterThanYear(final int year) {
-        this.year = year;
+public final class BeforeOrEqualToDayOfMonth extends DateAtom {
+    private BeforeOrEqualToDayOfMonth(final int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public static DateAtom of(final int year) {
-        return new GreaterThanYear(year);
-    }
-
-    @Override
-    public Optional<LocalDate> earliest() {
-        return Optional.of(LocalDate.of(this.year + 1, 1, 1));
+    public static DateAtom of(final int dayOfMonth) {
+        return new BeforeOrEqualToDayOfMonth(dayOfMonth);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.year > target.getYear();
+        return this.dayOfMonth <= target.getDayOfMonth();
     }
 
     /**
@@ -51,23 +45,23 @@ public final class GreaterThanYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return LessThanOrEqualToYear.of(this.year);
+        return AfterDayOfMonth.of(this.dayOfMonth);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(GreaterThanYear.class, this.year);
+        return Objects.hash(BeforeOrEqualToDayOfMonth.class, this.dayOfMonth);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == GreaterThanYear.class && this.year == ((GreaterThanYear) obj).year;
+        return obj.getClass() == BeforeOrEqualToDayOfMonth.class && this.dayOfMonth == ((BeforeOrEqualToDayOfMonth) obj).dayOfMonth;
     }
 
     @Override
     public String toString() {
-        return String.format("year > %d", this.year);
+        return String.format("dayOfMonth <= %d", this.dayOfMonth);
     }
 
-    private final int year;
+    private final int dayOfMonth;
 }
