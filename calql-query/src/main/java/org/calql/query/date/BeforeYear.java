@@ -22,22 +22,39 @@ import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
 public final class BeforeYear extends DateAtom {
-    private BeforeYear(final int year) {
+    private BeforeYear(final int year, final boolean inclusive) {
         this.year = year;
+        this.inclusive = inclusive;
     }
 
     public static DateAtom of(final int year) {
-        return new BeforeYear(year);
+        return new BeforeYear(year, false);
+    }
+
+    public static DateAtom of(final int year, final boolean inclusive) {
+        return new BeforeYear(year, inclusive);
+    }
+
+    public static DateAtom orEqualTo(final int year) {
+        return new BeforeYear(year, true);
     }
 
     @Override
     public Optional<LocalDate> latest() {
-        return Optional.of(LocalDate.of(this.year - 1, 12, 31));
+        if (this.inclusive) {
+            return Optional.of(LocalDate.of(this.year, 12, 31));
+        } else {
+            return Optional.of(LocalDate.of(this.year - 1, 12, 31));
+        }
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.year < target.getYear();
+        if (this.inclusive) {
+            return this.year <= target.getYear();
+        } else {
+            return this.year < target.getYear();
+        }
     }
 
     /**
@@ -51,23 +68,26 @@ public final class BeforeYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return AfterOrEqualToYear.of(this.year);
+        return AfterYear.of(this.year, !this.inclusive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(BeforeYear.class, this.year);
+        return Objects.hash(BeforeYear.class, this.year, this.inclusive);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == BeforeYear.class && this.year == ((BeforeYear) obj).year;
+        return obj.getClass() == BeforeYear.class &&
+                this.year == ((BeforeYear) obj).year &&
+                this.inclusive == ((BeforeYear) obj).inclusive;
     }
 
     @Override
     public String toString() {
-        return String.format("year < %d", this.year);
+        return String.format("year <%s %d", this.inclusive ? "=" : "", this.year);
     }
 
     private final int year;
+    private final boolean inclusive;
 }

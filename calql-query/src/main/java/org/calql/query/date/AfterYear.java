@@ -22,17 +22,30 @@ import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
 public final class AfterYear extends DateAtom {
-    private AfterYear(final int year) {
+    private AfterYear(final int year, final boolean inclusive) {
         this.year = year;
+        this.inclusive = inclusive;
     }
 
     public static DateAtom of(final int year) {
-        return new AfterYear(year);
+        return new AfterYear(year, false);
+    }
+
+    public static DateAtom of(final int year, final boolean inclusive) {
+        return new AfterYear(year, inclusive);
+    }
+
+    public static DateAtom orEqualTo(final int year) {
+        return new AfterYear(year, true);
     }
 
     @Override
     public Optional<LocalDate> earliest() {
-        return Optional.of(LocalDate.of(this.year + 1, 1, 1));
+        if (this.inclusive) {
+            return Optional.of(LocalDate.of(this.year, 1, 1));
+        } else {
+            return Optional.of(LocalDate.of(this.year + 1, 1, 1));
+        }
     }
 
     @Override
@@ -51,23 +64,26 @@ public final class AfterYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return BeforeOrEqualToYear.of(this.year);
+        return BeforeYear.of(this.year, !this.inclusive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(AfterYear.class, this.year);
+        return Objects.hash(AfterYear.class, this.year, this.inclusive);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == AfterYear.class && this.year == ((AfterYear) obj).year;
+        return obj.getClass() == AfterYear.class &&
+                this.year == ((AfterYear) obj).year &&
+                this.inclusive == ((AfterYear) obj).inclusive;
     }
 
     @Override
     public String toString() {
-        return String.format("year > %d", this.year);
+        return String.format("year >%s %d", this.inclusive ? "=" : "", this.year);
     }
 
     private final int year;
+    private final boolean inclusive;
 }

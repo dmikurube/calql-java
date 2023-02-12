@@ -21,17 +21,30 @@ import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
 public final class BeforeMonth extends DateAtom {
-    private BeforeMonth(final int month) {
+    private BeforeMonth(final int month, final boolean inclusive) {
         this.month = month;
+        this.inclusive = inclusive;
     }
 
     public static DateAtom of(final int month) {
-        return new BeforeMonth(month);
+        return new BeforeMonth(month, false);
+    }
+
+    public static DateAtom of(final int month, final boolean inclusive) {
+        return new BeforeMonth(month, inclusive);
+    }
+
+    public static DateAtom orEqualTo(final int month) {
+        return new BeforeMonth(month, true);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.month < target.getMonthValue();
+        if (this.inclusive) {
+            return this.month <= target.getMonthValue();
+        } else {
+            return this.month < target.getMonthValue();
+        }
     }
 
     /**
@@ -45,23 +58,26 @@ public final class BeforeMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return AfterOrEqualToMonth.of(this.month);
+        return AfterMonth.of(this.month, !this.inclusive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(BeforeMonth.class, this.month);
+        return Objects.hash(BeforeMonth.class, this.month, this.inclusive);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == BeforeMonth.class && this.month == ((BeforeMonth) obj).month;
+        return obj.getClass() == BeforeMonth.class &&
+                this.month == ((BeforeMonth) obj).month &&
+                this.inclusive == ((BeforeMonth) obj).inclusive;
     }
 
     @Override
     public String toString() {
-        return String.format("month < %d", this.month);
+        return String.format("month <%s %d", this.inclusive ? "=" : "", this.month);
     }
 
     private final int month;
+    private final boolean inclusive;
 }

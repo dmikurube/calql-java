@@ -21,17 +21,30 @@ import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
 public final class AfterDayOfMonth extends DateAtom {
-    private AfterDayOfMonth(final int dayOfMonth) {
+    private AfterDayOfMonth(final int dayOfMonth, final boolean inclusive) {
         this.dayOfMonth = dayOfMonth;
+        this.inclusive = inclusive;
     }
 
     public static DateAtom of(final int dayOfMonth) {
-        return new AfterDayOfMonth(dayOfMonth);
+        return new AfterDayOfMonth(dayOfMonth, false);
+    }
+
+    public static DateAtom of(final int dayOfMonth, final boolean inclusive) {
+        return new AfterDayOfMonth(dayOfMonth, inclusive);
+    }
+
+    public static DateAtom orEqualTo(final int dayOfMonth) {
+        return new AfterDayOfMonth(dayOfMonth, true);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.dayOfMonth > target.getDayOfMonth();
+        if (this.inclusive) {
+            return this.dayOfMonth >= target.getDayOfMonth();
+        } else {
+            return this.dayOfMonth > target.getDayOfMonth();
+        }
     }
 
     /**
@@ -45,23 +58,26 @@ public final class AfterDayOfMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return BeforeOrEqualToDayOfMonth.of(this.dayOfMonth);
+        return BeforeDayOfMonth.of(this.dayOfMonth, !this.inclusive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(AfterDayOfMonth.class, this.dayOfMonth);
+        return Objects.hash(AfterDayOfMonth.class, this.dayOfMonth, this.inclusive);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == AfterDayOfMonth.class && this.dayOfMonth == ((AfterDayOfMonth) obj).dayOfMonth;
+        return obj.getClass() == AfterDayOfMonth.class &&
+                this.dayOfMonth == ((AfterDayOfMonth) obj).dayOfMonth &&
+                this.inclusive == ((AfterDayOfMonth) obj).inclusive;
     }
 
     @Override
     public String toString() {
-        return String.format("dayOfMonth > %d", this.dayOfMonth);
+        return String.format("dayOfMonth >%s %d", this.inclusive ? "=" : "", this.dayOfMonth);
     }
 
     private final int dayOfMonth;
+    private final boolean inclusive;
 }

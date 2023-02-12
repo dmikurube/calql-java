@@ -21,17 +21,30 @@ import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
 public final class AfterMonth extends DateAtom {
-    private AfterMonth(final int month) {
+    private AfterMonth(final int month, final boolean inclusive) {
         this.month = month;
+        this.inclusive = inclusive;
     }
 
     public static DateAtom of(final int month) {
-        return new AfterMonth(month);
+        return new AfterMonth(month, false);
+    }
+
+    public static DateAtom of(final int month, final boolean inclusive) {
+        return new AfterMonth(month, inclusive);
+    }
+
+    public static DateAtom orEqualTo(final int month) {
+        return new AfterMonth(month, true);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.month > target.getMonthValue();
+        if (this.inclusive) {
+            return this.month >= target.getMonthValue();
+        } else {
+            return this.month > target.getMonthValue();
+        }
     }
 
     /**
@@ -45,23 +58,26 @@ public final class AfterMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return BeforeOrEqualToMonth.of(this.month);
+        return BeforeMonth.of(this.month, !this.inclusive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(AfterMonth.class, this.month);
+        return Objects.hash(AfterMonth.class, this.month, this.inclusive);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj.getClass() == AfterMonth.class && this.month == ((AfterMonth) obj).month;
+        return obj.getClass() == AfterMonth.class &&
+                this.month == ((AfterMonth) obj).month &&
+                this.inclusive == ((AfterMonth) obj).inclusive;
     }
 
     @Override
     public String toString() {
-        return String.format("month > %d", this.month);
+        return String.format("month >%s %d", this.inclusive ? "=" : "", this.month);
     }
 
     private final int month;
+    private final boolean inclusive;
 }
