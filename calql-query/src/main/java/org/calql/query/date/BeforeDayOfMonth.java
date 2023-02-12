@@ -67,10 +67,16 @@ public final class BeforeDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == BeforeDayOfMonth.class &&
-                this.dayOfMonth == ((BeforeDayOfMonth) obj).dayOfMonth &&
-                this.inclusive == ((BeforeDayOfMonth) obj).inclusive;
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof BeforeDayOfMonth)) {
+            return false;
+        }
+
+        final BeforeDayOfMonth other = (BeforeDayOfMonth) otherObject;
+        return this.dayOfMonth == other.dayOfMonth && this.inclusive == other.inclusive;
     }
 
     @Override

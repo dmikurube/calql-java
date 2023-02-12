@@ -77,10 +77,16 @@ public final class BeforeYear extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == BeforeYear.class &&
-                this.year == ((BeforeYear) obj).year &&
-                this.inclusive == ((BeforeYear) obj).inclusive;
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof BeforeYear)) {
+            return false;
+        }
+
+        final BeforeYear other = (BeforeYear) otherObject;
+        return this.year == other.year && this.inclusive == other.inclusive;
     }
 
     @Override
