@@ -65,8 +65,16 @@ public final class EqualToYear extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == EqualToYear.class && this.year == ((EqualToYear) obj).year;
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof EqualToYear)) {
+            return false;
+        }
+
+        final EqualToYear other = (EqualToYear) otherObject;
+        return this.year == other.year;
     }
 
     @Override

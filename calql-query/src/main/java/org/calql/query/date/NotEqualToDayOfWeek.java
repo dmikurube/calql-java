@@ -59,8 +59,16 @@ public final class NotEqualToDayOfWeek extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return this.dayOfWeek.equals(obj);
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof NotEqualToDayOfWeek)) {
+            return false;
+        }
+
+        final NotEqualToDayOfWeek other = (NotEqualToDayOfWeek) otherObject;
+        return Objects.equals(this.dayOfWeek, other.dayOfWeek);
     }
 
     @Override

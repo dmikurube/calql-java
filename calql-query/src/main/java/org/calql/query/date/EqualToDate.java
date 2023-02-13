@@ -74,8 +74,16 @@ public final class EqualToDate extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == EqualToDate.class && this.date.equals(((EqualToDate) obj).date);
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof EqualToDate)) {
+            return false;
+        }
+
+        final EqualToDate other = (EqualToDate) otherObject;
+        return Objects.equals(this.date, other.date);
     }
 
     @Override

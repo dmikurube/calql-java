@@ -54,8 +54,16 @@ public final class EqualToMonth extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == EqualToMonth.class && this.month == ((EqualToMonth) obj).month;
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof EqualToMonth)) {
+            return false;
+        }
+
+        final EqualToMonth other = (EqualToMonth) otherObject;
+        return this.month == other.month;
     }
 
     @Override

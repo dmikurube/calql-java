@@ -54,8 +54,16 @@ public final class NotEqualToYear extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == NotEqualToYear.class && this.year == ((NotEqualToYear) obj).year;
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof NotEqualToYear)) {
+            return false;
+        }
+
+        final NotEqualToYear other = (NotEqualToYear) otherObject;
+        return this.year == other.year;
     }
 
     @Override

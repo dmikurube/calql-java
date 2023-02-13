@@ -56,8 +56,16 @@ public final class NotEqualToDate extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == NotEqualToDate.class && this.date.equals(((NotEqualToDate) obj).date);
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof NotEqualToDate)) {
+            return false;
+        }
+
+        final NotEqualToDate other = (NotEqualToDate) otherObject;
+        return Objects.equals(this.date, other.date);
     }
 
     @Override

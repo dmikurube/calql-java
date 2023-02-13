@@ -54,8 +54,16 @@ public final class NotEqualToDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == NotEqualToDayOfMonth.class && this.dayOfMonth == ((NotEqualToDayOfMonth) obj).dayOfMonth;
+    public boolean equals(final Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+        if (!(otherObject instanceof NotEqualToDayOfMonth)) {
+            return false;
+        }
+
+        final NotEqualToDayOfMonth other = (NotEqualToDayOfMonth) otherObject;
+        return this.dayOfMonth == other.dayOfMonth;
     }
 
     @Override
