@@ -25,7 +25,7 @@ public final class NotEqualToYear extends DateAtom {
         this.year = year;
     }
 
-    public static DateAtom of(final int year) {
+    public static NotEqualToYear of(final int year) {
         return new NotEqualToYear(year);
     }
 

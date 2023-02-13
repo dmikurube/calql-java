@@ -25,7 +25,7 @@ public final class NotEqualToMonth extends DateAtom {
         this.month = month;
     }
 
-    public static DateAtom of(final int month) {
+    public static NotEqualToMonth of(final int month) {
         return new NotEqualToMonth(month);
     }
 

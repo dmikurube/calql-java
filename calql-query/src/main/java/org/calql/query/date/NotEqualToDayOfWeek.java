@@ -26,11 +26,11 @@ public final class NotEqualToDayOfWeek extends DateAtom {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public static DateAtom of(final DayOfWeek dayOfWeek) {
+    public static NotEqualToDayOfWeek of(final DayOfWeek dayOfWeek) {
         return new NotEqualToDayOfWeek(dayOfWeek);
     }
 
-    public static DateAtom of(final int dayOfWeek) {
+    public static NotEqualToDayOfWeek of(final int dayOfWeek) {
         return new NotEqualToDayOfWeek(DayOfWeek.of(dayOfWeek));
     }
 

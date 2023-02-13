@@ -26,7 +26,7 @@ public final class EqualToYear extends DateAtom {
         this.year = year;
     }
 
-    public static DateAtom of(final int year) {
+    public static EqualToYear of(final int year) {
         return new EqualToYear(year);
     }
 

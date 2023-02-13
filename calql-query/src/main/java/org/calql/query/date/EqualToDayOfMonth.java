@@ -25,7 +25,7 @@ public final class EqualToDayOfMonth extends DateAtom {
         this.dayOfMonth = dayOfMonth;
     }
 
-    public static DateAtom of(final int dayOfMonth) {
+    public static EqualToDayOfMonth of(final int dayOfMonth) {
         return new EqualToDayOfMonth(dayOfMonth);
     }
 

@@ -25,11 +25,11 @@ public final class NotEqualToDate extends DateAtom {
         this.date = date;
     }
 
-    public static DateAtom of(final LocalDate date) {
+    public static NotEqualToDate of(final LocalDate date) {
         return new NotEqualToDate(date);
     }
 
-    public static DateAtom of(final int year, final int month, final int dayOfMonth) {
+    public static NotEqualToDate of(final int year, final int month, final int dayOfMonth) {
         return new NotEqualToDate(LocalDate.of(year, month, dayOfMonth));
     }
 

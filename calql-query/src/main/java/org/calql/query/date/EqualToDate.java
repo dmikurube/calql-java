@@ -26,11 +26,11 @@ public final class EqualToDate extends DateAtom {
         this.date = date;
     }
 
-    public static DateAtom of(final LocalDate date) {
+    public static EqualToDate of(final LocalDate date) {
         return new EqualToDate(date);
     }
 
-    public static DateAtom of(final int year, final int month, final int dayOfMonth) {
+    public static EqualToDate of(final int year, final int month, final int dayOfMonth) {
         return new EqualToDate(LocalDate.of(year, month, dayOfMonth));
     }
 

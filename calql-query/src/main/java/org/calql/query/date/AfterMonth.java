@@ -26,15 +26,15 @@ public final class AfterMonth extends DateAtom {
         this.inclusive = inclusive;
     }
 
-    public static DateAtom of(final int month) {
+    public static AfterMonth of(final int month) {
         return new AfterMonth(month, false);
     }
 
-    public static DateAtom of(final int month, final boolean inclusive) {
+    public static AfterMonth of(final int month, final boolean inclusive) {
         return new AfterMonth(month, inclusive);
     }
 
-    public static DateAtom orEqualTo(final int month) {
+    public static AfterMonth orEqualTo(final int month) {
         return new AfterMonth(month, true);
     }
 

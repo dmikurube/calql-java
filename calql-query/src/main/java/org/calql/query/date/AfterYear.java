@@ -27,15 +27,15 @@ public final class AfterYear extends DateAtom {
         this.inclusive = inclusive;
     }
 
-    public static DateAtom of(final int year) {
+    public static AfterYear of(final int year) {
         return new AfterYear(year, false);
     }
 
-    public static DateAtom of(final int year, final boolean inclusive) {
+    public static AfterYear of(final int year, final boolean inclusive) {
         return new AfterYear(year, inclusive);
     }
 
-    public static DateAtom orEqualTo(final int year) {
+    public static AfterYear orEqualTo(final int year) {
         return new AfterYear(year, true);
     }
 
