@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Dai MIKURUBE
+ * Copyright 2022-2023 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,27 @@
 
 package org.calql.query.date;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class NotEqualToMonth extends DateAtom {
-    private NotEqualToMonth(final int month) {
-        this.month = month;
+public final class EitherDayOfWeek extends DateAtom {
+    private EitherDayOfWeek(final DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
-    public static NotEqualToMonth of(final int month) {
-        return new NotEqualToMonth(month);
+    public static EitherDayOfWeek of(final DayOfWeek dayOfWeek) {
+        return new EitherDayOfWeek(dayOfWeek);
+    }
+
+    public static EitherDayOfWeek of(final int dayOfWeek) {
+        return new EitherDayOfWeek(DayOfWeek.of(dayOfWeek));
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.month != target.getMonthValue();
+        return this.dayOfWeek == target.getDayOfWeek();
     }
 
     /**
@@ -45,12 +50,12 @@ public final class NotEqualToMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return EqualToMonth.of(this.month);
+        return NeitherDayOfWeek.of(this.dayOfWeek);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(NotEqualToMonth.class, this.month);
+        return Objects.hash(EitherDayOfWeek.class, this.dayOfWeek);
     }
 
     @Override
@@ -58,18 +63,18 @@ public final class NotEqualToMonth extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof NotEqualToMonth)) {
+        if (!(otherObject instanceof EitherDayOfWeek)) {
             return false;
         }
 
-        final NotEqualToMonth other = (NotEqualToMonth) otherObject;
-        return this.month == other.month;
+        final EitherDayOfWeek other = (EitherDayOfWeek) otherObject;
+        return Objects.equals(this.dayOfWeek, other.dayOfWeek);
     }
 
     @Override
     public String toString() {
-        return String.format("month != %d", this.month);
+        return String.format("dayOfWeek = %s", this.dayOfWeek.toString());
     }
 
-    private final int month;
+    private final DayOfWeek dayOfWeek;
 }

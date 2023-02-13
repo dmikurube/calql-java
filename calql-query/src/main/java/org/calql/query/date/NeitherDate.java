@@ -20,17 +20,17 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class NotEqualToDate extends DateAtom {
-    private NotEqualToDate(final LocalDate date) {
+public final class NeitherDate extends DateAtom {
+    private NeitherDate(final LocalDate date) {
         this.date = date;
     }
 
-    public static NotEqualToDate of(final LocalDate date) {
-        return new NotEqualToDate(date);
+    public static NeitherDate of(final LocalDate date) {
+        return new NeitherDate(date);
     }
 
-    public static NotEqualToDate of(final int year, final int month, final int dayOfMonth) {
-        return new NotEqualToDate(LocalDate.of(year, month, dayOfMonth));
+    public static NeitherDate of(final int year, final int month, final int dayOfMonth) {
+        return new NeitherDate(LocalDate.of(year, month, dayOfMonth));
     }
 
     @Override
@@ -47,12 +47,12 @@ public final class NotEqualToDate extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return EqualToDate.of(this.date);
+        return EitherDate.of(this.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(NotEqualToDate.class, this.date);
+        return Objects.hash(NeitherDate.class, this.date);
     }
 
     @Override
@@ -60,11 +60,11 @@ public final class NotEqualToDate extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof NotEqualToDate)) {
+        if (!(otherObject instanceof NeitherDate)) {
             return false;
         }
 
-        final NotEqualToDate other = (NotEqualToDate) otherObject;
+        final NeitherDate other = (NeitherDate) otherObject;
         return Objects.equals(this.date, other.date);
     }
 

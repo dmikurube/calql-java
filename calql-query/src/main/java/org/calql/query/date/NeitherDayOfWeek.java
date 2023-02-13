@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Dai MIKURUBE
+ * Copyright 2022-2023 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,27 @@
 
 package org.calql.query.date;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class NotEqualToYear extends DateAtom {
-    private NotEqualToYear(final int year) {
-        this.year = year;
+public final class NeitherDayOfWeek extends DateAtom {
+    private NeitherDayOfWeek(final DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
-    public static NotEqualToYear of(final int year) {
-        return new NotEqualToYear(year);
+    public static NeitherDayOfWeek of(final DayOfWeek dayOfWeek) {
+        return new NeitherDayOfWeek(dayOfWeek);
+    }
+
+    public static NeitherDayOfWeek of(final int dayOfWeek) {
+        return new NeitherDayOfWeek(DayOfWeek.of(dayOfWeek));
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.year != target.getYear();
+        return this.dayOfWeek != target.getDayOfWeek();
     }
 
     /**
@@ -45,12 +50,12 @@ public final class NotEqualToYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return EqualToYear.of(this.year);
+        return EitherDayOfWeek.of(this.dayOfWeek);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(NotEqualToYear.class, this.year);
+        return Objects.hash(NeitherDayOfWeek.class, this.dayOfWeek);
     }
 
     @Override
@@ -58,18 +63,18 @@ public final class NotEqualToYear extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof NotEqualToYear)) {
+        if (!(otherObject instanceof NeitherDayOfWeek)) {
             return false;
         }
 
-        final NotEqualToYear other = (NotEqualToYear) otherObject;
-        return this.year == other.year;
+        final NeitherDayOfWeek other = (NeitherDayOfWeek) otherObject;
+        return Objects.equals(this.dayOfWeek, other.dayOfWeek);
     }
 
     @Override
     public String toString() {
-        return String.format("year != %d", this.year);
+        return String.format("dayOfWeek = %s", this.dayOfWeek.toString());
     }
 
-    private final int year;
+    private final DayOfWeek dayOfWeek;
 }

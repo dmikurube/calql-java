@@ -20,18 +20,18 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class EqualToMonth extends DateAtom {
-    private EqualToMonth(final int month) {
-        this.month = month;
+public final class NeitherDayOfMonth extends DateAtom {
+    private NeitherDayOfMonth(final int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public static EqualToMonth of(final int month) {
-        return new EqualToMonth(month);
+    public static NeitherDayOfMonth of(final int dayOfMonth) {
+        return new NeitherDayOfMonth(dayOfMonth);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.month == target.getMonthValue();
+        return this.dayOfMonth != target.getDayOfMonth();
     }
 
     /**
@@ -45,12 +45,12 @@ public final class EqualToMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return NotEqualToMonth.of(this.month);
+        return EitherDayOfMonth.of(this.dayOfMonth);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(EqualToMonth.class, this.month);
+        return Objects.hash(NeitherDayOfMonth.class, this.dayOfMonth);
     }
 
     @Override
@@ -58,18 +58,18 @@ public final class EqualToMonth extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof EqualToMonth)) {
+        if (!(otherObject instanceof NeitherDayOfMonth)) {
             return false;
         }
 
-        final EqualToMonth other = (EqualToMonth) otherObject;
-        return this.month == other.month;
+        final NeitherDayOfMonth other = (NeitherDayOfMonth) otherObject;
+        return this.dayOfMonth == other.dayOfMonth;
     }
 
     @Override
     public String toString() {
-        return String.format("month = %d", this.month);
+        return String.format("dayOfMonth != %d", this.dayOfMonth);
     }
 
-    private final int month;
+    private final int dayOfMonth;
 }

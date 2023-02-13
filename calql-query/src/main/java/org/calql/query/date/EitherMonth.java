@@ -20,18 +20,18 @@ import java.time.LocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
-public final class NotEqualToDayOfMonth extends DateAtom {
-    private NotEqualToDayOfMonth(final int dayOfMonth) {
-        this.dayOfMonth = dayOfMonth;
+public final class EitherMonth extends DateAtom {
+    private EitherMonth(final int month) {
+        this.month = month;
     }
 
-    public static NotEqualToDayOfMonth of(final int dayOfMonth) {
-        return new NotEqualToDayOfMonth(dayOfMonth);
+    public static EitherMonth of(final int month) {
+        return new EitherMonth(month);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.dayOfMonth != target.getDayOfMonth();
+        return this.month == target.getMonthValue();
     }
 
     /**
@@ -45,12 +45,12 @@ public final class NotEqualToDayOfMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return EqualToDayOfMonth.of(this.dayOfMonth);
+        return NeitherMonth.of(this.month);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(NotEqualToDayOfMonth.class, this.dayOfMonth);
+        return Objects.hash(EitherMonth.class, this.month);
     }
 
     @Override
@@ -58,18 +58,18 @@ public final class NotEqualToDayOfMonth extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof NotEqualToDayOfMonth)) {
+        if (!(otherObject instanceof EitherMonth)) {
             return false;
         }
 
-        final NotEqualToDayOfMonth other = (NotEqualToDayOfMonth) otherObject;
-        return this.dayOfMonth == other.dayOfMonth;
+        final EitherMonth other = (EitherMonth) otherObject;
+        return this.month == other.month;
     }
 
     @Override
     public String toString() {
-        return String.format("dayOfMonth != %d", this.dayOfMonth);
+        return String.format("month = %d", this.month);
     }
 
-    private final int dayOfMonth;
+    private final int month;
 }

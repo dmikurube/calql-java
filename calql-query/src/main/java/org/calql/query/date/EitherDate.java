@@ -21,28 +21,37 @@ import java.util.Objects;
 import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
-public final class EqualToYear extends DateAtom {
-    private EqualToYear(final int year) {
-        this.year = year;
+public final class EitherDate extends DateAtom {
+    private EitherDate(final LocalDate date) {
+        this.date = date;
     }
 
-    public static EqualToYear of(final int year) {
-        return new EqualToYear(year);
+    public static EitherDate of(final LocalDate date) {
+        return new EitherDate(date);
+    }
+
+    public static EitherDate of(final int year, final int month, final int dayOfMonth) {
+        return new EitherDate(LocalDate.of(year, month, dayOfMonth));
     }
 
     @Override
     public Optional<LocalDate> earliest() {
-        return Optional.of(LocalDate.of(this.year, 1, 1));
+        return Optional.of(this.date);
     }
 
     @Override
     public Optional<LocalDate> latest() {
-        return Optional.of(LocalDate.of(this.year, 12, 31));
+        return Optional.of(this.date);
+    }
+
+    @Override
+    public Optional<LocalDate> unique() {
+        return Optional.of(this.date);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.year == target.getYear();
+        return this.date.equals(target);
     }
 
     /**
@@ -56,12 +65,12 @@ public final class EqualToYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return NotEqualToYear.of(this.year);
+        return NeitherDate.of(this.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(EqualToYear.class, this.year);
+        return Objects.hash(EitherDate.class, this.date);
     }
 
     @Override
@@ -69,18 +78,18 @@ public final class EqualToYear extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof EqualToYear)) {
+        if (!(otherObject instanceof EitherDate)) {
             return false;
         }
 
-        final EqualToYear other = (EqualToYear) otherObject;
-        return this.year == other.year;
+        final EitherDate other = (EitherDate) otherObject;
+        return Objects.equals(this.date, other.date);
     }
 
     @Override
     public String toString() {
-        return String.format("year = %d", this.year);
+        return String.format("date = %s", this.date.toString());
     }
 
-    private final int year;
+    private final LocalDate date;
 }

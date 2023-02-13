@@ -18,20 +18,31 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
-public final class EqualToDayOfMonth extends DateAtom {
-    private EqualToDayOfMonth(final int dayOfMonth) {
-        this.dayOfMonth = dayOfMonth;
+public final class EitherYear extends DateAtom {
+    private EitherYear(final int year) {
+        this.year = year;
     }
 
-    public static EqualToDayOfMonth of(final int dayOfMonth) {
-        return new EqualToDayOfMonth(dayOfMonth);
+    public static EitherYear of(final int year) {
+        return new EitherYear(year);
+    }
+
+    @Override
+    public Optional<LocalDate> earliest() {
+        return Optional.of(LocalDate.of(this.year, 1, 1));
+    }
+
+    @Override
+    public Optional<LocalDate> latest() {
+        return Optional.of(LocalDate.of(this.year, 12, 31));
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.dayOfMonth == target.getDayOfMonth();
+        return this.year == target.getYear();
     }
 
     /**
@@ -45,12 +56,12 @@ public final class EqualToDayOfMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return NotEqualToDayOfMonth.of(this.dayOfMonth);
+        return NeitherYear.of(this.year);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(EqualToDayOfMonth.class, this.dayOfMonth);
+        return Objects.hash(EitherYear.class, this.year);
     }
 
     @Override
@@ -58,18 +69,18 @@ public final class EqualToDayOfMonth extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof EqualToDayOfMonth)) {
+        if (!(otherObject instanceof EitherYear)) {
             return false;
         }
 
-        final EqualToDayOfMonth other = (EqualToDayOfMonth) otherObject;
-        return this.dayOfMonth == other.dayOfMonth;
+        final EitherYear other = (EitherYear) otherObject;
+        return this.year == other.year;
     }
 
     @Override
     public String toString() {
-        return String.format("dayOfMonth = %d", this.dayOfMonth);
+        return String.format("year = %d", this.year);
     }
 
-    private final int dayOfMonth;
+    private final int year;
 }

@@ -18,40 +18,20 @@ package org.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
-public final class EqualToDate extends DateAtom {
-    private EqualToDate(final LocalDate date) {
-        this.date = date;
+public final class EitherDayOfMonth extends DateAtom {
+    private EitherDayOfMonth(final int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
-    public static EqualToDate of(final LocalDate date) {
-        return new EqualToDate(date);
-    }
-
-    public static EqualToDate of(final int year, final int month, final int dayOfMonth) {
-        return new EqualToDate(LocalDate.of(year, month, dayOfMonth));
-    }
-
-    @Override
-    public Optional<LocalDate> earliest() {
-        return Optional.of(this.date);
-    }
-
-    @Override
-    public Optional<LocalDate> latest() {
-        return Optional.of(this.date);
-    }
-
-    @Override
-    public Optional<LocalDate> unique() {
-        return Optional.of(this.date);
+    public static EitherDayOfMonth of(final int dayOfMonth) {
+        return new EitherDayOfMonth(dayOfMonth);
     }
 
     @Override
     public boolean test(final LocalDate target) {
-        return this.date.equals(target);
+        return this.dayOfMonth == target.getDayOfMonth();
     }
 
     /**
@@ -65,12 +45,12 @@ public final class EqualToDate extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return NotEqualToDate.of(this.date);
+        return NeitherDayOfMonth.of(this.dayOfMonth);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(EqualToDate.class, this.date);
+        return Objects.hash(EitherDayOfMonth.class, this.dayOfMonth);
     }
 
     @Override
@@ -78,18 +58,18 @@ public final class EqualToDate extends DateAtom {
         if (this == otherObject) {
             return true;
         }
-        if (!(otherObject instanceof EqualToDate)) {
+        if (!(otherObject instanceof EitherDayOfMonth)) {
             return false;
         }
 
-        final EqualToDate other = (EqualToDate) otherObject;
-        return Objects.equals(this.date, other.date);
+        final EitherDayOfMonth other = (EitherDayOfMonth) otherObject;
+        return this.dayOfMonth == other.dayOfMonth;
     }
 
     @Override
     public String toString() {
-        return String.format("date = %s", this.date.toString());
+        return String.format("dayOfMonth = %d", this.dayOfMonth);
     }
 
-    private final LocalDate date;
+    private final int dayOfMonth;
 }
