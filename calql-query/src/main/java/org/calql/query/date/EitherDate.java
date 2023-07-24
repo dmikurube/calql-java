@@ -17,21 +17,26 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.calql.query.date.DateAtom;
 
-public final class EitherDate extends DateAtom {
-    private EitherDate(final LocalDate date) {
-        this.date = date;
+public class EitherDate extends DateAtom {
+    private EitherDate(final List<LocalDate> dates) {
+        this.dates = dates;
     }
 
-    public static EitherDate of(final LocalDate date) {
-        return new EitherDate(date);
+    public static EitherDate of(final LocalDate... dates) {
+        if (dates.length == 0) {
+            return EMPTY;
+        }
+        return new EitherDate(Collections.unmodifiableList(Arrays.asList(dates)));
     }
 
     public static EitherDate of(final int year, final int month, final int dayOfMonth) {
-        return new EitherDate(LocalDate.of(year, month, dayOfMonth));
+        return new EitherDate(Collections.unmodifiableList(Arrays.asList(LocalDate.of(year, month, dayOfMonth))));
     }
 
     @Override
@@ -46,7 +51,10 @@ public final class EitherDate extends DateAtom {
 
     @Override
     public Optional<LocalDate> unique() {
-        return Optional.of(this.date);
+        if (this.date.size() == 1) {
+            return Optional.of(this.dates.get(0));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -91,5 +99,7 @@ public final class EitherDate extends DateAtom {
         return String.format("date = %s", this.date.toString());
     }
 
-    private final LocalDate date;
+    private static final EitherDate EMPTY = new EitherDate(Collections.emptyList());
+
+    private final List<LocalDate> dates;
 }
