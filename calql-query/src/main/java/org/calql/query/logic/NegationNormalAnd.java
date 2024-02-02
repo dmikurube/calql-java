@@ -27,17 +27,18 @@ import java.util.stream.Collectors;
 /**
  * An "and" operator in negation normal form.
  */
-public final class NegationNormalAnd extends NegationNormalCompound {
-    private NegationNormalAnd(final ArrayList<NegationNormalFormula> negationNormalFormulae) {
+public final class NegationNormalAnd<T> extends NegationNormalCompound<T> {
+    private NegationNormalAnd(final ArrayList<NegationNormalFormula<T>> negationNormalFormulae) {
         this.negationNormalFormulae = Collections.unmodifiableList(negationNormalFormulae);
         this.disjunctiveNormalForm = distributeToDisjunctiveNormalForm(negationNormalFormulae);
     }
 
-    public static NegationNormalFormula of(final Collection<NegationNormalFormula> negationNormalFormulae) {
-        return new NegationNormalAnd(new ArrayList<>(negationNormalFormulae));
+    public static <T> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
+        return new NegationNormalAnd<T>(new ArrayList<>(negationNormalFormulae));
     }
 
-    public static NegationNormalFormula of(final NegationNormalFormula... negationNormalFormulae) {
+    @SafeVarargs
+    public static <T> NegationNormalFormula<T> of(final NegationNormalFormula<T>... negationNormalFormulae) {
         return of(Arrays.asList(negationNormalFormulae));
     }
 
@@ -52,12 +53,12 @@ public final class NegationNormalAnd extends NegationNormalCompound {
      * @see <a href="https://github.com/aimacode/aima-java/blob/aima3e-v1.9.1/aima-core/src/main/java/aima/core/logic/propositional/visitors/ConvertToDNF.java">Example from Artificial Intelligence: A Modern Approach</a>
      */
     @Override
-    public DisjunctiveNormalFormula getDisjunctiveNormalForm() {
+    public DisjunctiveNormalFormula<T> getDisjunctiveNormalForm() {
         return this.disjunctiveNormalForm;
     }
 
     @Override
-    public NegationNormalFormula negateInNegationNormalForm() {
+    public NegationNormalFormula<T> negateInNegationNormalForm() {
         return NegationNormalOr.of(
                 this.negationNormalFormulae.stream().map(f -> f.negateInNegationNormalForm()).collect(Collectors.toList()));
     }
@@ -78,25 +79,26 @@ public final class NegationNormalAnd extends NegationNormalCompound {
         return this.negationNormalFormulae.stream().map(Object::toString).collect(Collectors.joining(" AND ", "(", ")"));
     }
 
-    private static DisjunctiveNormalFormula distributeToDisjunctiveNormalForm(final List<NegationNormalFormula> negationNormalFormulae) {
-        final ArrayList<Conjunction> conjunctions = new ArrayList<>();
-        iter(0,
-                negationNormalFormulae.stream().map(NegationNormalFormula::getDisjunctiveNormalForm).collect(Collectors.toList()),
-                new ArrayList<>(),
+    private static <T> DisjunctiveNormalFormula<T> distributeToDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
+        final ArrayList<Conjunction<T>> conjunctions = new ArrayList<>();
+        iter(
+                0,
+                negationNormalFormulae.stream().map(NegationNormalFormula<T>::getDisjunctiveNormalForm).collect(Collectors.toList()),
+                new ArrayList<Atom<T>>(),
                 conjunctions);
-        return DisjunctiveNormalFormula.of(conjunctions);
+        return DisjunctiveNormalFormula.<T>of(conjunctions);
     }
 
-    private static void iter(
+    private static <T> void iter(
             final int index,
-            final List<DisjunctiveNormalFormula> dnfs,
-            final ArrayList<Atom> visitingConjunction,
-            final ArrayList<Conjunction> built) {
-        final DisjunctiveNormalFormula dnf = dnfs.get(index);
+            final List<DisjunctiveNormalFormula<T>> dnfs,
+            final ArrayList<Atom<T>> visitingConjunction,
+            final ArrayList<Conjunction<T>> built) {
+        final DisjunctiveNormalFormula<T> dnf = dnfs.get(index);
 
         System.out.printf(">> %d / %s\n", index, visitingConjunction);
         final int sizeOfVisitingConjunction = visitingConjunction.size();
-        for (final Conjunction conjunction : dnf) {
+        for (final Conjunction<T> conjunction : dnf) {
             System.out.printf(">>>> %s\n", conjunction);
             visitingConjunction.addAll(conjunction);
             System.out.println(">>>>>> !");
@@ -110,7 +112,7 @@ public final class NegationNormalAnd extends NegationNormalCompound {
         }
     }
 
-    private final List<NegationNormalFormula> negationNormalFormulae;
+    private final List<NegationNormalFormula<T>> negationNormalFormulae;
 
-    private final DisjunctiveNormalFormula disjunctiveNormalForm;
+    private final DisjunctiveNormalFormula<T> disjunctiveNormalForm;
 }

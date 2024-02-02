@@ -24,5 +24,5 @@ import org.calql.query.logic.Conjunction;
  * Generates a stream of dates.
  */
 public interface DateGeneratable {
-    Stream<LocalDate> generate(final Conjunction conjunction);
+    Stream<LocalDate> generate(final Conjunction<LocalDate> conjunction);
 }

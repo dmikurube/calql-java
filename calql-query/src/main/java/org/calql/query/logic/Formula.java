@@ -16,8 +16,8 @@
 
 package org.calql.query.logic;
 
-public abstract class Formula {
-    public abstract NegationNormalFormula toNegationNormalForm();
+public abstract class Formula<T> {
+    public abstract NegationNormalFormula<T> toNegationNormalForm();
 
     /**
      * Negates this formula.
@@ -28,5 +28,5 @@ public abstract class Formula {
      *
      * @return the negated formula in Negation Normal Form (NNF)
      */
-    public abstract NegationNormalFormula negateInNegationNormalForm();
+    public abstract NegationNormalFormula<T> negateInNegationNormalForm();
 }

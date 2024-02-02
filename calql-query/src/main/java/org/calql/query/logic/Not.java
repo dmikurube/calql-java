@@ -21,22 +21,22 @@ import java.util.Objects;
 /**
  * A "not" operator, which may not be in negation normal form.
  */
-public final class Not extends Compound {
-    public Not(final Formula formula) {
+public final class Not<T> extends Compound<T> {
+    public Not(final Formula<T> formula) {
         this.formula = formula;
     }
 
-    public static Formula of(final Formula formula) {
-        return new Not(formula);
+    public static <T> Formula<T> of(final Formula<T> formula) {
+        return new Not<T>(formula);
     }
 
     @Override
-    public NegationNormalFormula toNegationNormalForm() {
+    public NegationNormalFormula<T> toNegationNormalForm() {
         return this.formula.negateInNegationNormalForm();
     }
 
     @Override
-    public NegationNormalFormula negateInNegationNormalForm() {
+    public NegationNormalFormula<T> negateInNegationNormalForm() {
         return this.formula.toNegationNormalForm();
     }
 
@@ -55,5 +55,5 @@ public final class Not extends Compound {
         return String.format("not [%s]", this.formula.toString());
     }
 
-    private final Formula formula;
+    private final Formula<T> formula;
 }

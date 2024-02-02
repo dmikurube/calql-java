@@ -27,26 +27,27 @@ import java.util.stream.Collectors;
 /**
  * An "and" operator, which may not be in negation normal form.
  */
-public final class And extends Compound {
-    private And(final ArrayList<Formula> formulae) {
+public final class And<T> extends Compound<T> {
+    private And(final ArrayList<Formula<T>> formulae) {
         this.formulae = Collections.unmodifiableList(formulae);
     }
 
-    public static Formula of(final Collection<Formula> formulae) {
-        return new And(new ArrayList<>(formulae));
+    public static <T> Formula<T> of(final Collection<Formula<T>> formulae) {
+        return new And<T>(new ArrayList<>(formulae));
     }
 
-    public static Formula of(final Formula... formulae) {
+    @SafeVarargs
+    public static <T> Formula<T> of(final Formula<T>... formulae) {
         return of(Arrays.asList(formulae));
     }
 
     @Override
-    public NegationNormalFormula toNegationNormalForm() {
+    public NegationNormalFormula<T> toNegationNormalForm() {
         return NegationNormalAnd.of(this.formulae.stream().map(f -> f.toNegationNormalForm()).collect(Collectors.toList()));
     }
 
     @Override
-    public NegationNormalFormula negateInNegationNormalForm() {
+    public NegationNormalFormula<T> negateInNegationNormalForm() {
         return NegationNormalOr.of(this.formulae.stream().map(f -> f.negateInNegationNormalForm()).collect(Collectors.toList()));
     }
 
@@ -65,5 +66,5 @@ public final class And extends Compound {
         return this.formulae.stream().map(Object::toString).collect(Collectors.joining(" and ", "[", "]"));
     }
 
-    private final List<Formula> formulae;
+    private final List<Formula<T>> formulae;
 }

@@ -16,5 +16,5 @@
 
 package org.calql.query.logic;
 
-public abstract class Compound extends Formula {
+public abstract class Compound<T> extends Formula<T> {
 }

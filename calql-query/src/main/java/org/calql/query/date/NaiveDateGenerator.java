@@ -32,7 +32,7 @@ import org.calql.query.logic.Conjunction;
  */
 public final class NaiveDateGenerator implements DateGeneratable {
     @Override
-    public Stream<LocalDate> generate(final Conjunction conjunction) {
+    public Stream<LocalDate> generate(final Conjunction<LocalDate> conjunction) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireDate(conjunction);
 
@@ -48,7 +48,7 @@ public final class NaiveDateGenerator implements DateGeneratable {
     }
 
     private static class NaiveDateIterator implements Iterator<LocalDate> {
-        NaiveDateIterator(final Conjunction conjunction, final LocalDate cur) {
+        NaiveDateIterator(final Conjunction<LocalDate> conjunction, final LocalDate cur) {
             this.conjunction = conjunction;
             this.cur = cur;
         }
@@ -70,17 +70,17 @@ public final class NaiveDateGenerator implements DateGeneratable {
         private LocalDate cur;
     }
 
-    private static void requireDate(final Conjunction conjunction) {
-        for (final Atom atom : conjunction) {
+    private static void requireDate(final Conjunction<LocalDate> conjunction) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (atom.unit() != LocalDate.class) {
                 throw new IllegalArgumentException("conjunction contains non-date.");
             }
         }
     }
 
-    private static Optional<LocalDate> earliest(final Conjunction conjunction) {
+    private static Optional<LocalDate> earliest(final Conjunction<LocalDate> conjunction) {
         Optional<LocalDate> earliestDate = Optional.empty();
-        for (final Atom atom : conjunction) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (atom.unit() != LocalDate.class) {
                 throw new IllegalArgumentException("conjunction contains non-date.");
             }
@@ -94,9 +94,9 @@ public final class NaiveDateGenerator implements DateGeneratable {
         return earliestDate;
     }
 
-    private static Optional<LocalDate> latest(final Conjunction conjunction) {
+    private static Optional<LocalDate> latest(final Conjunction<LocalDate> conjunction) {
         Optional<LocalDate> latestDate = Optional.empty();
-        for (final Atom atom : conjunction) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (atom.unit() != LocalDate.class) {
                 throw new IllegalArgumentException("conjunction contains non-date.");
             }

@@ -32,26 +32,28 @@ import java.util.stream.Collectors;
  *
  * @see <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">Disjunctive normal form</a>
  */
-public final class DisjunctiveNormalFormula extends AbstractList<Conjunction> {
-    private DisjunctiveNormalFormula(final ArrayList<Conjunction> conjunctions) {
+public final class DisjunctiveNormalFormula<T> extends AbstractList<Conjunction<T>> {
+    private DisjunctiveNormalFormula(final ArrayList<Conjunction<T>> conjunctions) {
         this.conjunctions = Collections.unmodifiableList(conjunctions);
     }
 
-    public static DisjunctiveNormalFormula of(final Collection<Conjunction> conjunctions) {
-        return new DisjunctiveNormalFormula(new ArrayList<>(conjunctions));
+    public static <T> DisjunctiveNormalFormula<T> of(final Collection<Conjunction<T>> conjunctions) {
+        return new DisjunctiveNormalFormula<T>(new ArrayList<Conjunction<T>>(conjunctions));
     }
 
-    public static DisjunctiveNormalFormula of(final Conjunction... conjunctions) {
+    @SafeVarargs
+    public static <T> DisjunctiveNormalFormula<T> of(final Conjunction<T>... conjunctions) {
         return of(Arrays.asList(conjunctions));
     }
 
-    public DisjunctiveNormalFormula with(final Collection<Conjunction> additionalConjunctions) {
-        final ArrayList<Conjunction> newConjunctions = new ArrayList<>(this.conjunctions);
+    public DisjunctiveNormalFormula<T> with(final Collection<Conjunction<T>> additionalConjunctions) {
+        final ArrayList<Conjunction<T>> newConjunctions = new ArrayList<>(this.conjunctions);
         newConjunctions.addAll(conjunctions);
-        return new DisjunctiveNormalFormula(newConjunctions);
+        return new DisjunctiveNormalFormula<T>(newConjunctions);
     }
 
-    public DisjunctiveNormalFormula with(final Conjunction... additionalConjunctions) {
+    @SafeVarargs
+    public final DisjunctiveNormalFormula<T> with(final Conjunction<T>... additionalConjunctions) {
         return this.with(Arrays.asList(additionalConjunctions));
     }
 
@@ -61,7 +63,7 @@ public final class DisjunctiveNormalFormula extends AbstractList<Conjunction> {
     }
 
     @Override
-    public Conjunction get(final int index) {
+    public Conjunction<T> get(final int index) {
         return this.conjunctions.get(index);
     }
 
@@ -80,5 +82,5 @@ public final class DisjunctiveNormalFormula extends AbstractList<Conjunction> {
         return this.conjunctions.stream().map(Object::toString).collect(Collectors.joining(" OR ", "(", ")"));
     }
 
-    private final List<Conjunction> conjunctions;
+    private final List<Conjunction<T>> conjunctions;
 }

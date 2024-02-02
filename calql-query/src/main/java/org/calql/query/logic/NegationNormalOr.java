@@ -27,27 +27,28 @@ import java.util.stream.Collectors;
 /**
  * An "or" operator in negation normal form.
  */
-public final class NegationNormalOr extends NegationNormalCompound {
-    private NegationNormalOr(final ArrayList<NegationNormalFormula> negationNormalFormulae) {
+public final class NegationNormalOr<T> extends NegationNormalCompound<T> {
+    private NegationNormalOr(final ArrayList<NegationNormalFormula<T>> negationNormalFormulae) {
         this.negationNormalFormulae = Collections.unmodifiableList(negationNormalFormulae);
         this.disjunctiveNormalForm = toDisjunctiveNormalForm(negationNormalFormulae);
     }
 
-    public static NegationNormalFormula of(final Collection<NegationNormalFormula> negationNormalFormulae) {
-        return new NegationNormalOr(new ArrayList<>(negationNormalFormulae));
+    public static <T> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
+        return new NegationNormalOr<T>(new ArrayList<>(negationNormalFormulae));
     }
 
-    public static NegationNormalFormula of(final NegationNormalFormula... negationNormalFormulae) {
+    @SafeVarargs
+    public static <T> NegationNormalFormula<T> of(final NegationNormalFormula<T>... negationNormalFormulae) {
         return of(Arrays.asList(negationNormalFormulae));
     }
 
     @Override
-    public NegationNormalFormula negateInNegationNormalForm() {
+    public NegationNormalFormula<T> negateInNegationNormalForm() {
         return NegationNormalAnd.of(this.negationNormalFormulae.stream().map(f -> f.negateInNegationNormalForm()).collect(Collectors.toList()));
     }
 
     @Override
-    public DisjunctiveNormalFormula getDisjunctiveNormalForm() {
+    public DisjunctiveNormalFormula<T> getDisjunctiveNormalForm() {
         return this.disjunctiveNormalForm;
     }
 
@@ -66,25 +67,25 @@ public final class NegationNormalOr extends NegationNormalCompound {
         return this.negationNormalFormulae.stream().map(Object::toString).collect(Collectors.joining(" OR ", "(", ")"));
     }
 
-    private static DisjunctiveNormalFormula toDisjunctiveNormalForm(final List<NegationNormalFormula> negationNormalFormulae) {
-        final ArrayList<Conjunction> conjunctions = new ArrayList<>();
+    private static <T> DisjunctiveNormalFormula<T> toDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
+        final ArrayList<Conjunction<T>> conjunctions = new ArrayList<>();
         System.out.print(">> ");
         System.out.println(negationNormalFormulae);
-        final List<DisjunctiveNormalFormula> dnfs = negationNormalFormulae.stream().map(NegationNormalFormula::getDisjunctiveNormalForm).collect(Collectors.toList());
+        final List<DisjunctiveNormalFormula<T>> dnfs = negationNormalFormulae.stream().map(NegationNormalFormula<T>::getDisjunctiveNormalForm).collect(Collectors.toList());
         System.out.print(")) ");
         System.out.println(dnfs);
-        for (final DisjunctiveNormalFormula dnf : dnfs) {
+        for (final DisjunctiveNormalFormula<T> dnf : dnfs) {
             if (dnf == null) {
                 System.out.println("!!!");
             }
-            for (final Conjunction conjunction : dnf) {
+            for (final Conjunction<T> conjunction : dnf) {
                 conjunctions.add(conjunction);
             }
         }
         return DisjunctiveNormalFormula.of(conjunctions);
     }
 
-    private final List<NegationNormalFormula> negationNormalFormulae;
+    private final List<NegationNormalFormula<T>> negationNormalFormulae;
 
-    private final DisjunctiveNormalFormula disjunctiveNormalForm;
+    private final DisjunctiveNormalFormula<T> disjunctiveNormalForm;
 }

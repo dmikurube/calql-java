@@ -30,26 +30,28 @@ import java.util.stream.Collectors;
  *
  * <p>Ex. {@code f1 AND f2 AND f3 AND f4}
  */
-public final class Conjunction extends AbstractList<Atom> {
-    private Conjunction(final ArrayList<Atom> atoms) {
+public final class Conjunction<T> extends AbstractList<Atom<T>> {
+    private Conjunction(final ArrayList<Atom<T>> atoms) {
         this.atoms = Collections.unmodifiableList(atoms);
     }
 
-    public static Conjunction of(final Collection<Atom> atoms) {
-        return new Conjunction(new ArrayList<>(atoms));
+    public static <T> Conjunction<T> of(final Collection<Atom<T>> atoms) {
+        return new Conjunction<T>(new ArrayList<>(atoms));
     }
 
-    public static Conjunction of(final Atom... atoms) {
+    @SafeVarargs
+    public static <T> Conjunction<T> of(final Atom<T>... atoms) {
         return of(Arrays.asList(atoms));
     }
 
-    public Conjunction with(final Collection<Atom> additionalAtoms) {
-        final ArrayList<Atom> newAtoms = new ArrayList<>(this.atoms);
+    public Conjunction<T> with(final Collection<Atom<T>> additionalAtoms) {
+        final ArrayList<Atom<T>> newAtoms = new ArrayList<>(this.atoms);
         newAtoms.addAll(atoms);
-        return new Conjunction(newAtoms);
+        return new Conjunction<T>(newAtoms);
     }
 
-    public Conjunction with(final Atom... additionalAtoms) {
+    @SafeVarargs
+    public final Conjunction<T> with(final Atom<T>... additionalAtoms) {
         return this.with(Arrays.asList(additionalAtoms));
     }
 
@@ -59,7 +61,7 @@ public final class Conjunction extends AbstractList<Atom> {
     }
 
     @Override
-    public Atom get(final int index) {
+    public Atom<T> get(final int index) {
         return this.atoms.get(index);
     }
 
@@ -78,5 +80,5 @@ public final class Conjunction extends AbstractList<Atom> {
         return this.atoms.stream().map(Object::toString).collect(Collectors.joining(" AND ", "(", ")"));
     }
 
-    private final List<Atom> atoms;
+    private final List<Atom<T>> atoms;
 }
