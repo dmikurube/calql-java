@@ -14,8 +14,8 @@ version = rootProject.version
 description = "Queries for calendars."
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-Xlint:unchecked")
     options.compilerArgs.add("-Xlint:deprecation")
+    options.compilerArgs.add("-Xlint:unchecked")
     options.encoding = "UTF-8"
 }
 
@@ -88,6 +88,7 @@ publishing {
                         // http://central.sonatype.org/pages/requirements.html#license-information
                         name.set("The Apache License, Version 2.0")
                         url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                        distribution.set("repo")
                     }
                 }
 
