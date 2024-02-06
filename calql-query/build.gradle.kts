@@ -76,6 +76,10 @@ tasks.named<Jar>("javadocJar") {
     }
 }
 
+tasks.withType<GenerateModuleMetadata> {
+    enabled = false
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
