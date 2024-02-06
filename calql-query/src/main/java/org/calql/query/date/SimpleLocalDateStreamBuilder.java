@@ -31,9 +31,26 @@ import org.calql.query.logic.Conjunction;
 /**
  * Generates a stream of dates.
  */
-public final class NaiveDateGenerator implements DateGeneratable {
+public final class SimpleLocalDateStreamBuilder implements LocalDateStreamBuilder {
+    private SimpleLocalDateStreamBuilder() {
+        this.conjunction = null;
+    }
+
+    public static SimpleLocalDateStreamBuilder builder() {
+        return new SimpleLocalDateStreamBuilder();
+    }
+
+    public SimpleLocalDateStreamBuilder fromConjunction(final Conjunction<ChronoLocalDate> conjunction) {
+        this.conjunction = conjunction;
+        return this;
+    }
+
     @Override
-    public Stream<LocalDate> generate(final Conjunction<ChronoLocalDate> conjunction) {
+    public Stream<LocalDate> build() {
+        return buildFromConjunction(this.conjunction);
+    }
+
+    private static Stream<LocalDate> buildFromConjunction(final Conjunction<ChronoLocalDate> conjunction) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireDate(conjunction);
 
@@ -118,4 +135,6 @@ public final class NaiveDateGenerator implements DateGeneratable {
         }
         throw new ClassCastException("Atom cannot be casted to DateAtom.");
     }
+
+    private Conjunction<ChronoLocalDate> conjunction;
 }

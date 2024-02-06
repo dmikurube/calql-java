@@ -17,13 +17,15 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.stream.Stream;
+import org.calql.query.date.AfterYear;
 import org.calql.query.logic.Conjunction;
+import org.junit.jupiter.api.Test;
 
-/**
- * Generates a stream of dates.
- */
-public interface DateGeneratable {
-    Stream<LocalDate> generate(final Conjunction<ChronoLocalDate> conjunction);
+public class TestSimpleLocalDateStreamBuilder {
+    @Test
+    public void dump() {
+        final Stream<LocalDate> stream = SimpleLocalDateStreamBuilder.builder().fromConjunction(Conjunction.of(AfterYear.orEqualTo(1970))).build();
+        stream.limit(100).forEach(date -> System.out.println(date.toString()));
+    }
 }
