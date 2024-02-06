@@ -17,6 +17,7 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
@@ -39,12 +40,16 @@ public final class BeforeDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        if (this.inclusive) {
-            return this.dayOfMonth <= target.getDayOfMonth();
-        } else {
-            return this.dayOfMonth < target.getDayOfMonth();
+    public boolean test(final ChronoLocalDate targetChrono) {
+        if (targetChrono instanceof LocalDate) {
+            final LocalDate target = (LocalDate) targetChrono;
+            if (this.inclusive) {
+                return this.dayOfMonth <= target.getDayOfMonth();
+            } else {
+                return this.dayOfMonth < target.getDayOfMonth();
+            }
         }
+        return false;
     }
 
     /**

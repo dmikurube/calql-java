@@ -17,10 +17,11 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 import org.calql.query.logic.Atom;
 
-public abstract class DateAtom extends Atom<LocalDate> {
+public abstract class DateAtom extends Atom<ChronoLocalDate> {
     @Override
     public final Class<LocalDate> unit() {
         return LocalDate.class;

@@ -32,17 +32,17 @@ import java.util.stream.Collectors;
  *
  * @see <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">Disjunctive normal form</a>
  */
-public final class DisjunctiveNormalFormula<T> extends AbstractList<Conjunction<T>> {
+public final class DisjunctiveNormalFormula<T extends Comparable<T>> extends AbstractList<Conjunction<T>> {
     private DisjunctiveNormalFormula(final ArrayList<Conjunction<T>> conjunctions) {
         this.conjunctions = Collections.unmodifiableList(conjunctions);
     }
 
-    public static <T> DisjunctiveNormalFormula<T> of(final Collection<Conjunction<T>> conjunctions) {
+    public static <T extends Comparable<T>> DisjunctiveNormalFormula<T> of(final Collection<Conjunction<T>> conjunctions) {
         return new DisjunctiveNormalFormula<T>(new ArrayList<Conjunction<T>>(conjunctions));
     }
 
     @SafeVarargs
-    public static <T> DisjunctiveNormalFormula<T> of(final Conjunction<T>... conjunctions) {
+    public static <T extends Comparable<T>> DisjunctiveNormalFormula<T> of(final Conjunction<T>... conjunctions) {
         return of(Arrays.asList(conjunctions));
     }
 

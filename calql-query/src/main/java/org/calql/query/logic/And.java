@@ -27,17 +27,17 @@ import java.util.stream.Collectors;
 /**
  * An "and" operator, which may not be in negation normal form.
  */
-public final class And<T> extends Compound<T> {
+public final class And<T extends Comparable<T>> extends Compound<T> {
     private And(final ArrayList<Formula<T>> formulae) {
         this.formulae = Collections.unmodifiableList(formulae);
     }
 
-    public static <T> Formula<T> of(final Collection<Formula<T>> formulae) {
+    public static <T extends Comparable<T>> Formula<T> of(final Collection<Formula<T>> formulae) {
         return new And<T>(new ArrayList<>(formulae));
     }
 
     @SafeVarargs
-    public static <T> Formula<T> of(final Formula<T>... formulae) {
+    public static <T extends Comparable<T>> Formula<T> of(final Formula<T>... formulae) {
         return of(Arrays.asList(formulae));
     }
 

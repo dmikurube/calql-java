@@ -16,5 +16,5 @@
 
 package org.calql.query.logic;
 
-public abstract class NegationNormalCompound<T> extends NegationNormalFormula<T> {
+public abstract class NegationNormalCompound<T extends Comparable<T>> extends NegationNormalFormula<T> {
 }

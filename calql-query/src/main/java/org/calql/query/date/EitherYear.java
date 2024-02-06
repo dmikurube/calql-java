@@ -17,6 +17,7 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import org.calql.query.date.DateAtom;
@@ -41,8 +42,12 @@ public final class EitherYear extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        return this.year == target.getYear();
+    public boolean test(final ChronoLocalDate targetChrono) {
+        if (targetChrono instanceof LocalDate) {
+            final LocalDate target = (LocalDate) targetChrono;
+            return this.year == target.getYear();
+        }
+        return false;
     }
 
     /**

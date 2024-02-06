@@ -30,17 +30,17 @@ import java.util.stream.Collectors;
  *
  * <p>Ex. {@code f1 AND f2 AND f3 AND f4}
  */
-public final class Conjunction<T> extends AbstractList<Atom<T>> {
+public final class Conjunction<T extends Comparable<T>> extends AbstractList<Atom<T>> {
     private Conjunction(final ArrayList<Atom<T>> atoms) {
         this.atoms = Collections.unmodifiableList(atoms);
     }
 
-    public static <T> Conjunction<T> of(final Collection<Atom<T>> atoms) {
+    public static <T extends Comparable<T>> Conjunction<T> of(final Collection<Atom<T>> atoms) {
         return new Conjunction<T>(new ArrayList<>(atoms));
     }
 
     @SafeVarargs
-    public static <T> Conjunction<T> of(final Atom<T>... atoms) {
+    public static <T extends Comparable<T>> Conjunction<T> of(final Atom<T>... atoms) {
         return of(Arrays.asList(atoms));
     }
 
@@ -54,6 +54,18 @@ public final class Conjunction<T> extends AbstractList<Atom<T>> {
     public final Conjunction<T> with(final Atom<T>... additionalAtoms) {
         return this.with(Arrays.asList(additionalAtoms));
     }
+
+    /*
+    public Optional<T> earliest() {
+
+    }
+
+    public Optional<T> latest() {
+    }
+
+    public Optional<T> unique() {
+    }
+    */
 
     @Override
     public int size() {

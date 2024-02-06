@@ -18,6 +18,7 @@ package org.calql.query.date;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
@@ -35,8 +36,12 @@ public final class NeitherDayOfWeek extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        return this.dayOfWeek != target.getDayOfWeek();
+    public boolean test(final ChronoLocalDate targetChrono) {
+        if (targetChrono instanceof LocalDate) {
+            final LocalDate target = (LocalDate) targetChrono;
+            return this.dayOfWeek != target.getDayOfWeek();
+        }
+        return false;
     }
 
     /**

@@ -19,7 +19,7 @@ package org.calql.query.logic;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public abstract class Atom<T> extends NegationNormalFormula<T> implements Predicate<T> {
+public abstract class Atom<T extends Comparable<T>> extends NegationNormalFormula<T> implements Predicate<T> {
     protected Atom() {
         this.disjunctiveNormalForm = DisjunctiveNormalFormula.<T>of(Conjunction.<T>of(this));
     }
@@ -34,13 +34,13 @@ public abstract class Atom<T> extends NegationNormalFormula<T> implements Predic
         return this.disjunctiveNormalForm;
     }
 
-    public abstract Class<T> unit();
+    public abstract Class<? extends T> unit();
 
-    public abstract Optional<T> earliest();
+    public abstract Optional<? extends T> earliest();
 
-    public abstract Optional<T> latest();
+    public abstract Optional<? extends T> latest();
 
-    public abstract Optional<T> unique();
+    public abstract Optional<? extends T> unique();
 
     public abstract Atom<T> negate();
 

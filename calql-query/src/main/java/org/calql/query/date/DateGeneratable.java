@@ -17,6 +17,7 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.stream.Stream;
 import org.calql.query.logic.Conjunction;
 
@@ -24,5 +25,5 @@ import org.calql.query.logic.Conjunction;
  * Generates a stream of dates.
  */
 public interface DateGeneratable {
-    Stream<LocalDate> generate(final Conjunction<LocalDate> conjunction);
+    Stream<LocalDate> generate(final Conjunction<ChronoLocalDate> conjunction);
 }

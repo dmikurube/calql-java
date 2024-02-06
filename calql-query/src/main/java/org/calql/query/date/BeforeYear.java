@@ -17,6 +17,7 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import org.calql.query.date.DateAtom;
@@ -49,12 +50,16 @@ public final class BeforeYear extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        if (this.inclusive) {
-            return this.year <= target.getYear();
-        } else {
-            return this.year < target.getYear();
+    public boolean test(final ChronoLocalDate targetChrono) {
+        if (targetChrono instanceof LocalDate) {
+            final LocalDate target = (LocalDate) targetChrono;
+            if (this.inclusive) {
+                return this.year <= target.getYear();
+            } else {
+                return this.year < target.getYear();
+            }
         }
+        return false;
     }
 
     /**

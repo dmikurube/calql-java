@@ -16,7 +16,7 @@
 
 package org.calql.query.logic;
 
-public abstract class NegationNormalFormula<T> extends Formula<T> {
+public abstract class NegationNormalFormula<T extends Comparable<T>> extends Formula<T> {
     @Override
     public final NegationNormalFormula<T> toNegationNormalForm() {
         return this;

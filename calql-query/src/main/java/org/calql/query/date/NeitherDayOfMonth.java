@@ -17,6 +17,7 @@
 package org.calql.query.date;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import org.calql.query.date.DateAtom;
 
@@ -30,8 +31,12 @@ public final class NeitherDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        return this.dayOfMonth != target.getDayOfMonth();
+    public boolean test(final ChronoLocalDate targetChrono) {
+        if (targetChrono instanceof LocalDate) {
+            final LocalDate target = (LocalDate) targetChrono;
+            return this.dayOfMonth != target.getDayOfMonth();
+        }
+        return false;
     }
 
     /**

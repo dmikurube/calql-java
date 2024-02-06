@@ -21,12 +21,12 @@ import java.util.Objects;
 /**
  * A "not" operator, which may not be in negation normal form.
  */
-public final class Not<T> extends Compound<T> {
+public final class Not<T extends Comparable<T>> extends Compound<T> {
     public Not(final Formula<T> formula) {
         this.formula = formula;
     }
 
-    public static <T> Formula<T> of(final Formula<T> formula) {
+    public static <T extends Comparable<T>> Formula<T> of(final Formula<T> formula) {
         return new Not<T>(formula);
     }
 
