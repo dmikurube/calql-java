@@ -9,6 +9,15 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    compileClasspath {
+        resolutionStrategy.activateDependencyLocking()
+    }
+    runtimeClasspath {
+        resolutionStrategy.activateDependencyLocking()
+    }
+}
+
 group = rootProject.group
 version = rootProject.version
 description = "Queries for calendars."
