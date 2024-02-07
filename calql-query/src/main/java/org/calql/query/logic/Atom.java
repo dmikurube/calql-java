@@ -20,10 +20,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public abstract class Atom<T extends Comparable<T>> extends NegationNormalFormula<T> implements Predicate<T> {
-    protected Atom() {
-        this.disjunctiveNormalForm = DisjunctiveNormalFormula.<T>of(Conjunction.<T>of(this));
-    }
-
     @Override
     public final NegationNormalFormula<T> negateInNegationNormalForm() {
         return this.negate();
@@ -31,7 +27,8 @@ public abstract class Atom<T extends Comparable<T>> extends NegationNormalFormul
 
     @Override
     public final DisjunctiveNormalFormula<T> getDisjunctiveNormalForm() {
-        return this.disjunctiveNormalForm;
+        // TODO: Cache?
+        return DisjunctiveNormalFormula.<T>of(Conjunction.<T>of(this));
     }
 
     public abstract Class<? extends T> unit();
@@ -43,6 +40,4 @@ public abstract class Atom<T extends Comparable<T>> extends NegationNormalFormul
     public abstract Optional<? extends T> unique();
 
     public abstract Atom<T> negate();
-
-    private final DisjunctiveNormalFormula<T> disjunctiveNormalForm;
 }
