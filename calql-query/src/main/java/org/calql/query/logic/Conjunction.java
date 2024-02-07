@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Dai MIKURUBE
+ * Copyright 2021-2024 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +34,42 @@ import java.util.stream.Collectors;
 public final class Conjunction<T extends Comparable<T>> extends AbstractList<Atom<T>> {
     private Conjunction(final ArrayList<Atom<T>> atoms) {
         this.atoms = Collections.unmodifiableList(atoms);
+
+        T totalEarliest = null;
+        T totalLatest = null;
+        T totalUnique = null;
+        boolean isUnique = true;
+
+        for (final Atom<T> atom : atoms) {
+            final Optional<? extends T> atomEarliest = atom.earliest();
+            if (atomEarliest.isPresent() && (totalEarliest == null || totalEarliest.compareTo(atomEarliest.get()) < 0)) {
+                totalEarliest = atomEarliest.get();
+            }
+
+            final Optional<? extends T> atomLatest = atom.latest();
+            if (atomLatest.isPresent() && (totalLatest == null || totalLatest.compareTo(atomLatest.get()) > 0)) {
+                totalLatest = atomLatest.get();
+            }
+
+            final Optional<? extends T> atomUnique = atom.unique();
+            if (isUnique && atomUnique.isPresent()) {
+                if (totalUnique == null) {
+                    totalUnique = atomUnique.get();
+                } else if (!totalUnique.equals(atomUnique.get())) {
+                    isUnique = false;
+                }
+            }
+        }
+
+        if (totalEarliest != null && totalLatest != null && totalEarliest.compareTo(totalLatest) > 0) {
+            this.earliest = Optional.empty();
+            this.latest = Optional.empty();
+            this.unique = Optional.empty();
+        } else {
+            this.earliest = Optional.ofNullable(totalEarliest);
+            this.latest = Optional.ofNullable(totalLatest);
+            this.unique = isUnique ? Optional.ofNullable(totalUnique) : Optional.empty();
+        }
     }
 
     public static <T extends Comparable<T>> Conjunction<T> of(final Collection<Atom<T>> atoms) {
@@ -55,17 +92,17 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
         return this.with(Arrays.asList(additionalAtoms));
     }
 
-    /*
     public Optional<T> earliest() {
-
+        return this.earliest;
     }
 
     public Optional<T> latest() {
+        return this.latest;
     }
 
     public Optional<T> unique() {
+        return this.unique;
     }
-    */
 
     @Override
     public int size() {
@@ -93,4 +130,8 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
     }
 
     private final List<Atom<T>> atoms;
+
+    private final Optional<T> earliest;
+    private final Optional<T> latest;
+    private final Optional<T> unique;
 }
