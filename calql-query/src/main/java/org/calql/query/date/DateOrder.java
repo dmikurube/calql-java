@@ -24,6 +24,10 @@ package org.calql.query.date;
  * week", and else.
  */
 public class DateOrder {
+    private DateOrder() {
+        // No instantiation.
+    }
+
     public static final DateOrder FROM_EARLIEST_TO_LATEST = new DateOrder();
 
     public static final DateOrder FROM_LATEST_TO_EARLIEST = new DateOrder();
