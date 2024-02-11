@@ -65,10 +65,12 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
             this.earliest = Optional.empty();
             this.latest = Optional.empty();
             this.unique = Optional.empty();
+            this.existsPossibly = false;
         } else {
             this.earliest = Optional.ofNullable(totalEarliest);
             this.latest = Optional.ofNullable(totalLatest);
             this.unique = isUnique ? Optional.ofNullable(totalUnique) : Optional.empty();
+            this.existsPossibly = true;
         }
     }
 
@@ -104,6 +106,10 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
         return this.unique;
     }
 
+    public boolean existsPossibly() {
+        return this.existsPossibly;
+    }
+
     @Override
     public int size() {
         return this.atoms.size();
@@ -134,4 +140,6 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
     private final Optional<T> earliest;
     private final Optional<T> latest;
     private final Optional<T> unique;
+
+    private final boolean existsPossibly;
 }

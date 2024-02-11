@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Dai MIKURUBE
+ * Copyright 2024 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package org.calql.query.date;
 
-import java.time.LocalDate;
-import java.util.stream.Stream;
-import org.calql.query.logic.Conjunction;
-import org.junit.jupiter.api.Test;
+/**
+ * Defines orders of dates.
+ *
+ * <p>They are defined as {@code static} constant variables, not as {@code enum}, so that
+ * more parameterized orders can be defined, such as "ordered by month", "ordered by day of
+ * week", and else.
+ */
+public class DateOrder {
+    public static final DateOrder FROM_EARLIEST_TO_LATEST = new DateOrder();
 
-public class TestSimpleLocalDateStreamBuilder {
-    @Test
-    public void dump() {
-        final Stream<LocalDate> stream = SimpleLocalDateStreamBuilder.builder().fromConjunction(Conjunction.of(AfterYear.orEqualTo(1970))).build(DateOrder.FROM_EARLIEST_TO_LATEST);
-        stream.limit(100).forEach(date -> System.out.println(date.toString()));
-    }
+    public static final DateOrder FROM_LATEST_TO_EARLIEST = new DateOrder();
 }
