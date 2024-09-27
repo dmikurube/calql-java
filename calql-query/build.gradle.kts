@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 }
 
+group = rootProject.group
+version = rootProject.version
+description = "Queries for calendars."
+
 configurations {
     compileClasspath {
         resolutionStrategy.activateDependencyLocking()
@@ -17,10 +21,6 @@ configurations {
         resolutionStrategy.activateDependencyLocking()
     }
 }
-
-group = rootProject.group
-version = rootProject.version
-description = "Queries for calendars."
 
 tasks.withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:deprecation")
