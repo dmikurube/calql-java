@@ -164,11 +164,11 @@ tasks.withType<Checkstyle> {
 }
 
 checkstyle {
-    toolVersion = "8.42"
+    toolVersion = libs.versions.checkstyle.get()
     configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
     setConfigProperties(mapOf(
-        "checkstyle.config.path" to file("${rootProject.projectDir}/config/checkstyle")
+        "org.checkstyle.google.suppressionfilter.config" to "${rootProject.projectDir}/config/checkstyle/checkstyle-suppressions.xml"
     ))
     setIgnoreFailures(false)
-    maxWarnings = 0
+    setMaxWarnings(0)
 }

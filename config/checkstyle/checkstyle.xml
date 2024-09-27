@@ -29,11 +29,12 @@
   </module>
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
   <module name="SuppressionFilter">
-    <property name="file" value="${checkstyle.config.path}/checkstyle-suppressions.xml"/>
+    <property name="file" value="${org.checkstyle.google.suppressionfilter.config}"
+           default="checkstyle-suppressions.xml" />
     <property name="optional" value="false"/>
   </module>
 
-  <module name="SuppressWarningsFilter" />
+  <module name="SuppressWarningsFilter"/>
 
   <!-- Checks for whitespace                               -->
   <!-- See http://checkstyle.org/config_whitespace.html -->
@@ -170,7 +171,7 @@
       <property name="option" value="nl"/>
     </module>
     <module name="PackageName">
-      <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+      <property name="format" value="^[\_a-z]+(\.[\_a-z][\_a-z0-9]*)*$"/>
       <message key="name.invalidPattern"
              value="Package name ''{0}'' must match pattern ''{1}''."/>
     </module>
@@ -262,6 +263,7 @@
                     PARAMETER_DEF, VARIABLE_DEF, METHOD_DEF, PATTERN_VARIABLE_DEF, RECORD_DEF,
                     RECORD_COMPONENT_DEF"/>
     </module>
+    <module name="NoWhitespaceBeforeCaseDefaultColon"/>
     <module name="OverloadMethodsDeclarationOrder"/>
     <module name="VariableDeclarationUsageDistance"/>
     <module name="CustomImportOrder">
@@ -356,10 +358,11 @@
     </module>
     <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->
     <module name="SuppressionXpathFilter">
-      <property name="file" value="${checkstyle.config.path}/checkstyle-xpath-suppressions.xml"/>
+      <property name="file" value="${org.checkstyle.google.suppressionxpathfilter.config}"
+             default="checkstyle-xpath-suppressions.xml" />
       <property name="optional" value="true"/>
     </module>
-    <module name="SuppressWarningsHolder" />
-    <module name="UnusedImports" />
+    <module name="SuppressWarningsHolder"/>
+    <module name="UnusedImports"/>
   </module>
 </module>
