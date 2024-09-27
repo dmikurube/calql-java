@@ -58,21 +58,18 @@ tasks.javadoc {
 tasks.jar {
     metaInf {
         from(rootProject.file("LICENSE"))
-        from(rootProject.file("NOTICE"))
     }
 }
 
 tasks.named<Jar>("sourcesJar") {
     metaInf {
         from(rootProject.file("LICENSE"))
-        from(rootProject.file("NOTICE"))
     }
 }
 
 tasks.named<Jar>("javadocJar") {
     metaInf {
         from(rootProject.file("LICENSE"))
-        from(rootProject.file("NOTICE"))
     }
 }
 
