@@ -103,6 +103,7 @@ publishing {
 
                 developers {
                     developer {
+                        id.set("dmikurube")
                         name.set("Dai MIKURUBE")
                         email.set("dmikurube@acm.org")
                     }
