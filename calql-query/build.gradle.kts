@@ -136,6 +136,10 @@ publishing {
 }
 
 signing {
+    if (project.hasProperty("signingKey") && project.hasProperty("signingPassword")) {
+        logger.lifecycle("Signing with an in-memory key.")
+        useInMemoryPgpKeys(project.property("signingKey").toString(), project.property("signingPassword").toString())
+    }
     sign(publishing.publications["maven"])
 }
 
