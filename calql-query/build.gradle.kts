@@ -38,9 +38,10 @@ java {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testImplementation(platform(libs.junit5.bom))
+    testImplementation(libs.bundles.junit5.implementation)
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+    testRuntimeOnly(libs.bundles.junit5.runtime)
 }
 
 tasks.javadoc {
