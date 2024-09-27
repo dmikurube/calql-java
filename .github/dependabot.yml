@@ -5,3 +5,16 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    groups:
+      junit5:
+        applies-to: version-updates
+        patterns:
+        - "org.junit:*"
+        - "org.junit.jupiter:*"
+        update-types:
+        - "minor"
+        - "patch"
