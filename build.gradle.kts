@@ -5,5 +5,5 @@ plugins {
     id("checkstyle")
 }
 
-group = "org.calql"
+group = "org.theatime.calql"
 version = "0.1.0-SNAPSHOT"
