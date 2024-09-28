@@ -24,7 +24,7 @@ import org.theatime.calql.query.logic.Conjunction;
 public class TestSimpleLocalDateStreamBuilder {
     @Test
     public void dump() {
-        final Stream<LocalDate> stream = SimpleLocalDateStreamBuilder.of(DateOrder.FROM_EARLIEST_TO_LATEST).streamFrom(Conjunction.of(AfterYear.orEqualTo(1970)));
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970)).stream(SimpleLocalDateStreamBuilder.of(DateOrder.FROM_EARLIEST_TO_LATEST));
         stream.limit(100).forEach(date -> System.out.println(date.toString()));
     }
 }
