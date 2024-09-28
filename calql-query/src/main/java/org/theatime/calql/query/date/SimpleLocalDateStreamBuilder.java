@@ -32,7 +32,7 @@ import org.theatime.calql.query.logic.Conjunction;
 /**
  * Generates a stream of dates.
  */
-public final class SimpleLocalDateStreamBuilder implements LocalDateStreamBuilder {
+public final class SimpleLocalDateStreamBuilder {
     private SimpleLocalDateStreamBuilder() {
         this.conjunction = null;
     }
@@ -46,7 +46,6 @@ public final class SimpleLocalDateStreamBuilder implements LocalDateStreamBuilde
         return this;
     }
 
-    @Override
     public Stream<LocalDate> build(final DateOrder order) {
         return buildFromConjunction(this.conjunction, order);
     }
