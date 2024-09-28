@@ -33,22 +33,17 @@ import org.theatime.calql.query.logic.Streamer;
 /**
  * Generates a stream of dates.
  */
-public final class SimpleLocalDateStreamBuilder implements Streamer<ChronoLocalDate, LocalDate> {
-    private SimpleLocalDateStreamBuilder(final DateOrder order) {
+public final class SimpleLocalDateStreamer implements Streamer<ChronoLocalDate, LocalDate> {
+    private SimpleLocalDateStreamer(final DateOrder order) {
         this.order = order;
     }
 
-    public static SimpleLocalDateStreamBuilder of(final DateOrder order) {
-        return new SimpleLocalDateStreamBuilder(order);
+    public static SimpleLocalDateStreamer of(final DateOrder order) {
+        return new SimpleLocalDateStreamer(order);
     }
 
+    @Override
     public Stream<LocalDate> streamFrom(final Conjunction<ChronoLocalDate> conjunction) {
-        return buildFromConjunction(conjunction, this.order);
-    }
-
-    private static Stream<LocalDate> buildFromConjunction(
-            final Conjunction<ChronoLocalDate> conjunction,
-            final DateOrder order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireDate(conjunction);
 
@@ -56,24 +51,24 @@ public final class SimpleLocalDateStreamBuilder implements Streamer<ChronoLocalD
             return Stream.<LocalDate>empty();
         }
 
-        if (order == DateOrder.FROM_EARLIEST_TO_LATEST) {
+        if (this.order == DateOrder.FROM_EARLIEST_TO_LATEST) {
             if (!earliest(conjunction).isPresent()) {
                 throw new IllegalArgumentException("conjunction does not have the earliest date.");
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, earliest(conjunction).get(), latest(conjunction), order),
+                         new NaiveDateIterator(conjunction, earliest(conjunction).get(), latest(conjunction), this.order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
-        } else if (order == DateOrder.FROM_LATEST_TO_EARLIEST) {
+        } else if (this.order == DateOrder.FROM_LATEST_TO_EARLIEST) {
             if (!latest(conjunction).isPresent()) {
                 throw new IllegalArgumentException("conjunction does not have the latest date.");
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, latest(conjunction).get(), earliest(conjunction), order),
+                         new NaiveDateIterator(conjunction, latest(conjunction).get(), earliest(conjunction), this.order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
         } else {
-            throw new IllegalArgumentException("invalid date order: " + order);
+            throw new IllegalArgumentException("invalid date order: " + this.order);
         }
     }
 

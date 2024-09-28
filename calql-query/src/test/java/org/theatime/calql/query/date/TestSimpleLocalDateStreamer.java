@@ -21,10 +21,10 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.theatime.calql.query.logic.Conjunction;
 
-public class TestSimpleLocalDateStreamBuilder {
+public class TestSimpleLocalDateStreamer {
     @Test
     public void dump() {
-        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970)).stream(SimpleLocalDateStreamBuilder.of(DateOrder.FROM_EARLIEST_TO_LATEST));
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970)).stream(SimpleLocalDateStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
         stream.limit(100).forEach(date -> System.out.println(date.toString()));
     }
 }
