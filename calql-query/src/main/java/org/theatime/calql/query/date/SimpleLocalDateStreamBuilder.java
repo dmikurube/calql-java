@@ -70,7 +70,7 @@ public final class SimpleLocalDateStreamBuilder implements LocalDateStreamBuilde
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
         } else if (order == DateOrder.FROM_LATEST_TO_EARLIEST) {
-            if (!conjunction.latest().isPresent()) {
+            if (!latest(conjunction).isPresent()) {
                 throw new IllegalArgumentException("conjunction does not have the latest date.");
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
