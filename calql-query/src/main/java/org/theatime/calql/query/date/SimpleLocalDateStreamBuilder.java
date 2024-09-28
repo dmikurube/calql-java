@@ -33,21 +33,16 @@ import org.theatime.calql.query.logic.Conjunction;
  * Generates a stream of dates.
  */
 public final class SimpleLocalDateStreamBuilder {
-    private SimpleLocalDateStreamBuilder() {
-        this.conjunction = null;
+    private SimpleLocalDateStreamBuilder(final DateOrder order) {
+        this.order = order;
     }
 
-    public static SimpleLocalDateStreamBuilder builder() {
-        return new SimpleLocalDateStreamBuilder();
+    public static SimpleLocalDateStreamBuilder of(final DateOrder order) {
+        return new SimpleLocalDateStreamBuilder(order);
     }
 
-    public SimpleLocalDateStreamBuilder fromConjunction(final Conjunction<ChronoLocalDate> conjunction) {
-        this.conjunction = conjunction;
-        return this;
-    }
-
-    public Stream<LocalDate> build(final DateOrder order) {
-        return buildFromConjunction(this.conjunction, order);
+    public Stream<LocalDate> streamFrom(final Conjunction<ChronoLocalDate> conjunction) {
+        return buildFromConjunction(conjunction, this.order);
     }
 
     private static Stream<LocalDate> buildFromConjunction(
@@ -191,5 +186,5 @@ public final class SimpleLocalDateStreamBuilder {
         throw new ClassCastException("Atom cannot be casted to DateAtom.");
     }
 
-    private Conjunction<ChronoLocalDate> conjunction;
+    private final DateOrder order;
 }

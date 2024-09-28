@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A logical conjuction is the "and" of a set of atoms.
@@ -92,6 +93,10 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
     @SafeVarargs
     public final Conjunction<T> with(final Atom<T>... additionalAtoms) {
         return this.with(Arrays.asList(additionalAtoms));
+    }
+
+    public Stream<T> stream(final Streamer<T> streamer) {
+        return null;
     }
 
     public Optional<T> earliest() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Dai MIKURUBE
+ * Copyright 2024 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,7 @@
  * limitations under the License.
  */
 
-package org.theatime.calql.query.date;
+package org.theatime.calql.query.logic;
 
-import java.time.LocalDate;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.Test;
-import org.theatime.calql.query.logic.Conjunction;
-
-public class TestSimpleLocalDateStreamBuilder {
-    @Test
-    public void dump() {
-        final Stream<LocalDate> stream = SimpleLocalDateStreamBuilder.of(DateOrder.FROM_EARLIEST_TO_LATEST).streamFrom(Conjunction.of(AfterYear.orEqualTo(1970)));
-        stream.limit(100).forEach(date -> System.out.println(date.toString()));
-    }
+public interface Streamer<T> {
 }
