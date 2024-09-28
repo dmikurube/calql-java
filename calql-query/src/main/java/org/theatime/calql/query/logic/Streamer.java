@@ -16,5 +16,8 @@
 
 package org.theatime.calql.query.logic;
 
-public interface Streamer<T> {
+import java.util.stream.Stream;
+
+public interface Streamer<T extends Comparable<T>, U extends T> {
+    Stream<U> streamFrom(Conjunction<T> conjunction);
 }

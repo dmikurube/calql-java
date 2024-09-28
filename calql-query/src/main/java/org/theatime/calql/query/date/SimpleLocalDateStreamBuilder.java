@@ -28,11 +28,12 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.theatime.calql.query.logic.Atom;
 import org.theatime.calql.query.logic.Conjunction;
+import org.theatime.calql.query.logic.Streamer;
 
 /**
  * Generates a stream of dates.
  */
-public final class SimpleLocalDateStreamBuilder {
+public final class SimpleLocalDateStreamBuilder implements Streamer<ChronoLocalDate, LocalDate> {
     private SimpleLocalDateStreamBuilder(final DateOrder order) {
         this.order = order;
     }
