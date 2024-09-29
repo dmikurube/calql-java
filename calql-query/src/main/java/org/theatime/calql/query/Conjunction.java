@@ -95,7 +95,7 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
         return this.with(Arrays.asList(additionalAtoms));
     }
 
-    public <U extends T> Stream<U> stream(final Streamer<T, U> streamer) {
+    public <U extends T> Stream<U> streamBy(final Streamer<T, U> streamer) {
         return streamer.streamFrom(this);
     }
 

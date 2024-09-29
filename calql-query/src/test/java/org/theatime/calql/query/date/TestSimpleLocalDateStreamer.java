@@ -16,15 +16,30 @@
 
 package org.theatime.calql.query.date;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.theatime.calql.query.Conjunction;
 
 public class TestSimpleLocalDateStreamer {
     @Test
-    public void dump() {
-        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970)).stream(SimpleLocalDateStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
-        stream.limit(100).forEach(date -> System.out.println(date.toString()));
+    public void testSimple() {
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970))
+                .streamBy(SimpleLocalDateStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
+
+        final ArrayList<LocalDate> expected = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            expected.add(LocalDate.of(1970, 1, 1).plusDays(i));
+        }
+        assertDateStream(expected, stream);
+    }
+
+    private static void assertDateStream(final List<LocalDate> expected, final Stream<LocalDate> actual) {
+        assertEquals(expected, actual.limit(expected.size()).collect(Collectors.toList()));
     }
 }
