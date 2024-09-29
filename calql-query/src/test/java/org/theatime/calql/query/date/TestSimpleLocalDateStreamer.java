@@ -19,7 +19,7 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.theatime.calql.query.logic.Conjunction;
+import org.theatime.calql.query.Conjunction;
 
 public class TestSimpleLocalDateStreamer {
     @Test

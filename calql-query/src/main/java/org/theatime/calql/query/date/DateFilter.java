@@ -18,7 +18,7 @@ package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.function.Predicate;
-import org.theatime.calql.query.logic.Conjunction;
+import org.theatime.calql.query.Conjunction;
 
 /**
  * Filters dates from a stream of dates.

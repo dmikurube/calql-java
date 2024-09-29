@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package org.theatime.calql.query.logic;
+package org.theatime.calql.query;
 
-public abstract class NegationNormalCompound<T extends Comparable<T>> extends NegationNormalFormula<T> {
+public abstract class NegationNormalFormula<T extends Comparable<T>> extends Formula<T> {
+    @Override
+    public final NegationNormalFormula<T> toNegationNormalForm() {
+        return this;
+    }
+
+    public abstract DisjunctiveNormalFormula<T> getDisjunctiveNormalForm();
 }

@@ -19,7 +19,7 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
-import org.theatime.calql.query.logic.Atom;
+import org.theatime.calql.query.Atom;
 
 public abstract class DateAtom extends Atom<ChronoLocalDate> {
     @Override

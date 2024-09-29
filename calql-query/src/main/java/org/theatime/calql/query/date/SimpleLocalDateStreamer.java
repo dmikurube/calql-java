@@ -26,9 +26,9 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.theatime.calql.query.logic.Atom;
-import org.theatime.calql.query.logic.Conjunction;
-import org.theatime.calql.query.logic.Streamer;
+import org.theatime.calql.query.Atom;
+import org.theatime.calql.query.Conjunction;
+import org.theatime.calql.query.Streamer;
 
 /**
  * Generates a stream of dates.

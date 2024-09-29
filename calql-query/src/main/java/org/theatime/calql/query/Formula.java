@@ -14,7 +14,19 @@
  * limitations under the License.
  */
 
-package org.theatime.calql.query.logic;
+package org.theatime.calql.query;
 
-public abstract class Compound<T extends Comparable<T>> extends Formula<T> {
+public abstract class Formula<T extends Comparable<T>> {
+    public abstract NegationNormalFormula<T> toNegationNormalForm();
+
+    /**
+     * Negates this formula.
+     *
+     * <p>It negates the formula in Negation Normal Form (NNF).
+     *
+     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
+     *
+     * @return the negated formula in Negation Normal Form (NNF)
+     */
+    public abstract NegationNormalFormula<T> negateInNegationNormalForm();
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.theatime.calql.query.logic;
+package org.theatime.calql.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

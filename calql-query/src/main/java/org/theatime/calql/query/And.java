@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.theatime.calql.query.logic;
+package org.theatime.calql.query;
 
 import java.util.ArrayList;
 import java.util.Arrays;

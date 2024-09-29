@@ -18,7 +18,7 @@ package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
-import org.theatime.calql.query.logic.Conjunction;
+import org.theatime.calql.query.Conjunction;
 
 public class DateConjunctionResolver {
     public Stream<LocalDate> resolve(final Conjunction conjunction) {
