@@ -109,23 +109,27 @@ public final class SimpleLocalDateStreamer implements Streamer<ChronoLocalDate, 
 
         @Override
         public LocalDate next() {
-            final LocalDate t = this.cursor;
+            final LocalDate beforeNext = this.cursor;
 
             if (order == DateOrder.FROM_EARLIEST_TO_LATEST) {
-                if (this.to.isPresent() && this.cursor.isAfter(this.to.get())) {
-                    throw new NoSuchElementException();
-                }
-                this.cursor = this.cursor.plusDays(1);
+                do {
+                    if (this.to.isPresent() && this.cursor.isAfter(this.to.get())) {
+                        throw new NoSuchElementException();
+                    }
+                    this.cursor = this.cursor.plusDays(1);
+                } while (!this.conjunction.test(this.cursor));
             } else if (order == DateOrder.FROM_LATEST_TO_EARLIEST) {
-                if (this.to.isPresent() && this.cursor.isBefore(this.to.get())) {
-                    throw new NoSuchElementException();
-                }
-                this.cursor = this.cursor.minusDays(1);
+                do {
+                    if (this.to.isPresent() && this.cursor.isBefore(this.to.get())) {
+                        throw new NoSuchElementException();
+                    }
+                    this.cursor = this.cursor.minusDays(1);
+                } while (!this.conjunction.test(this.cursor));
             } else {
                 throw new IllegalArgumentException("invalid date order: " + this.order);
             }
 
-            return t;
+            return beforeNext;
         }
 
         private final Conjunction<ChronoLocalDate> conjunction;
