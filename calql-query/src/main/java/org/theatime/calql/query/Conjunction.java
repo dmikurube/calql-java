@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
  *
  * <p>Ex. {@code f1 AND f2 AND f3 AND f4}
  */
-public final class Conjunction<T extends Comparable<T>> extends AbstractList<Atom<T>> {
+public final class Conjunction<T extends Comparable<T>> extends AbstractList<Atom<T>> implements Predicate<T> {
     private Conjunction(final ArrayList<Atom<T>> atoms) {
         this.atoms = Collections.unmodifiableList(atoms);
 
@@ -123,6 +124,16 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
     @Override
     public Atom<T> get(final int index) {
         return this.atoms.get(index);
+    }
+
+    @Override
+    public boolean test(final T target) {
+        for (final Atom<T> atom : this.atoms) {
+            if (!atom.test(target)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
