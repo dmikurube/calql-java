@@ -53,7 +53,11 @@ public final class AfterYear extends DateAtom {
     public boolean test(final ChronoLocalDate targetChrono) {
         if (targetChrono instanceof LocalDate) {
             final LocalDate target = (LocalDate) targetChrono;
-            return this.year > target.getYear();
+            if (this.inclusive) {
+                return target.getYear() >= this.year;
+            } else {
+                return target.getYear() > this.year;
+            }
         }
         return false;
     }

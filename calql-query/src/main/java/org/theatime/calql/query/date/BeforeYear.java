@@ -54,9 +54,9 @@ public final class BeforeYear extends DateAtom {
         if (targetChrono instanceof LocalDate) {
             final LocalDate target = (LocalDate) targetChrono;
             if (this.inclusive) {
-                return this.year <= target.getYear();
+                return target.getYear() <= this.year;
             } else {
-                return this.year < target.getYear();
+                return target.getYear() < this.year;
             }
         }
         return false;
