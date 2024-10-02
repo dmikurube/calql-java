@@ -44,9 +44,9 @@ public final class AfterDayOfMonth extends DateAtom {
         if (targetChrono instanceof LocalDate) {
             final LocalDate target = (LocalDate) targetChrono;
             if (this.inclusive) {
-                return this.dayOfMonth >= target.getDayOfMonth();
+                return target.getDayOfMonth() >= this.dayOfMonth;
             } else {
-                return this.dayOfMonth > target.getDayOfMonth();
+                return target.getDayOfMonth() > this.dayOfMonth;
             }
         }
         return false;

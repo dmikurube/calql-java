@@ -44,9 +44,9 @@ public final class AfterMonth extends DateAtom {
         if (targetChrono instanceof LocalDate) {
             final LocalDate target = (LocalDate) targetChrono;
             if (this.inclusive) {
-                return this.month >= target.getMonthValue();
+                return target.getMonthValue() >= this.month;
             } else {
-                return this.month > target.getMonthValue();
+                return target.getMonthValue() > this.month;
             }
         }
         return false;
