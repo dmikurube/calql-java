@@ -30,7 +30,7 @@ tasks.withType<JavaCompile> {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 
     withJavadocJar()
@@ -50,7 +50,7 @@ tasks.javadoc {
         locale = "en_US"
         encoding = "UTF-8"
         (this as StandardJavadocDocletOptions).apply {
-            links("https://docs.oracle.com/javase/8/docs/api/")
+            links("https://docs.oracle.com/en/java/javase/11/docs/api/")
         }
     }
 }
