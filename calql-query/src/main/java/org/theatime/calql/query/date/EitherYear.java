@@ -18,34 +18,81 @@ package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.theatime.calql.query.date.DateAtom;
 
+@SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
 public final class EitherYear extends DateAtom {
-    private EitherYear(final int year) {
-        this.year = year;
+    private EitherYear(final Set<Integer> years, final boolean includes, final int earliest, final int latest) {
+        this.years = years;
+        this.includes = includes;
+        this.earliest = earliest;
+        this.latest = latest;
+    }
+
+    static EitherYear of(final Collection<Integer> years, final boolean includes) {
+        int earliest = Integer.MAX_VALUE;
+        int latest = Integer.MIN_VALUE;
+        for (final int year : years) {
+            if (earliest < year) {
+                earliest = year;
+            }
+            if (latest > year) {
+                latest = year;
+            }
+        }
+        return new EitherYear(Set.copyOf(years), includes, earliest, latest);
     }
 
     public static EitherYear of(final int year) {
-        return new EitherYear(year);
+        return new EitherYear(Set.of(year), true, year, year);
+    }
+
+    public static EitherYear notOf(final int year) {
+        return new EitherYear(Set.of(year), false, year, year);
+    }
+
+    public static EitherYear of(final Collection<Integer> years) {
+        return of(years, true);
+    }
+
+    public static EitherYear notOf(final Collection<Integer> years) {
+        return of(years, false);
+    }
+
+    public static EitherYear of(final int... years) {
+        return of(Arrays.stream(years).boxed().collect(Collectors.toSet()));
+    }
+
+    public static EitherYear notOf(final int... years) {
+        return notOf(Arrays.stream(years).boxed().collect(Collectors.toSet()));
     }
 
     @Override
     public Optional<LocalDate> earliest() {
-        return Optional.of(LocalDate.of(this.year, 1, 1));
+        return Optional.of(LocalDate.of(this.earliest, 1, 1));
     }
 
     @Override
     public Optional<LocalDate> latest() {
-        return Optional.of(LocalDate.of(this.year, 12, 31));
+        return Optional.of(LocalDate.of(this.latest, 12, 31));
     }
 
     @Override
     public boolean test(final ChronoLocalDate targetChrono) {
         if (targetChrono instanceof LocalDate) {
             final LocalDate target = (LocalDate) targetChrono;
-            return this.year == target.getYear();
+            final boolean contains = this.years.contains(target.getYear());
+            if (this.includes) {
+                return contains;
+            } else {
+                return !contains;
+            }
         }
         return false;
     }
@@ -61,12 +108,12 @@ public final class EitherYear extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return NeitherYear.of(this.year);
+        return new EitherYear(this.years, !this.includes, this.earliest, this.latest);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(EitherYear.class, this.year);
+        return Objects.hash(EitherYear.class, this.years, this.includes);
     }
 
     @Override
@@ -79,13 +126,29 @@ public final class EitherYear extends DateAtom {
         }
 
         final EitherYear other = (EitherYear) otherObject;
-        return this.year == other.year;
+        return Objects.equals(this.years, other.years) && Objects.equals(this.includes, other.includes);
     }
 
     @Override
     public String toString() {
-        return String.format("year = %d", this.year);
+        if (this.includes) {
+            if (this.earliest == this.latest) {
+                return String.format("year = %s", this.earliest);
+            } else {
+                return String.format("year in %s", this.years);
+            }
+        } else {
+            if (this.earliest == this.latest) {
+                return String.format("year <> %s", this.earliest);
+            } else {
+                return String.format("year not in %s", this.years);
+            }
+        }
     }
 
-    private final int year;
+    private final Set<Integer> years;
+    private final boolean includes;
+
+    private final int earliest;
+    private final int latest;
 }

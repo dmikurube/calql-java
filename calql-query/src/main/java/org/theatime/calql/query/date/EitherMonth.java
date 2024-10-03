@@ -18,23 +18,58 @@ package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.theatime.calql.query.date.DateAtom;
 
+@SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
 public final class EitherMonth extends DateAtom {
-    private EitherMonth(final int month) {
-        this.month = month;
+    private EitherMonth(final Set<Integer> months, final boolean includes) {
+        this.months = months;
+        this.includes = includes;
+    }
+
+    static EitherMonth of(final Collection<Integer> months, final boolean includes) {
+        return new EitherMonth(Set.copyOf(months), includes);
     }
 
     public static EitherMonth of(final int month) {
-        return new EitherMonth(month);
+        return new EitherMonth(Set.of(month), true);
+    }
+
+    public static EitherMonth notOf(final int month) {
+        return new EitherMonth(Set.of(month), false);
+    }
+
+    public static EitherMonth of(final Collection<Integer> months) {
+        return of(months, true);
+    }
+
+    public static EitherMonth notOf(final Collection<Integer> months) {
+        return of(months, false);
+    }
+
+    public static EitherMonth of(final int... months) {
+        return of(Arrays.stream(months).boxed().collect(Collectors.toSet()));
+    }
+
+    public static EitherMonth notOf(final int... months) {
+        return notOf(Arrays.stream(months).boxed().collect(Collectors.toSet()));
     }
 
     @Override
     public boolean test(final ChronoLocalDate targetChrono) {
         if (targetChrono instanceof LocalDate) {
             final LocalDate target = (LocalDate) targetChrono;
-            return this.month == target.getMonthValue();
+            final boolean contains = this.months.contains(target.getMonthValue());
+            if (this.includes) {
+                return contains;
+            } else {
+                return !contains;
+            }
         }
         return false;
     }
@@ -50,12 +85,12 @@ public final class EitherMonth extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return NeitherMonth.of(this.month);
+        return new EitherMonth(this.months, !this.includes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(EitherMonth.class, this.month);
+        return Objects.hash(EitherMonth.class, this.months, this.includes);
     }
 
     @Override
@@ -68,13 +103,18 @@ public final class EitherMonth extends DateAtom {
         }
 
         final EitherMonth other = (EitherMonth) otherObject;
-        return this.month == other.month;
+        return Objects.equals(this.months, other.months) && Objects.equals(this.includes, other.includes);
     }
 
     @Override
     public String toString() {
-        return String.format("month = %d", this.month);
+        if (this.includes) {
+            return String.format("month in %s", this.months);
+        } else {
+            return String.format("month not in %s", this.months);
+        }
     }
 
-    private final int month;
+    private final Set<Integer> months;
+    private final boolean includes;
 }

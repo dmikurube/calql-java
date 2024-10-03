@@ -19,27 +19,56 @@ package org.theatime.calql.query.date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import org.theatime.calql.query.date.DateAtom;
 
+@SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
 public final class EitherDayOfWeek extends DateAtom {
-    private EitherDayOfWeek(final DayOfWeek dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
+    private EitherDayOfWeek(final Set<DayOfWeek> daysOfWeek, final boolean includes) {
+        this.daysOfWeek = daysOfWeek;
+        this.includes = includes;
+    }
+
+    static EitherDayOfWeek of(final Collection<DayOfWeek> daysOfWeek, final boolean includes) {
+        return new EitherDayOfWeek(Set.copyOf(daysOfWeek), includes);
     }
 
     public static EitherDayOfWeek of(final DayOfWeek dayOfWeek) {
-        return new EitherDayOfWeek(dayOfWeek);
+        return new EitherDayOfWeek(Set.of(dayOfWeek), true);
     }
 
-    public static EitherDayOfWeek of(final int dayOfWeek) {
-        return new EitherDayOfWeek(DayOfWeek.of(dayOfWeek));
+    public static EitherDayOfWeek notOf(final DayOfWeek dayOfWeek) {
+        return new EitherDayOfWeek(Set.of(dayOfWeek), false);
+    }
+
+    public static EitherDayOfWeek of(final Collection<DayOfWeek> daysOfWeek) {
+        return of(daysOfWeek, true);
+    }
+
+    public static EitherDayOfWeek notOf(final Collection<DayOfWeek> daysOfWeek) {
+        return of(daysOfWeek, false);
+    }
+
+    public static EitherDayOfWeek of(final DayOfWeek... daysOfWeek) {
+        return new EitherDayOfWeek(Set.of(daysOfWeek), true);
+    }
+
+    public static EitherDayOfWeek notOf(final DayOfWeek... daysOfWeek) {
+        return new EitherDayOfWeek(Set.of(daysOfWeek), false);
     }
 
     @Override
     public boolean test(final ChronoLocalDate targetChrono) {
         if (targetChrono instanceof LocalDate) {
             final LocalDate target = (LocalDate) targetChrono;
-            return this.dayOfWeek == target.getDayOfWeek();
+            final boolean contains = this.daysOfWeek.contains(target.getDayOfWeek());
+            if (this.includes) {
+                return contains;
+            } else {
+                return !contains;
+            }
         }
         return false;
     }
@@ -55,12 +84,12 @@ public final class EitherDayOfWeek extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return NeitherDayOfWeek.of(this.dayOfWeek);
+        return new EitherDayOfWeek(this.daysOfWeek, !this.includes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(EitherDayOfWeek.class, this.dayOfWeek);
+        return Objects.hash(EitherDayOfWeek.class, this.daysOfWeek, this.includes);
     }
 
     @Override
@@ -73,13 +102,18 @@ public final class EitherDayOfWeek extends DateAtom {
         }
 
         final EitherDayOfWeek other = (EitherDayOfWeek) otherObject;
-        return Objects.equals(this.dayOfWeek, other.dayOfWeek);
+        return Objects.equals(this.daysOfWeek, other.daysOfWeek) && Objects.equals(this.includes, other.includes);
     }
 
     @Override
     public String toString() {
-        return String.format("dayOfWeek = %s", this.dayOfWeek.toString());
+        if (this.includes) {
+            return String.format("dayOfWeek in %s", this.daysOfWeek);
+        } else {
+            return String.format("dayOfWeek not in %s", this.daysOfWeek);
+        }
     }
 
-    private final DayOfWeek dayOfWeek;
+    private final Set<DayOfWeek> daysOfWeek;
+    private final boolean includes;
 }
