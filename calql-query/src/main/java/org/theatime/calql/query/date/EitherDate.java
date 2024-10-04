@@ -37,10 +37,10 @@ public final class EitherDate extends DateAtom {
         LocalDate earliest = LocalDate.MAX;
         LocalDate latest = LocalDate.MIN;
         for (final LocalDate date : dates) {
-            if (earliest.compareTo(date) < 0) {
+            if (earliest.compareTo(date) > 0) {
                 earliest = date;
             }
-            if (latest.compareTo(date) > 0) {
+            if (latest.compareTo(date) < 0) {
                 latest = date;
             }
         }
