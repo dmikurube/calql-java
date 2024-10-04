@@ -79,6 +79,14 @@ public final class EitherDate extends DateAtom {
         return of(Set.of(dates), false);
     }
 
+    public Set<LocalDate> dates() {
+        return this.dates;
+    }
+
+    public boolean includes() {
+        return this.includes;
+    }
+
     @Override
     public Optional<LocalDate> earliest() {
         return Optional.of(this.earliest);

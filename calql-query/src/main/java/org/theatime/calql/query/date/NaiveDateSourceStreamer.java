@@ -77,6 +77,13 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<ChronoLocal
         }
     }
 
+    @Override
+    public boolean isApplicableTo(
+            final Conjunction<ChronoLocalDate> conjunction,
+            final Order order) {
+        return true;
+    }
+
     private static class NaiveDateIterator implements Iterator<LocalDate> {
         NaiveDateIterator(
                 final Conjunction<ChronoLocalDate> conjunction,

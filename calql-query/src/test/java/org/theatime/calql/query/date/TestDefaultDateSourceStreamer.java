@@ -52,6 +52,21 @@ public class TestDefaultDateSourceStreamer {
         assertDateStream(expected, stream);
     }
 
+    @Test
+    public void testExactDates() {
+        final Stream<LocalDate> stream = Conjunction.of(EitherDate.of(
+                    LocalDate.of(1972, 2, 27),
+                    LocalDate.of(1973, 1, 18),
+                    LocalDate.of(1974, 10, 8)))
+                .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST);
+
+        final ArrayList<LocalDate> expected = new ArrayList<>();
+        expected.add(LocalDate.of(1972, 2, 27));
+        expected.add(LocalDate.of(1973, 1, 18));
+        expected.add(LocalDate.of(1974, 10, 8));
+        assertDateStream(expected, stream);
+    }
+
     private static void assertDateStream(final List<LocalDate> expected, final Stream<LocalDate> actual) {
         assertEquals(expected, actual.limit(expected.size()).collect(Collectors.toList()));
     }
