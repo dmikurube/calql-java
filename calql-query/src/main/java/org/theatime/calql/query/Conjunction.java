@@ -96,8 +96,10 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
         return this.with(Arrays.asList(additionalAtoms));
     }
 
-    public <U extends T> Stream<U> streamBy(final Streamer<T, U> streamer) {
-        return streamer.streamFrom(this).filter(this);
+    public <U extends T> Stream<U> streamBy(final SourceStreamer<T, U> sourceStreamer) {
+        // Generate the efficient "source" stream based on Conjunction (this, itself) -- sourceStreamFrom(this)
+        // Finalize the "source" stream with filtering by Conjunction (this, itself) -- filter(this)
+        return sourceStreamer.sourceStreamFrom(this).filter(this);
     }
 
     public Optional<T> earliest() {
