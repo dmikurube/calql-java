@@ -178,13 +178,5 @@ public final class SimpleLocalDateStreamer implements Streamer<ChronoLocalDate, 
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static DateAtom asDateAtom(final Atom atom) {
-        if (atom instanceof DateAtom) {
-            return (DateAtom) atom;
-        }
-        throw new ClassCastException("Atom cannot be casted to DateAtom.");
-    }
-
     private final DateOrder order;
 }
