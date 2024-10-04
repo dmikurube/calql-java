@@ -26,11 +26,11 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.theatime.calql.query.Conjunction;
 
-public class TestSimpleLocalDateStreamer {
+public class TestDefaultDateSourceStreamer {
     @Test
     public void testSimple() {
         final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970))
-                .streamBy(SimpleLocalDateStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
+                .streamBy(DefaultDateSourceStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
 
         final ArrayList<LocalDate> expected = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -42,7 +42,7 @@ public class TestSimpleLocalDateStreamer {
     @Test
     public void testEveryTenth() {
         final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), EitherDayOfMonth.of(10))
-                .streamBy(SimpleLocalDateStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
+                .streamBy(DefaultDateSourceStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
 
         final ArrayList<LocalDate> expected = new ArrayList<>();
         for (int i = 0; i < 100; i++) {

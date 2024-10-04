@@ -28,22 +28,22 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.theatime.calql.query.Atom;
 import org.theatime.calql.query.Conjunction;
-import org.theatime.calql.query.Streamer;
+import org.theatime.calql.query.SourceStreamer;
 
 /**
  * Generates a stream of dates.
  */
-public final class SimpleLocalDateStreamer implements Streamer<ChronoLocalDate, LocalDate> {
-    private SimpleLocalDateStreamer(final DateOrder order) {
+public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLocalDate, LocalDate> {
+    private DefaultDateSourceStreamer(final DateOrder order) {
         this.order = order;
     }
 
-    public static SimpleLocalDateStreamer of(final DateOrder order) {
-        return new SimpleLocalDateStreamer(order);
+    public static DefaultDateSourceStreamer of(final DateOrder order) {
+        return new DefaultDateSourceStreamer(order);
     }
 
     @Override
-    public Stream<LocalDate> streamFrom(final Conjunction<ChronoLocalDate> conjunction) {
+    public Stream<LocalDate> sourceStreamFrom(final Conjunction<ChronoLocalDate> conjunction) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireDate(conjunction);
 
