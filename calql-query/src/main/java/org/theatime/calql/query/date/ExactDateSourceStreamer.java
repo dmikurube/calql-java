@@ -19,6 +19,7 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 import org.theatime.calql.query.Atom;
 import org.theatime.calql.query.Conjunction;
@@ -26,16 +27,14 @@ import org.theatime.calql.query.Order;
 import org.theatime.calql.query.SourceStreamer;
 
 /**
- * Generates a stream of possible dates with being hinted from {@link Conjunction}.
+ * Generates an "optimized" stream of dates, estimated from {@link Conjunction} that includes {@link EitherDate}.
  */
-public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLocalDate, LocalDate> {
-    private DefaultDateSourceStreamer() {
-        this.exactDateStreamer = ExactDateSourceStreamer.of();
-        this.naiveStreamer = NaiveDateSourceStreamer.of();
+public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocalDate, LocalDate> {
+    private ExactDateSourceStreamer() {
     }
 
-    public static DefaultDateSourceStreamer of() {
-        return new DefaultDateSourceStreamer();
+    public static ExactDateSourceStreamer of() {
+        return new ExactDateSourceStreamer();
     }
 
     @Override
@@ -49,19 +48,37 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
             return Stream.<LocalDate>empty();
         }
 
-        if (this.exactDateStreamer.isApplicableTo(conjunction, order)) {
-            return this.exactDateStreamer.sourceStreamFrom(conjunction, order);
+        final TreeSet<LocalDate> dates = new TreeSet<>();
+        for (final Atom<ChronoLocalDate> atom : conjunction) {
+            if (!(atom instanceof EitherDate)) {
+                continue;
+            }
+            final EitherDate eitherDate = (EitherDate) atom;
+            if (!eitherDate.includes()) {
+                continue;
+            }
+            if (dates.isEmpty()) {
+                dates.addAll(eitherDate.dates());
+            } else {
+                dates.retainAll(eitherDate.dates());
+            }
         }
-
-        // Last resort -- iterate all dates naively.
-        return this.naiveStreamer.sourceStreamFrom(conjunction, order);
+        return dates.stream();
     }
 
     @Override
-    public boolean isApplicableTo(
-            final Conjunction<ChronoLocalDate> conjunction,
-            final Order order) {
-        return true;
+    public boolean isApplicableTo(final Conjunction<ChronoLocalDate> conjunction, final Order order) {
+        for (final Atom<ChronoLocalDate> atom : conjunction) {
+            if (!(atom instanceof EitherDate)) {
+                continue;
+            }
+            final EitherDate eitherDate = (EitherDate) atom;
+            if (!eitherDate.includes()) {
+                continue;
+            }
+            return true;
+        }
+        return false;
     }
 
     private static void requireLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
@@ -71,8 +88,4 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
             }
         }
     }
-
-    private final ExactDateSourceStreamer exactDateStreamer;
-
-    private final NaiveDateSourceStreamer naiveStreamer;
 }
