@@ -19,5 +19,5 @@ package org.theatime.calql.query;
 import java.util.stream.Stream;
 
 public interface SourceStreamer<T extends Comparable<T>, U extends T> {
-    Stream<U> sourceStreamFrom(Conjunction<T> conjunction);
+    Stream<U> sourceStreamFrom(Conjunction<T> conjunction, Order order);
 }

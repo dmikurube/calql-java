@@ -28,22 +28,24 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.theatime.calql.query.Atom;
 import org.theatime.calql.query.Conjunction;
+import org.theatime.calql.query.Order;
 import org.theatime.calql.query.SourceStreamer;
 
 /**
  * Generates a stream of dates.
  */
 public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLocalDate, LocalDate> {
-    private DefaultDateSourceStreamer(final DateOrder order) {
-        this.order = order;
+    private DefaultDateSourceStreamer() {
     }
 
-    public static DefaultDateSourceStreamer of(final DateOrder order) {
-        return new DefaultDateSourceStreamer(order);
+    public static DefaultDateSourceStreamer of() {
+        return new DefaultDateSourceStreamer();
     }
 
     @Override
-    public Stream<LocalDate> sourceStreamFrom(final Conjunction<ChronoLocalDate> conjunction) {
+    public Stream<LocalDate> sourceStreamFrom(
+            final Conjunction<ChronoLocalDate> conjunction,
+            final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireDate(conjunction);
 
@@ -51,24 +53,24 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
             return Stream.<LocalDate>empty();
         }
 
-        if (this.order == DateOrder.FROM_EARLIEST_TO_LATEST) {
+        if (order == Order.FROM_EARLIEST_TO_LATEST) {
             if (!earliest(conjunction).isPresent()) {
                 throw new IllegalArgumentException("conjunction does not have the earliest date.");
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, earliest(conjunction).get(), latest(conjunction), this.order),
+                         new NaiveDateIterator(conjunction, earliest(conjunction).get(), latest(conjunction), order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
-        } else if (this.order == DateOrder.FROM_LATEST_TO_EARLIEST) {
+        } else if (order == Order.FROM_LATEST_TO_EARLIEST) {
             if (!latest(conjunction).isPresent()) {
                 throw new IllegalArgumentException("conjunction does not have the latest date.");
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, latest(conjunction).get(), earliest(conjunction), this.order),
+                         new NaiveDateIterator(conjunction, latest(conjunction).get(), earliest(conjunction), order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
         } else {
-            throw new IllegalArgumentException("invalid date order: " + this.order);
+            throw new IllegalArgumentException("invalid date order: " + order);
         }
     }
 
@@ -77,7 +79,7 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
                 final Conjunction<ChronoLocalDate> conjunction,
                 final LocalDate from,
                 final Optional<LocalDate> to,
-                final DateOrder order) {
+                final Order order) {
             this.conjunction = conjunction;
             this.from = from;
             this.to = to;
@@ -92,12 +94,12 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
                 return true;
             }
 
-            if (order == DateOrder.FROM_EARLIEST_TO_LATEST) {
+            if (order == Order.FROM_EARLIEST_TO_LATEST) {
                 if (this.cursor.isAfter(this.to.get())) {
                     return false;
                 }
                 return true;
-            } else if (order == DateOrder.FROM_LATEST_TO_EARLIEST) {
+            } else if (order == Order.FROM_LATEST_TO_EARLIEST) {
                 if (this.cursor.isBefore(this.to.get())) {
                     return false;
                 }
@@ -111,12 +113,12 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
         public LocalDate next() {
             final LocalDate beforeNext = this.cursor;
 
-            if (order == DateOrder.FROM_EARLIEST_TO_LATEST) {
+            if (order == Order.FROM_EARLIEST_TO_LATEST) {
                 if (this.to.isPresent() && this.cursor.isAfter(this.to.get())) {
                     throw new NoSuchElementException();
                 }
                 this.cursor = this.cursor.plusDays(1);
-            } else if (order == DateOrder.FROM_LATEST_TO_EARLIEST) {
+            } else if (order == Order.FROM_LATEST_TO_EARLIEST) {
                 if (this.to.isPresent() && this.cursor.isBefore(this.to.get())) {
                     throw new NoSuchElementException();
                 }
@@ -133,7 +135,7 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
         private final LocalDate from;
         private final Optional<LocalDate> to;
 
-        private final DateOrder order;
+        private final Order order;
 
         private LocalDate cursor;
     }
@@ -173,6 +175,4 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
             return Optional.<LocalDate>empty();
         }
     }
-
-    private final DateOrder order;
 }

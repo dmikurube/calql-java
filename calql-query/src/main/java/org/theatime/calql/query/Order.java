@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.theatime.calql.query.date;
+package org.theatime.calql.query;
 
 /**
- * Defines orders of dates.
+ * Defines orders (earliest to latest, latest to earliest, and else).
  *
  * <p>They are defined as {@code static} constant variables, not as {@code enum}, so that
  * more parameterized orders can be defined, such as "ordered by month", "ordered by day of
- * week", and else.
+ * week", and else, in the future.
  */
-public class DateOrder {
-    private DateOrder() {
+public class Order {
+    private Order() {
         // No instantiation.
     }
 
-    public static final DateOrder FROM_EARLIEST_TO_LATEST = new DateOrder();
+    public static final Order FROM_EARLIEST_TO_LATEST = new Order();
 
-    public static final DateOrder FROM_LATEST_TO_EARLIEST = new DateOrder();
+    public static final Order FROM_LATEST_TO_EARLIEST = new Order();
 }
