@@ -14,7 +14,7 @@ Imagine a virtual table like the one below.
 |   2024-10-01 | 2024 |    10 |         275 |            1 |  Tuesday (2) |    2460585 |
 |          ... |  ... |   ... |         ... |          ... |          ... |        ... |
 
-This is a query (language) to such a table.
+This `calql` is a (work-in-progress) query library / language to such a table.
 
 The intented design by examples
 --------------------------------
