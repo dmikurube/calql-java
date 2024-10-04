@@ -97,7 +97,7 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
     }
 
     public <U extends T> Stream<U> streamBy(final Streamer<T, U> streamer) {
-        return streamer.streamFrom(this);
+        return streamer.streamFrom(this).filter(this);
     }
 
     public Optional<T> earliest() {

@@ -39,6 +39,18 @@ public class TestSimpleLocalDateStreamer {
         assertDateStream(expected, stream);
     }
 
+    @Test
+    public void testEveryTenth() {
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), EitherDayOfMonth.of(10))
+                .streamBy(SimpleLocalDateStreamer.of(DateOrder.FROM_EARLIEST_TO_LATEST));
+
+        final ArrayList<LocalDate> expected = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            expected.add(LocalDate.of(1970, 1, 10).plusMonths(i));
+        }
+        assertDateStream(expected, stream);
+    }
+
     private static void assertDateStream(final List<LocalDate> expected, final Stream<LocalDate> actual) {
         assertEquals(expected, actual.limit(expected.size()).collect(Collectors.toList()));
     }
