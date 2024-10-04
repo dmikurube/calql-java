@@ -53,20 +53,23 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
             return Stream.<LocalDate>empty();
         }
 
+        final Optional<LocalDate> earliestLocalDate = earliestLocalDate(conjunction);
+        final Optional<LocalDate> latestLocalDate = latestLocalDate(conjunction);
+
         if (order == Order.FROM_EARLIEST_TO_LATEST) {
-            if (!earliest(conjunction).isPresent()) {
+            if (!earliestLocalDate.isPresent()) {
                 throw new IllegalArgumentException("conjunction does not have the earliest date.");
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, earliest(conjunction).get(), latest(conjunction), order),
+                         new NaiveDateIterator(conjunction, earliestLocalDate.get(), latestLocalDate, order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
         } else if (order == Order.FROM_LATEST_TO_EARLIEST) {
-            if (!latest(conjunction).isPresent()) {
+            if (!latestLocalDate.isPresent()) {
                 throw new IllegalArgumentException("conjunction does not have the latest date.");
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, latest(conjunction).get(), earliest(conjunction), order),
+                         new NaiveDateIterator(conjunction, latestLocalDate.get(), earliestLocalDate, order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
         } else {
@@ -148,7 +151,7 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
         }
     }
 
-    private static Optional<LocalDate> earliest(final Conjunction<ChronoLocalDate> conjunction) {
+    private static Optional<LocalDate> earliestLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
         final Optional<ChronoLocalDate> earliest = conjunction.earliest();
         if (earliest.isPresent()) {
             final ChronoLocalDate chronoEarliest = earliest.get();
@@ -162,7 +165,7 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
         }
     }
 
-    private static Optional<LocalDate> latest(final Conjunction<ChronoLocalDate> conjunction) {
+    private static Optional<LocalDate> latestLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
         final Optional<ChronoLocalDate> latest = conjunction.latest();
         if (latest.isPresent()) {
             final ChronoLocalDate chronoLatest = latest.get();
