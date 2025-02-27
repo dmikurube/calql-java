@@ -15,6 +15,7 @@ updates:
         patterns:
         - "org.junit:*"
         - "org.junit.jupiter:*"
+        - "org.junit.platform:*"
         update-types:
         - "minor"
         - "patch"
