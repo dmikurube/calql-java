@@ -147,6 +147,9 @@ signing {
 tasks.test {
     useJUnitPlatform()
     outputs.upToDateWhen { false }
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    })
     testLogging {
         events("started", "passed", "skipped", "failed", "standardOut", "standardError")
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
@@ -159,6 +162,9 @@ tasks.test {
 
 tasks.withType<Checkstyle> {
     outputs.upToDateWhen { false }
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    })
     ignoreFailures = false
     maxWarnings = 0
 }
