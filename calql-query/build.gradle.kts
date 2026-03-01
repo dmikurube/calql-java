@@ -22,12 +22,6 @@ configurations {
     }
 }
 
-tasks.withType<JavaCompile> {
-    options.compilerArgs.add("-Xlint:deprecation")
-    options.compilerArgs.add("-Xlint:unchecked")
-    options.encoding = "UTF-8"
-}
-
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(11))
@@ -42,6 +36,18 @@ dependencies {
     testImplementation(libs.bundles.junit5.implementation)
 
     testRuntimeOnly(libs.bundles.junit5.runtime)
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:deprecation")
+    options.compilerArgs.add("-Xlint:unchecked")
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<JavaCompile>().matching { it.name.contains("test", ignoreCase = true) }.configureEach {
+    javaCompiler.set(javaToolchains.compilerFor {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    })
 }
 
 tasks.javadoc {
