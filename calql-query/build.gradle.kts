@@ -146,6 +146,7 @@ signing {
 
 tasks.test {
     useJUnitPlatform()
+    outputs.upToDateWhen { false }
     testLogging {
         events("started", "passed", "skipped", "failed", "standardOut", "standardError")
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
@@ -153,22 +154,19 @@ tasks.test {
         showExceptions = true
         showStackTraces = true
         showStandardStreams = true
-        outputs.upToDateWhen { false }
     }
 }
 
 tasks.withType<Checkstyle> {
-    reports {
-        outputs.upToDateWhen { false }
-    }
+    outputs.upToDateWhen { false }
+    ignoreFailures = false
+    maxWarnings = 0
 }
 
 checkstyle {
     toolVersion = libs.versions.checkstyle.get()
     configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-    setConfigProperties(mapOf(
+    configProperties = mapOf(
         "org.checkstyle.google.suppressionfilter.config" to "${rootProject.projectDir}/config/checkstyle/checkstyle-suppressions.xml"
-    ))
-    setIgnoreFailures(false)
-    setMaxWarnings(0)
+    )
 }
