@@ -56,11 +56,11 @@ public final class EitherDate extends DateAtom {
     }
 
     public static EitherDate of(final LocalDate date) {
-        return new EitherDate(Set.of(date), true, date, date);
+        return new EitherDate(UnmodifiableSet.of(date), true, date, date);
     }
 
     public static EitherDate notOf(final LocalDate date) {
-        return new EitherDate(Set.of(date), false, date, date);
+        return new EitherDate(UnmodifiableSet.of(date), false, date, date);
     }
 
     public static EitherDate of(final Collection<LocalDate> dates) {
@@ -72,11 +72,11 @@ public final class EitherDate extends DateAtom {
     }
 
     public static EitherDate of(final LocalDate... dates) {
-        return of(Set.of(dates), true);
+        return of(UnmodifiableSet.of(dates), true);
     }
 
     public static EitherDate notOf(final LocalDate... dates) {
-        return of(Set.of(dates), false);
+        return of(UnmodifiableSet.of(dates), false);
     }
 
     public Set<LocalDate> dates() {
