@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: "daily"
     groups:
-      junit5:
+      junit:
         applies-to: version-updates
         patterns:
         - "org.junit:*"
