@@ -147,6 +147,10 @@ signing {
         logger.lifecycle("Signing with an in-memory key.")
         useInMemoryPgpKeys(project.property("signingKey").toString(), project.property("signingPassword").toString())
     }
+
+    // Skip signing when signingKey is not available. Note that Maven Central rejects an unsigned upload.
+    isRequired = project.hasProperty("signingKey")
+
     sign(publishing.publications["maven"])
 }
 
