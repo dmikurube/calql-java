@@ -32,10 +32,10 @@ java {
 }
 
 dependencies {
-    testImplementation(platform(libs.junit5.bom))
-    testImplementation(libs.bundles.junit5.implementation)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.bundles.junit.implementation)
 
-    testRuntimeOnly(libs.bundles.junit5.runtime)
+    testRuntimeOnly(libs.bundles.junit.runtime)
 }
 
 tasks.withType<JavaCompile> {
