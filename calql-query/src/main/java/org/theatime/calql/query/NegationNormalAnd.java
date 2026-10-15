@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,13 +96,9 @@ public final class NegationNormalAnd<T extends Comparable<T>> extends NegationNo
             final ArrayList<Conjunction<T>> built) {
         final DisjunctiveNormalFormula<T> dnf = dnfs.get(index);
 
-        System.out.printf(">> %d / %s\n", index, visitingConjunction);
         final int sizeOfVisitingConjunction = visitingConjunction.size();
         for (final Conjunction<T> conjunction : dnf) {
-            System.out.printf(">>>> %s\n", conjunction);
             visitingConjunction.addAll(conjunction);
-            System.out.println(">>>>>> !");
-            System.out.printf(">>>>>> %s\n", visitingConjunction);
             if (index + 1 < dnfs.size()) {
                 iter(index + 1, dnfs, visitingConjunction, built);
             } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,15 +69,8 @@ public final class NegationNormalOr<T extends Comparable<T>> extends NegationNor
 
     private static <T extends Comparable<T>> DisjunctiveNormalFormula<T> toDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
         final ArrayList<Conjunction<T>> conjunctions = new ArrayList<>();
-        System.out.print(">> ");
-        System.out.println(negationNormalFormulae);
         final List<DisjunctiveNormalFormula<T>> dnfs = negationNormalFormulae.stream().map(NegationNormalFormula<T>::getDisjunctiveNormalForm).collect(Collectors.toList());
-        System.out.print(")) ");
-        System.out.println(dnfs);
         for (final DisjunctiveNormalFormula<T> dnf : dnfs) {
-            if (dnf == null) {
-                System.out.println("!!!");
-            }
             for (final Conjunction<T> conjunction : dnf) {
                 conjunctions.add(conjunction);
             }
