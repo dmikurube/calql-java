@@ -163,13 +163,13 @@ public final class EitherDate extends DateAtom {
     @Override
     public String toString() {
         if (this.includes) {
-            if (this.earliest == this.latest) {
+            if (this.earliest.equals(this.latest)) {
                 return String.format("date = %s", this.earliest);
             } else {
                 return String.format("date in %s", this.dates);
             }
         } else {
-            if (this.earliest == this.latest) {
+            if (this.earliest.equals(this.latest)) {
                 return String.format("date <> %s", this.earliest);
             } else {
                 return String.format("date not in %s", this.dates);
