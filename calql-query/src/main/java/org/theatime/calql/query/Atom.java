@@ -39,5 +39,13 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
 
     public abstract Optional<T> unique();
 
+    /**
+     * Returns an atom that negates this atom.
+     *
+     * <p>The negation of an atom is always an atom, and negating it twice returns an atom equal to the original.
+     * It keeps the negation of a formula in Negation Normal Form (NNF) from growing.
+     *
+     * @return the negated atom
+     */
     public abstract Atom<T> negate();
 }

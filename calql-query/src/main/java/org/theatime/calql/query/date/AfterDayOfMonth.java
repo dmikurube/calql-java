@@ -17,13 +17,10 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import org.theatime.calql.query.date.DateAtom;
 
-public final class AfterDayOfMonth extends DateAtom {
+public final class AfterDayOfMonth extends OrderingDateAtom {
     private AfterDayOfMonth(final int dayOfMonth, final boolean inclusive) {
-        this.dayOfMonth = dayOfMonth;
-        this.inclusive = inclusive;
+        super(dayOfMonth, inclusive, true);
     }
 
     public static AfterDayOfMonth of(final int dayOfMonth) {
@@ -39,51 +36,17 @@ public final class AfterDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        if (this.inclusive) {
-            return target.getDayOfMonth() >= this.dayOfMonth;
-        } else {
-            return target.getDayOfMonth() > this.dayOfMonth;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
-    @Override
     public DateAtom negate() {
-        return BeforeDayOfMonth.of(this.dayOfMonth, !this.inclusive);
+        return BeforeDayOfMonth.of(this.value(), !this.inclusive());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(AfterDayOfMonth.class, this.dayOfMonth, this.inclusive);
+    protected String columnName() {
+        return "dayOfMonth";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof AfterDayOfMonth)) {
-            return false;
-        }
-
-        final AfterDayOfMonth other = (AfterDayOfMonth) otherObject;
-        return this.dayOfMonth == other.dayOfMonth && this.inclusive == other.inclusive;
+    protected int columnValueOf(final LocalDate date) {
+        return date.getDayOfMonth();
     }
-
-    @Override
-    public String toString() {
-        return String.format("dayOfMonth >%s %d", this.inclusive ? "=" : "", this.dayOfMonth);
-    }
-
-    private final int dayOfMonth;
-    private final boolean inclusive;
 }

@@ -19,16 +19,13 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.theatime.calql.query.date.DateAtom;
 
 @SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
-public final class EitherMonth extends DateAtom {
+public final class EitherMonth extends MembershipDateAtom<Integer> {
     private EitherMonth(final Set<Integer> months, final boolean includes) {
-        this.months = months;
-        this.includes = includes;
+        super(months, includes);
     }
 
     static EitherMonth of(final Collection<Integer> months, final boolean includes) {
@@ -60,56 +57,17 @@ public final class EitherMonth extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        final boolean contains = this.months.contains(target.getMonthValue());
-        if (this.includes) {
-            return contains;
-        } else {
-            return !contains;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
-    @Override
     public DateAtom negate() {
-        return new EitherMonth(this.months, !this.includes);
+        return new EitherMonth(this.values(), !this.includes());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(EitherMonth.class, this.months, this.includes);
+    protected String columnName() {
+        return "month";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof EitherMonth)) {
-            return false;
-        }
-
-        final EitherMonth other = (EitherMonth) otherObject;
-        return Objects.equals(this.months, other.months) && Objects.equals(this.includes, other.includes);
+    protected Integer columnValueOf(final LocalDate date) {
+        return date.getMonthValue();
     }
-
-    @Override
-    public String toString() {
-        if (this.includes) {
-            return String.format("month in %s", this.months);
-        } else {
-            return String.format("month not in %s", this.months);
-        }
-    }
-
-    private final Set<Integer> months;
-    private final boolean includes;
 }

@@ -19,15 +19,12 @@ package org.theatime.calql.query.date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
-import org.theatime.calql.query.date.DateAtom;
 
 @SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
-public final class EitherDayOfWeek extends DateAtom {
+public final class EitherDayOfWeek extends MembershipDateAtom<DayOfWeek> {
     private EitherDayOfWeek(final Set<DayOfWeek> daysOfWeek, final boolean includes) {
-        this.daysOfWeek = daysOfWeek;
-        this.includes = includes;
+        super(daysOfWeek, includes);
     }
 
     static EitherDayOfWeek of(final Collection<DayOfWeek> daysOfWeek, final boolean includes) {
@@ -59,56 +56,17 @@ public final class EitherDayOfWeek extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        final boolean contains = this.daysOfWeek.contains(target.getDayOfWeek());
-        if (this.includes) {
-            return contains;
-        } else {
-            return !contains;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
-    @Override
     public DateAtom negate() {
-        return new EitherDayOfWeek(this.daysOfWeek, !this.includes);
+        return new EitherDayOfWeek(this.values(), !this.includes());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(EitherDayOfWeek.class, this.daysOfWeek, this.includes);
+    protected String columnName() {
+        return "dayOfWeek";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof EitherDayOfWeek)) {
-            return false;
-        }
-
-        final EitherDayOfWeek other = (EitherDayOfWeek) otherObject;
-        return Objects.equals(this.daysOfWeek, other.daysOfWeek) && Objects.equals(this.includes, other.includes);
+    protected DayOfWeek columnValueOf(final LocalDate date) {
+        return date.getDayOfWeek();
     }
-
-    @Override
-    public String toString() {
-        if (this.includes) {
-            return String.format("dayOfWeek in %s", this.daysOfWeek);
-        } else {
-            return String.format("dayOfWeek not in %s", this.daysOfWeek);
-        }
-    }
-
-    private final Set<DayOfWeek> daysOfWeek;
-    private final boolean includes;
 }

@@ -17,14 +17,11 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Optional;
-import org.theatime.calql.query.date.DateAtom;
 
-public final class BeforeYear extends DateAtom {
+public final class BeforeYear extends OrderingDateAtom {
     private BeforeYear(final int year, final boolean inclusive) {
-        this.year = year;
-        this.inclusive = inclusive;
+        super(year, inclusive, false);
     }
 
     public static BeforeYear of(final int year) {
@@ -41,59 +38,25 @@ public final class BeforeYear extends DateAtom {
 
     @Override
     public Optional<LocalDate> latest() {
-        if (this.inclusive) {
-            return Optional.of(LocalDate.of(this.year, 12, 31));
+        if (this.inclusive()) {
+            return Optional.of(LocalDate.of(this.value(), 12, 31));
         } else {
-            return Optional.of(LocalDate.of(this.year - 1, 12, 31));
+            return Optional.of(LocalDate.of(this.value() - 1, 12, 31));
         }
     }
 
-    @Override
-    public boolean test(final LocalDate target) {
-        if (this.inclusive) {
-            return target.getYear() <= this.year;
-        } else {
-            return target.getYear() < this.year;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
     @Override
     public DateAtom negate() {
-        return AfterYear.of(this.year, !this.inclusive);
+        return AfterYear.of(this.value(), !this.inclusive());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(BeforeYear.class, this.year, this.inclusive);
+    protected String columnName() {
+        return "year";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof BeforeYear)) {
-            return false;
-        }
-
-        final BeforeYear other = (BeforeYear) otherObject;
-        return this.year == other.year && this.inclusive == other.inclusive;
+    protected int columnValueOf(final LocalDate date) {
+        return date.getYear();
     }
-
-    @Override
-    public String toString() {
-        return String.format("year <%s %d", this.inclusive ? "=" : "", this.year);
-    }
-
-    private final int year;
-    private final boolean inclusive;
 }

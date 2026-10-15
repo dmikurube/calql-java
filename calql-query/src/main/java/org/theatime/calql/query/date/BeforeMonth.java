@@ -17,13 +17,10 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import org.theatime.calql.query.date.DateAtom;
 
-public final class BeforeMonth extends DateAtom {
+public final class BeforeMonth extends OrderingDateAtom {
     private BeforeMonth(final int month, final boolean inclusive) {
-        this.month = month;
-        this.inclusive = inclusive;
+        super(month, inclusive, false);
     }
 
     public static BeforeMonth of(final int month) {
@@ -39,51 +36,17 @@ public final class BeforeMonth extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        if (this.inclusive) {
-            return target.getMonthValue() <= this.month;
-        } else {
-            return target.getMonthValue() < this.month;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
-    @Override
     public DateAtom negate() {
-        return AfterMonth.of(this.month, !this.inclusive);
+        return AfterMonth.of(this.value(), !this.inclusive());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(BeforeMonth.class, this.month, this.inclusive);
+    protected String columnName() {
+        return "month";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof BeforeMonth)) {
-            return false;
-        }
-
-        final BeforeMonth other = (BeforeMonth) otherObject;
-        return this.month == other.month && this.inclusive == other.inclusive;
+    protected int columnValueOf(final LocalDate date) {
+        return date.getMonthValue();
     }
-
-    @Override
-    public String toString() {
-        return String.format("month <%s %d", this.inclusive ? "=" : "", this.month);
-    }
-
-    private final int month;
-    private final boolean inclusive;
 }

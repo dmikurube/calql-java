@@ -19,16 +19,13 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.theatime.calql.query.date.DateAtom;
 
 @SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
-public final class EitherDayOfMonth extends DateAtom {
+public final class EitherDayOfMonth extends MembershipDateAtom<Integer> {
     private EitherDayOfMonth(final Set<Integer> daysOfMonth, final boolean includes) {
-        this.daysOfMonth = daysOfMonth;
-        this.includes = includes;
+        super(daysOfMonth, includes);
     }
 
     static EitherDayOfMonth of(final Collection<Integer> daysOfMonth, final boolean includes) {
@@ -60,56 +57,17 @@ public final class EitherDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        final boolean contains = this.daysOfMonth.contains(target.getDayOfMonth());
-        if (this.includes) {
-            return contains;
-        } else {
-            return !contains;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
-    @Override
     public DateAtom negate() {
-        return new EitherDayOfMonth(this.daysOfMonth, !this.includes);
+        return new EitherDayOfMonth(this.values(), !this.includes());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(EitherDayOfMonth.class, this.daysOfMonth, this.includes);
+    protected String columnName() {
+        return "dayOfMonth";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof EitherDayOfMonth)) {
-            return false;
-        }
-
-        final EitherDayOfMonth other = (EitherDayOfMonth) otherObject;
-        return Objects.equals(this.daysOfMonth, other.daysOfMonth) && Objects.equals(this.includes, other.includes);
+    protected Integer columnValueOf(final LocalDate date) {
+        return date.getDayOfMonth();
     }
-
-    @Override
-    public String toString() {
-        if (this.includes) {
-            return String.format("dayOfMonth in %s", this.daysOfMonth);
-        } else {
-            return String.format("dayOfMonth not in %s", this.daysOfMonth);
-        }
-    }
-
-    private final Set<Integer> daysOfMonth;
-    private final boolean includes;
 }

@@ -19,41 +19,27 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.theatime.calql.query.date.DateAtom;
 
 @SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
-public final class EitherYear extends DateAtom {
-    private EitherYear(final Set<Integer> years, final boolean includes, final int earliest, final int latest) {
-        this.years = years;
-        this.includes = includes;
-        this.earliest = earliest;
-        this.latest = latest;
+public final class EitherYear extends MembershipDateAtom<Integer> {
+    private EitherYear(final Set<Integer> years, final boolean includes) {
+        super(years, includes);
     }
 
     static EitherYear of(final Collection<Integer> years, final boolean includes) {
-        int earliest = Integer.MAX_VALUE;
-        int latest = Integer.MIN_VALUE;
-        for (final int year : years) {
-            if (earliest > year) {
-                earliest = year;
-            }
-            if (latest < year) {
-                latest = year;
-            }
-        }
-        return new EitherYear(Set.copyOf(years), includes, earliest, latest);
+        return new EitherYear(Set.copyOf(years), includes);
     }
 
     public static EitherYear of(final int year) {
-        return new EitherYear(Set.of(year), true, year, year);
+        return new EitherYear(Set.of(year), true);
     }
 
     public static EitherYear notOf(final int year) {
-        return new EitherYear(Set.of(year), false, year, year);
+        return new EitherYear(Set.of(year), false);
     }
 
     public static EitherYear of(final Collection<Integer> years) {
@@ -74,90 +60,40 @@ public final class EitherYear extends DateAtom {
 
     @Override
     public Optional<LocalDate> earliest() {
-        if (!this.includes) {
+        if (!this.includes()) {
             return Optional.empty();
         }
-        if (this.years.isEmpty()) {
+        if (this.values().isEmpty()) {
             // Nothing matches. Return an earliest date after the latest date in the same way as EitherDate.
             return Optional.of(LocalDate.MAX);
         }
-        return Optional.of(LocalDate.of(this.earliest, 1, 1));
+        return Optional.of(LocalDate.of(Collections.min(this.values()), 1, 1));
     }
 
     @Override
     public Optional<LocalDate> latest() {
-        if (!this.includes) {
+        if (!this.includes()) {
             return Optional.empty();
         }
-        if (this.years.isEmpty()) {
+        if (this.values().isEmpty()) {
             // Nothing matches. Return a latest date before the earliest date in the same way as EitherDate.
             return Optional.of(LocalDate.MIN);
         }
-        return Optional.of(LocalDate.of(this.latest, 12, 31));
+        return Optional.of(LocalDate.of(Collections.max(this.values()), 12, 31));
     }
 
-    @Override
-    public boolean test(final LocalDate target) {
-        final boolean contains = this.years.contains(target.getYear());
-        if (this.includes) {
-            return contains;
-        } else {
-            return !contains;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
     @Override
     public DateAtom negate() {
-        return new EitherYear(this.years, !this.includes, this.earliest, this.latest);
+        return new EitherYear(this.values(), !this.includes());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(EitherYear.class, this.years, this.includes);
+    protected String columnName() {
+        return "year";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof EitherYear)) {
-            return false;
-        }
-
-        final EitherYear other = (EitherYear) otherObject;
-        return Objects.equals(this.years, other.years) && Objects.equals(this.includes, other.includes);
+    protected Integer columnValueOf(final LocalDate date) {
+        return date.getYear();
     }
-
-    @Override
-    public String toString() {
-        if (this.includes) {
-            if (this.earliest == this.latest) {
-                return String.format("year = %s", this.earliest);
-            } else {
-                return String.format("year in %s", this.years);
-            }
-        } else {
-            if (this.earliest == this.latest) {
-                return String.format("year <> %s", this.earliest);
-            } else {
-                return String.format("year not in %s", this.years);
-            }
-        }
-    }
-
-    private final Set<Integer> years;
-    private final boolean includes;
-
-    private final int earliest;
-    private final int latest;
 }

@@ -18,32 +18,18 @@ package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import org.theatime.calql.query.date.DateAtom;
 
 @SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
-public final class EitherDate extends DateAtom {
-    private EitherDate(final Set<LocalDate> dates, final boolean includes, final LocalDate earliest, final LocalDate latest) {
-        this.dates = dates;
-        this.includes = includes;
-        this.earliest = earliest;
-        this.latest = latest;
+public final class EitherDate extends MembershipDateAtom<LocalDate> {
+    private EitherDate(final Set<LocalDate> dates, final boolean includes) {
+        super(dates, includes);
     }
 
     static EitherDate of(final Collection<LocalDate> dates, final boolean includes) {
-        LocalDate earliest = LocalDate.MAX;
-        LocalDate latest = LocalDate.MIN;
-        for (final LocalDate date : dates) {
-            if (earliest.compareTo(date) > 0) {
-                earliest = date;
-            }
-            if (latest.compareTo(date) < 0) {
-                latest = date;
-            }
-        }
-        return new EitherDate(Set.copyOf(dates), includes, earliest, latest);
+        return new EitherDate(Set.copyOf(dates), includes);
     }
 
     public static EitherDate of(final int year, final int month, final int dayOfMonth) {
@@ -55,11 +41,11 @@ public final class EitherDate extends DateAtom {
     }
 
     public static EitherDate of(final LocalDate date) {
-        return new EitherDate(Set.of(date), true, date, date);
+        return new EitherDate(Set.of(date), true);
     }
 
     public static EitherDate notOf(final LocalDate date) {
-        return new EitherDate(Set.of(date), false, date, date);
+        return new EitherDate(Set.of(date), false);
     }
 
     public static EitherDate of(final Collection<LocalDate> dates) {
@@ -79,102 +65,56 @@ public final class EitherDate extends DateAtom {
     }
 
     public Set<LocalDate> dates() {
-        return this.dates;
-    }
-
-    public boolean includes() {
-        return this.includes;
+        return this.values();
     }
 
     @Override
     public Optional<LocalDate> earliest() {
-        if (!this.includes) {
+        if (!this.includes()) {
             return Optional.empty();
         }
-        return Optional.of(this.earliest);
+        if (this.values().isEmpty()) {
+            // Nothing matches. Return an earliest date after the latest date.
+            return Optional.of(LocalDate.MAX);
+        }
+        return Optional.of(Collections.min(this.values()));
     }
 
     @Override
     public Optional<LocalDate> latest() {
-        if (!this.includes) {
+        if (!this.includes()) {
             return Optional.empty();
         }
-        return Optional.of(this.latest);
+        if (this.values().isEmpty()) {
+            // Nothing matches. Return a latest date before the earliest date.
+            return Optional.of(LocalDate.MIN);
+        }
+        return Optional.of(Collections.max(this.values()));
     }
 
     @Override
     public Optional<LocalDate> unique() {
-        if (!this.includes) {
+        if (!this.includes()) {
             return Optional.empty();
         }
-        if (this.earliest.equals(this.latest)) {
-            return Optional.of(this.earliest);
+        if (this.values().size() == 1) {
+            return Optional.of(this.values().iterator().next());
         }
         return Optional.empty();
     }
 
     @Override
-    public boolean test(final LocalDate target) {
-        final boolean contains = this.dates.contains(target);
-        if (this.includes) {
-            return contains;
-        } else {
-            return !contains;
-        }
-    }
-
-    /**
-     * Negates this formula.
-     *
-     * <p>It negates the formula in Negation Normal Form (NNF).
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
-     * @return the negated formula in Negation Normal Form (NNF)
-     */
-    @Override
     public DateAtom negate() {
-        return new EitherDate(this.dates, !this.includes, this.earliest, this.latest);
+        return new EitherDate(this.values(), !this.includes());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(EitherDate.class, this.dates, this.includes);
+    protected String columnName() {
+        return "date";
     }
 
     @Override
-    public boolean equals(final Object otherObject) {
-        if (this == otherObject) {
-            return true;
-        }
-        if (!(otherObject instanceof EitherDate)) {
-            return false;
-        }
-
-        final EitherDate other = (EitherDate) otherObject;
-        return Objects.equals(this.dates, other.dates) && Objects.equals(this.includes, other.includes);
+    protected LocalDate columnValueOf(final LocalDate date) {
+        return date;
     }
-
-    @Override
-    public String toString() {
-        if (this.includes) {
-            if (this.earliest.equals(this.latest)) {
-                return String.format("date = %s", this.earliest);
-            } else {
-                return String.format("date in %s", this.dates);
-            }
-        } else {
-            if (this.earliest.equals(this.latest)) {
-                return String.format("date <> %s", this.earliest);
-            } else {
-                return String.format("date not in %s", this.dates);
-            }
-        }
-    }
-
-    private final Set<LocalDate> dates;
-    private final boolean includes;
-
-    private final LocalDate earliest;
-    private final LocalDate latest;
 }
