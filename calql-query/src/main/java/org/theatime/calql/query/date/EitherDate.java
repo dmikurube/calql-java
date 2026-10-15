@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,17 +89,26 @@ public final class EitherDate extends DateAtom {
 
     @Override
     public Optional<LocalDate> earliest() {
+        if (!this.includes) {
+            return Optional.empty();
+        }
         return Optional.of(this.earliest);
     }
 
     @Override
     public Optional<LocalDate> latest() {
+        if (!this.includes) {
+            return Optional.empty();
+        }
         return Optional.of(this.latest);
     }
 
     @Override
     public Optional<LocalDate> unique() {
-        if (earliest.equals(latest)) {
+        if (!this.includes) {
+            return Optional.empty();
+        }
+        if (this.earliest.equals(this.latest)) {
             return Optional.of(this.earliest);
         }
         return Optional.empty();
@@ -130,7 +139,7 @@ public final class EitherDate extends DateAtom {
      */
     @Override
     public DateAtom negate() {
-        return new EitherDate(this.dates, this.includes, this.earliest, this.latest);
+        return new EitherDate(this.dates, !this.includes, this.earliest, this.latest);
     }
 
     @Override

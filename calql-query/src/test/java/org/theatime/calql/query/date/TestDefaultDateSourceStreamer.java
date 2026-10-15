@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Dai MIKURUBE
+ * Copyright 2023-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,41 @@ public class TestDefaultDateSourceStreamer {
         expected.add(LocalDate.of(1973, 1, 18));
         expected.add(LocalDate.of(1974, 10, 8));
         assertDateStream(expected, stream);
+    }
+
+    @Test
+    public void testExceptDate() {
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), EitherDate.notOf(1970, 1, 3))
+                .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST);
+
+        final ArrayList<LocalDate> expected = new ArrayList<>();
+        expected.add(LocalDate.of(1970, 1, 1));
+        expected.add(LocalDate.of(1970, 1, 2));
+        expected.add(LocalDate.of(1970, 1, 4));
+        expected.add(LocalDate.of(1970, 1, 5));
+        assertDateStream(expected, stream);
+    }
+
+    @Test
+    public void testExceptYear() {
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), EitherYear.notOf(1970), EitherDayOfMonth.of(1))
+                .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST);
+
+        final ArrayList<LocalDate> expected = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            expected.add(LocalDate.of(1971, 1, 1).plusMonths(i));
+        }
+        assertDateStream(expected, stream);
+    }
+
+    @Test
+    public void testMultipleYears() {
+        final Stream<LocalDate> stream = Conjunction.of(EitherYear.of(1970, 1972), EitherMonth.of(2), EitherDayOfMonth.of(29))
+                .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST);
+
+        final ArrayList<LocalDate> expected = new ArrayList<>();
+        expected.add(LocalDate.of(1972, 2, 29));
+        assertEquals(expected, stream.collect(Collectors.toList()));
     }
 
     private static void assertDateStream(final List<LocalDate> expected, final Stream<LocalDate> actual) {

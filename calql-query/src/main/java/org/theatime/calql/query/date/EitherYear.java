@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,10 @@ public final class EitherYear extends DateAtom {
         int earliest = Integer.MAX_VALUE;
         int latest = Integer.MIN_VALUE;
         for (final int year : years) {
-            if (earliest < year) {
+            if (earliest > year) {
                 earliest = year;
             }
-            if (latest > year) {
+            if (latest < year) {
                 latest = year;
             }
         }
@@ -75,11 +75,25 @@ public final class EitherYear extends DateAtom {
 
     @Override
     public Optional<LocalDate> earliest() {
+        if (!this.includes) {
+            return Optional.empty();
+        }
+        if (this.years.isEmpty()) {
+            // Nothing matches. Return an earliest date after the latest date in the same way as EitherDate.
+            return Optional.of(LocalDate.MAX);
+        }
         return Optional.of(LocalDate.of(this.earliest, 1, 1));
     }
 
     @Override
     public Optional<LocalDate> latest() {
+        if (!this.includes) {
+            return Optional.empty();
+        }
+        if (this.years.isEmpty()) {
+            // Nothing matches. Return a latest date before the earliest date in the same way as EitherDate.
+            return Optional.of(LocalDate.MIN);
+        }
         return Optional.of(LocalDate.of(this.latest, 12, 31));
     }
 

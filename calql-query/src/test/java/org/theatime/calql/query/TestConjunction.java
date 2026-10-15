@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Dai MIKURUBE
+ * Copyright 2024-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,6 +96,30 @@ public class TestConjunction {
     public void testDatesNoIntersection() {
         final Conjunction c = Conjunction.of(EitherDate.of(1982, 3, 4), EitherDate.of(1982, 3, 5));
         assertFalse(c.earliest().isPresent());
+        assertFalse(c.latest().isPresent());
+        assertFalse(c.unique().isPresent());
+    }
+
+    @Test
+    public void testMultipleYears() {
+        final Conjunction c = Conjunction.of(EitherYear.of(1970, 1972));
+        assertEquals(LocalDate.of(1970, 1, 1), c.earliest().get());
+        assertEquals(LocalDate.of(1972, 12, 31), c.latest().get());
+        assertFalse(c.unique().isPresent());
+    }
+
+    @Test
+    public void testNotYearDoesNotNarrow() {
+        final Conjunction c = Conjunction.of(AfterYear.orEqualTo(1970), EitherYear.notOf(1975));
+        assertEquals(LocalDate.of(1970, 1, 1), c.earliest().get());
+        assertFalse(c.latest().isPresent());
+        assertFalse(c.unique().isPresent());
+    }
+
+    @Test
+    public void testNotDateDoesNotNarrow() {
+        final Conjunction c = Conjunction.of(AfterYear.orEqualTo(1970), EitherDate.notOf(1970, 1, 5));
+        assertEquals(LocalDate.of(1970, 1, 1), c.earliest().get());
         assertFalse(c.latest().isPresent());
         assertFalse(c.unique().isPresent());
     }
