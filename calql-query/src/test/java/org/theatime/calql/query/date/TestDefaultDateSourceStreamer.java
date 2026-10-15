@@ -68,6 +68,21 @@ public class TestDefaultDateSourceStreamer {
     }
 
     @Test
+    public void testExactDatesFromLatestToEarliest() {
+        final Stream<LocalDate> stream = Conjunction.of(EitherDate.of(
+                    LocalDate.of(1972, 2, 27),
+                    LocalDate.of(1973, 1, 18),
+                    LocalDate.of(1974, 10, 8)))
+                .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_LATEST_TO_EARLIEST);
+
+        final ArrayList<LocalDate> expected = new ArrayList<>();
+        expected.add(LocalDate.of(1974, 10, 8));
+        expected.add(LocalDate.of(1973, 1, 18));
+        expected.add(LocalDate.of(1972, 2, 27));
+        assertDateStream(expected, stream);
+    }
+
+    @Test
     public void testExceptDate() {
         final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), EitherDate.notOf(1970, 1, 3))
                 .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST);

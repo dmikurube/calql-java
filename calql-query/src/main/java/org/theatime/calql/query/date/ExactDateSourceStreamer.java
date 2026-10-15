@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Dai MIKURUBE
+ * Copyright 2023-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,9 @@ public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocal
             return Stream.<LocalDate>empty();
         }
 
-        final TreeSet<LocalDate> dates = new TreeSet<>();
+        // |dates| is null until the first EitherDate that includes dates is found.
+        // It must be distinguished from an empty set, which means that the intersection has become empty.
+        TreeSet<LocalDate> dates = null;
         for (final Atom<ChronoLocalDate> atom : conjunction) {
             if (!(atom instanceof EitherDate)) {
                 continue;
@@ -57,13 +59,23 @@ public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocal
             if (!eitherDate.includes()) {
                 continue;
             }
-            if (dates.isEmpty()) {
-                dates.addAll(eitherDate.dates());
+            if (dates == null) {
+                dates = new TreeSet<>(eitherDate.dates());
             } else {
                 dates.retainAll(eitherDate.dates());
             }
         }
-        return dates.stream();
+
+        if (dates == null) {
+            return Stream.<LocalDate>empty();
+        }
+        if (order == Order.FROM_EARLIEST_TO_LATEST) {
+            return dates.stream();
+        } else if (order == Order.FROM_LATEST_TO_EARLIEST) {
+            return dates.descendingSet().stream();
+        } else {
+            throw new IllegalArgumentException("invalid date order: " + order);
+        }
     }
 
     @Override
