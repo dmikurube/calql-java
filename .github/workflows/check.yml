@@ -10,12 +10,12 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v7
-    - name: Set up OpenJDK 11 and 21, with 21 as default
+    - name: Set up OpenJDK 17 and 25, with 25 as default
       uses: actions/setup-java@v6
       with:
         distribution: "temurin"
         java-version: |
-          11
-          21
+          17
+          25
     - name: Check
       run: ./gradlew --stacktrace check

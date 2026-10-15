@@ -24,7 +24,7 @@ configurations {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 
     withJavadocJar()
@@ -46,7 +46,7 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<JavaCompile>().matching { it.name.contains("test", ignoreCase = true) }.configureEach {
     javaCompiler.set(javaToolchains.compilerFor {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     })
 }
 
@@ -56,7 +56,7 @@ tasks.javadoc {
         locale = "en_US"
         encoding = "UTF-8"
         (this as StandardJavadocDocletOptions).apply {
-            links("https://docs.oracle.com/en/java/javase/11/docs/api/")
+            links("https://docs.oracle.com/en/java/javase/17/docs/api/")
         }
     }
 }
@@ -158,7 +158,7 @@ tasks.test {
     useJUnitPlatform()
     outputs.upToDateWhen { false }
     javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     })
     testLogging {
         events("started", "passed", "skipped", "failed", "standardOut", "standardError")
@@ -173,7 +173,7 @@ tasks.test {
 tasks.withType<Checkstyle> {
     outputs.upToDateWhen { false }
     javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     })
     ignoreFailures = false
     maxWarnings = 0
