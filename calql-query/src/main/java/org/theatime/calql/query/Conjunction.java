@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
 
     public Conjunction<T> with(final Collection<Atom<T>> additionalAtoms) {
         final ArrayList<Atom<T>> newAtoms = new ArrayList<>(this.atoms);
-        newAtoms.addAll(atoms);
+        newAtoms.addAll(additionalAtoms);
         return new Conjunction<T>(newAtoms);
     }
 

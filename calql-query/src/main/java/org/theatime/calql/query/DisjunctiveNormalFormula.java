@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public final class DisjunctiveNormalFormula<T extends Comparable<T>> extends Abs
 
     public DisjunctiveNormalFormula<T> with(final Collection<Conjunction<T>> additionalConjunctions) {
         final ArrayList<Conjunction<T>> newConjunctions = new ArrayList<>(this.conjunctions);
-        newConjunctions.addAll(conjunctions);
+        newConjunctions.addAll(additionalConjunctions);
         return new DisjunctiveNormalFormula<T>(newConjunctions);
     }
 
