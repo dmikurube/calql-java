@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -79,7 +78,7 @@ public class TestReadmeExamples {
                 .collect(Collectors.toList()));
     }
 
-    private static List<LocalDate> query(final Conjunction<ChronoLocalDate> conjunction) {
+    private static List<LocalDate> query(final Conjunction<LocalDate> conjunction) {
         return conjunction.streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST).collect(Collectors.toList());
     }
 }

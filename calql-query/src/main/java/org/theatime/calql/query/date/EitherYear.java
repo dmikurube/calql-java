@@ -17,7 +17,6 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -98,17 +97,13 @@ public final class EitherYear extends DateAtom {
     }
 
     @Override
-    public boolean test(final ChronoLocalDate targetChrono) {
-        if (targetChrono instanceof LocalDate) {
-            final LocalDate target = (LocalDate) targetChrono;
-            final boolean contains = this.years.contains(target.getYear());
-            if (this.includes) {
-                return contains;
-            } else {
-                return !contains;
-            }
+    public boolean test(final LocalDate target) {
+        final boolean contains = this.years.contains(target.getYear());
+        if (this.includes) {
+            return contains;
+        } else {
+            return !contains;
         }
-        return false;
     }
 
     /**

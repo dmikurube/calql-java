@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Dai MIKURUBE
+ * Copyright 2023-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -34,7 +33,7 @@ import org.theatime.calql.query.SourceStreamer;
 /**
  * Generates a naive stream of all dates.
  */
-public final class NaiveDateSourceStreamer implements SourceStreamer<ChronoLocalDate, LocalDate> {
+public final class NaiveDateSourceStreamer implements SourceStreamer<LocalDate, LocalDate> {
     private NaiveDateSourceStreamer() {
     }
 
@@ -44,7 +43,7 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<ChronoLocal
 
     @Override
     public Stream<LocalDate> sourceStreamFrom(
-            final Conjunction<ChronoLocalDate> conjunction,
+            final Conjunction<LocalDate> conjunction,
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireLocalDate(conjunction);
@@ -79,14 +78,14 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<ChronoLocal
 
     @Override
     public boolean isApplicableTo(
-            final Conjunction<ChronoLocalDate> conjunction,
+            final Conjunction<LocalDate> conjunction,
             final Order order) {
         return true;
     }
 
     private static class NaiveDateIterator implements Iterator<LocalDate> {
         NaiveDateIterator(
-                final Conjunction<ChronoLocalDate> conjunction,
+                final Conjunction<LocalDate> conjunction,
                 final LocalDate from,
                 final Optional<LocalDate> to,
                 final Order order) {
@@ -140,7 +139,7 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<ChronoLocal
             return beforeNext;
         }
 
-        private final Conjunction<ChronoLocalDate> conjunction;
+        private final Conjunction<LocalDate> conjunction;
 
         private final LocalDate from;
         private final Optional<LocalDate> to;
@@ -150,18 +149,18 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<ChronoLocal
         private LocalDate cursor;
     }
 
-    private static void requireLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
-        for (final Atom<ChronoLocalDate> atom : conjunction) {
+    private static void requireLocalDate(final Conjunction<LocalDate> conjunction) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (atom.unit() != LocalDate.class) {
                 throw new IllegalArgumentException("conjunction contains non-date.");
             }
         }
     }
 
-    private static Optional<LocalDate> earliestLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
-        final Optional<ChronoLocalDate> earliest = conjunction.earliest();
+    private static Optional<LocalDate> earliestLocalDate(final Conjunction<LocalDate> conjunction) {
+        final Optional<LocalDate> earliest = conjunction.earliest();
         if (earliest.isPresent()) {
-            final ChronoLocalDate chronoEarliest = earliest.get();
+            final LocalDate chronoEarliest = earliest.get();
             if (chronoEarliest instanceof LocalDate) {
                 return Optional.<LocalDate>of((LocalDate) chronoEarliest);
             } else {
@@ -172,10 +171,10 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<ChronoLocal
         }
     }
 
-    private static Optional<LocalDate> latestLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
-        final Optional<ChronoLocalDate> latest = conjunction.latest();
+    private static Optional<LocalDate> latestLocalDate(final Conjunction<LocalDate> conjunction) {
+        final Optional<LocalDate> latest = conjunction.latest();
         if (latest.isPresent()) {
-            final ChronoLocalDate chronoLatest = latest.get();
+            final LocalDate chronoLatest = latest.get();
             if (chronoLatest instanceof LocalDate) {
                 return Optional.<LocalDate>of((LocalDate) chronoLatest);
             } else {

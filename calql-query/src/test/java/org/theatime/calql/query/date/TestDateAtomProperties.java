@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +51,7 @@ public class TestDateAtomProperties {
     @TestFactory
     public Stream<DynamicTest> testNegationIsComplement() {
         return atomsAndNegations().map(atom -> DynamicTest.dynamicTest(atom.toString(), () -> {
-            final Atom<ChronoLocalDate> negated = atom.negate();
+            final Atom<LocalDate> negated = atom.negate();
             for (final LocalDate date : sampleDates()) {
                 assertEquals(!atom.test(date), negated.test(date), date.toString());
             }
@@ -62,9 +61,9 @@ public class TestDateAtomProperties {
     @TestFactory
     public Stream<DynamicTest> testBoundsContainAllMatchingDates() {
         return atomsAndNegations().map(atom -> DynamicTest.dynamicTest(atom.toString(), () -> {
-            final Optional<? extends ChronoLocalDate> earliest = atom.earliest();
-            final Optional<? extends ChronoLocalDate> latest = atom.latest();
-            final Optional<? extends ChronoLocalDate> unique = atom.unique();
+            final Optional<? extends LocalDate> earliest = atom.earliest();
+            final Optional<? extends LocalDate> latest = atom.latest();
+            final Optional<? extends LocalDate> unique = atom.unique();
             for (final LocalDate date : sampleDates()) {
                 if (!atom.test(date)) {
                     continue;
@@ -76,12 +75,12 @@ public class TestDateAtomProperties {
         }));
     }
 
-    private static Stream<Atom<ChronoLocalDate>> atomsAndNegations() {
+    private static Stream<Atom<LocalDate>> atomsAndNegations() {
         return atoms().stream().flatMap(atom -> Stream.of(atom, atom.negate()));
     }
 
-    private static List<Atom<ChronoLocalDate>> atoms() {
-        final ArrayList<Atom<ChronoLocalDate>> atoms = new ArrayList<>();
+    private static List<Atom<LocalDate>> atoms() {
+        final ArrayList<Atom<LocalDate>> atoms = new ArrayList<>();
 
         atoms.add(AfterYear.of(2020));
         atoms.add(AfterYear.orEqualTo(2020));

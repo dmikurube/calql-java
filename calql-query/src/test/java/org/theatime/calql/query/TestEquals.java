@@ -19,7 +19,7 @@ package org.theatime.calql.query;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.time.chrono.ChronoLocalDate;
+import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -52,10 +52,10 @@ public class TestEquals {
     }
 
     private static Stream<Object> instances() {
-        final Formula<ChronoLocalDate> year = EitherYear.of(1970);
-        final Formula<ChronoLocalDate> month = EitherMonth.of(6);
-        final NegationNormalFormula<ChronoLocalDate> nnYear = EitherYear.of(1970);
-        final NegationNormalFormula<ChronoLocalDate> nnMonth = EitherMonth.of(6);
+        final Formula<LocalDate> year = EitherYear.of(1970);
+        final Formula<LocalDate> month = EitherMonth.of(6);
+        final NegationNormalFormula<LocalDate> nnYear = EitherYear.of(1970);
+        final NegationNormalFormula<LocalDate> nnMonth = EitherMonth.of(6);
         return Stream.of(
                 And.of(year, month),
                 Or.of(year, month),

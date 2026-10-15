@@ -19,7 +19,6 @@ package org.theatime.calql.query.date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,7 @@ import org.theatime.calql.query.Order;
 public class TestExactDateSourceStreamer {
     @Test
     public void testIntersection() {
-        final Conjunction<ChronoLocalDate> conjunction = Conjunction.of(
+        final Conjunction<LocalDate> conjunction = Conjunction.of(
                 EitherDate.of(JAN1, JAN2, JAN3),
                 EitherDate.of(JAN2, JAN3, JAN4));
         assertEquals(List.of(JAN2, JAN3), source(conjunction, Order.FROM_EARLIEST_TO_LATEST));
@@ -38,7 +37,7 @@ public class TestExactDateSourceStreamer {
     @Test
     public void testIntersectionBecomingEmpty() {
         // The intersection becomes empty at the second EitherDate. It must stay empty at the third EitherDate.
-        final Conjunction<ChronoLocalDate> conjunction = Conjunction.of(
+        final Conjunction<LocalDate> conjunction = Conjunction.of(
                 EitherDate.of(JAN1, JAN3),
                 EitherDate.of(JAN2),
                 EitherDate.of(JAN2));
@@ -47,17 +46,17 @@ public class TestExactDateSourceStreamer {
 
     @Test
     public void testFromEarliestToLatest() {
-        final Conjunction<ChronoLocalDate> conjunction = Conjunction.of(EitherDate.of(JAN3, JAN1, JAN2));
+        final Conjunction<LocalDate> conjunction = Conjunction.of(EitherDate.of(JAN3, JAN1, JAN2));
         assertEquals(List.of(JAN1, JAN2, JAN3), source(conjunction, Order.FROM_EARLIEST_TO_LATEST));
     }
 
     @Test
     public void testFromLatestToEarliest() {
-        final Conjunction<ChronoLocalDate> conjunction = Conjunction.of(EitherDate.of(JAN3, JAN1, JAN2));
+        final Conjunction<LocalDate> conjunction = Conjunction.of(EitherDate.of(JAN3, JAN1, JAN2));
         assertEquals(List.of(JAN3, JAN2, JAN1), source(conjunction, Order.FROM_LATEST_TO_EARLIEST));
     }
 
-    private static List<LocalDate> source(final Conjunction<ChronoLocalDate> conjunction, final Order order) {
+    private static List<LocalDate> source(final Conjunction<LocalDate> conjunction, final Order order) {
         return ExactDateSourceStreamer.of().sourceStreamFrom(conjunction, order).collect(Collectors.toList());
     }
 

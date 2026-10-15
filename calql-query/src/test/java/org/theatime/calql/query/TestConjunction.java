@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -129,7 +128,7 @@ public class TestConjunction {
 
     @Test
     public void testWith() {
-        final Conjunction<ChronoLocalDate> c = Conjunction.<ChronoLocalDate>of(AfterYear.orEqualTo(1970)).with(BeforeYear.orEqualTo(1972));
+        final Conjunction<LocalDate> c = Conjunction.<LocalDate>of(AfterYear.orEqualTo(1970)).with(BeforeYear.orEqualTo(1972));
         assertEquals(List.of(AfterYear.orEqualTo(1970), BeforeYear.orEqualTo(1972)), new ArrayList<>(c));
         assertEquals(LocalDate.of(1970, 1, 1), c.earliest().get());
         assertEquals(LocalDate.of(1972, 12, 31), c.latest().get());
@@ -137,7 +136,7 @@ public class TestConjunction {
 
     @Test
     public void testWithMultiple() {
-        final Conjunction<ChronoLocalDate> c = Conjunction.<ChronoLocalDate>of(EitherYear.of(1970))
+        final Conjunction<LocalDate> c = Conjunction.<LocalDate>of(EitherYear.of(1970))
                 .with(List.of(EitherMonth.of(6), EitherDate.of(1970, 6, 1)));
         assertEquals(List.of(EitherYear.of(1970), EitherMonth.of(6), EitherDate.of(1970, 6, 1)), new ArrayList<>(c));
         assertEquals(LocalDate.of(1970, 6, 1), c.unique().get());

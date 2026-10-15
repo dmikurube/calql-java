@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Dai MIKURUBE
+ * Copyright 2023-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,16 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 import org.theatime.calql.query.Atom;
 
-public abstract class DateAtom extends Atom<ChronoLocalDate> {
+/**
+ * An atomic formula over {@link LocalDate}.
+ *
+ * <p>{@link LocalDate} can be the type parameter because {@link org.theatime.calql.query.Formula}
+ * has the type parameter {@code <T extends Comparable<? super T>>}, not {@code <T extends Comparable<T>>}.
+ */
+public abstract class DateAtom extends Atom<LocalDate> {
     @Override
     public final Class<LocalDate> unit() {
         return LocalDate.class;

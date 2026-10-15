@@ -17,7 +17,6 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -29,7 +28,7 @@ import org.theatime.calql.query.SourceStreamer;
 /**
  * Generates an "optimized" stream of dates, estimated from {@link Conjunction} that includes {@link EitherDate}.
  */
-public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocalDate, LocalDate> {
+public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate, LocalDate> {
     private ExactDateSourceStreamer() {
     }
 
@@ -39,7 +38,7 @@ public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocal
 
     @Override
     public Stream<LocalDate> sourceStreamFrom(
-            final Conjunction<ChronoLocalDate> conjunction,
+            final Conjunction<LocalDate> conjunction,
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireLocalDate(conjunction);
@@ -51,7 +50,7 @@ public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocal
         // |dates| is null until the first EitherDate that includes dates is found.
         // It must be distinguished from an empty set, which means that the intersection has become empty.
         TreeSet<LocalDate> dates = null;
-        for (final Atom<ChronoLocalDate> atom : conjunction) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (!(atom instanceof EitherDate)) {
                 continue;
             }
@@ -79,8 +78,8 @@ public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocal
     }
 
     @Override
-    public boolean isApplicableTo(final Conjunction<ChronoLocalDate> conjunction, final Order order) {
-        for (final Atom<ChronoLocalDate> atom : conjunction) {
+    public boolean isApplicableTo(final Conjunction<LocalDate> conjunction, final Order order) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (!(atom instanceof EitherDate)) {
                 continue;
             }
@@ -93,8 +92,8 @@ public final class ExactDateSourceStreamer implements SourceStreamer<ChronoLocal
         return false;
     }
 
-    private static void requireLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
-        for (final Atom<ChronoLocalDate> atom : conjunction) {
+    private static void requireLocalDate(final Conjunction<LocalDate> conjunction) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (atom.unit() != LocalDate.class) {
                 throw new IllegalArgumentException("conjunction contains non-date.");
             }

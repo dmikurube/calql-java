@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 Dai MIKURUBE
+ * Copyright 2023-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.theatime.calql.query.Atom;
@@ -28,7 +27,7 @@ import org.theatime.calql.query.SourceStreamer;
 /**
  * Generates a stream of possible dates with being hinted from {@link Conjunction}.
  */
-public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLocalDate, LocalDate> {
+public final class DefaultDateSourceStreamer implements SourceStreamer<LocalDate, LocalDate> {
     private DefaultDateSourceStreamer() {
         this.exactDateStreamer = ExactDateSourceStreamer.of();
         this.naiveStreamer = NaiveDateSourceStreamer.of();
@@ -40,7 +39,7 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
 
     @Override
     public Stream<LocalDate> sourceStreamFrom(
-            final Conjunction<ChronoLocalDate> conjunction,
+            final Conjunction<LocalDate> conjunction,
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
         requireLocalDate(conjunction);
@@ -59,13 +58,13 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<ChronoLoc
 
     @Override
     public boolean isApplicableTo(
-            final Conjunction<ChronoLocalDate> conjunction,
+            final Conjunction<LocalDate> conjunction,
             final Order order) {
         return true;
     }
 
-    private static void requireLocalDate(final Conjunction<ChronoLocalDate> conjunction) {
-        for (final Atom<ChronoLocalDate> atom : conjunction) {
+    private static void requireLocalDate(final Conjunction<LocalDate> conjunction) {
+        for (final Atom<LocalDate> atom : conjunction) {
             if (atom.unit() != LocalDate.class) {
                 throw new IllegalArgumentException("conjunction contains non-date.");
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,5 +16,5 @@
 
 package org.theatime.calql.query;
 
-public abstract class Compound<T extends Comparable<T>> extends Formula<T> {
+public abstract class Compound<T extends Comparable<? super T>> extends Formula<T> {
 }

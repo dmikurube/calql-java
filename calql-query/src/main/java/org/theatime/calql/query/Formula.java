@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,15 @@
 
 package org.theatime.calql.query;
 
-public abstract class Formula<T extends Comparable<T>> {
+/**
+ * A logical formula over values of type {@code T}, such as {@link java.time.LocalDate}.
+ *
+ * @param <T> the type of values that this formula is evaluated on. It is bounded by
+ *   {@code Comparable<? super T>}, not by {@code Comparable<T>}, so that types comparable
+ *   through their supertype can be used. For example, {@link java.time.LocalDate} implements
+ *   {@code Comparable<ChronoLocalDate>}, not {@code Comparable<LocalDate>}.
+ */
+public abstract class Formula<T extends Comparable<? super T>> {
     public abstract NegationNormalFormula<T> toNegationNormalForm();
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Dai MIKURUBE
+ * Copyright 2022-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.theatime.calql.query.date;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -60,17 +59,13 @@ public final class EitherDayOfWeek extends DateAtom {
     }
 
     @Override
-    public boolean test(final ChronoLocalDate targetChrono) {
-        if (targetChrono instanceof LocalDate) {
-            final LocalDate target = (LocalDate) targetChrono;
-            final boolean contains = this.daysOfWeek.contains(target.getDayOfWeek());
-            if (this.includes) {
-                return contains;
-            } else {
-                return !contains;
-            }
+    public boolean test(final LocalDate target) {
+        final boolean contains = this.daysOfWeek.contains(target.getDayOfWeek());
+        if (this.includes) {
+            return contains;
+        } else {
+            return !contains;
         }
-        return false;
     }
 
     /**

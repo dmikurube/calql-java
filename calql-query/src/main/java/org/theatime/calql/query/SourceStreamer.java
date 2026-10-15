@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Dai MIKURUBE
+ * Copyright 2024-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.theatime.calql.query;
 
 import java.util.stream.Stream;
 
-public interface SourceStreamer<T extends Comparable<T>, U extends T> {
+public interface SourceStreamer<T extends Comparable<? super T>, U extends T> {
     Stream<U> sourceStreamFrom(Conjunction<T> conjunction, Order order);
 
     default boolean isApplicableTo(Conjunction<T> conjunction, Order order) {

@@ -27,18 +27,18 @@ import java.util.stream.Collectors;
 /**
  * An "and" operator in negation normal form.
  */
-public final class NegationNormalAnd<T extends Comparable<T>> extends NegationNormalCompound<T> {
+public final class NegationNormalAnd<T extends Comparable<? super T>> extends NegationNormalCompound<T> {
     private NegationNormalAnd(final ArrayList<NegationNormalFormula<T>> negationNormalFormulae) {
         this.negationNormalFormulae = Collections.unmodifiableList(negationNormalFormulae);
         this.disjunctiveNormalForm = distributeToDisjunctiveNormalForm(negationNormalFormulae);
     }
 
-    public static <T extends Comparable<T>> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
+    public static <T extends Comparable<? super T>> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
         return new NegationNormalAnd<T>(new ArrayList<>(negationNormalFormulae));
     }
 
     @SafeVarargs
-    public static <T extends Comparable<T>> NegationNormalFormula<T> of(final NegationNormalFormula<T>... negationNormalFormulae) {
+    public static <T extends Comparable<? super T>> NegationNormalFormula<T> of(final NegationNormalFormula<T>... negationNormalFormulae) {
         return of(Arrays.asList(negationNormalFormulae));
     }
 
@@ -87,7 +87,7 @@ public final class NegationNormalAnd<T extends Comparable<T>> extends NegationNo
         return this.negationNormalFormulae.stream().map(Object::toString).collect(Collectors.joining(" AND ", "(", ")"));
     }
 
-    private static <T extends Comparable<T>> DisjunctiveNormalFormula<T> distributeToDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
+    private static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> distributeToDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
         final ArrayList<Conjunction<T>> conjunctions = new ArrayList<>();
         iter(
                 0,
@@ -97,7 +97,7 @@ public final class NegationNormalAnd<T extends Comparable<T>> extends NegationNo
         return DisjunctiveNormalFormula.<T>of(conjunctions);
     }
 
-    private static <T extends Comparable<T>> void iter(
+    private static <T extends Comparable<? super T>> void iter(
             final int index,
             final List<DisjunctiveNormalFormula<T>> dnfs,
             final ArrayList<Atom<T>> visitingConjunction,

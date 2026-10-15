@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package org.theatime.calql.query;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public abstract class Atom<T extends Comparable<T>> extends NegationNormalFormula<T> implements Predicate<T> {
+public abstract class Atom<T extends Comparable<? super T>> extends NegationNormalFormula<T> implements Predicate<T> {
     @Override
     public final NegationNormalFormula<T> negateInNegationNormalForm() {
         return this.negate();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 Dai MIKURUBE
+ * Copyright 2022-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Objects;
 import org.theatime.calql.query.date.DateAtom;
 
@@ -40,16 +39,12 @@ public final class BeforeDayOfMonth extends DateAtom {
     }
 
     @Override
-    public boolean test(final ChronoLocalDate targetChrono) {
-        if (targetChrono instanceof LocalDate) {
-            final LocalDate target = (LocalDate) targetChrono;
-            if (this.inclusive) {
-                return target.getDayOfMonth() <= this.dayOfMonth;
-            } else {
-                return target.getDayOfMonth() < this.dayOfMonth;
-            }
+    public boolean test(final LocalDate target) {
+        if (this.inclusive) {
+            return target.getDayOfMonth() <= this.dayOfMonth;
+        } else {
+            return target.getDayOfMonth() < this.dayOfMonth;
         }
-        return false;
     }
 
     /**

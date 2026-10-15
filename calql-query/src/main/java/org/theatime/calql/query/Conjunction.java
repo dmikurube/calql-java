@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  *
  * <p>Ex. {@code f1 AND f2 AND f3 AND f4}
  */
-public final class Conjunction<T extends Comparable<T>> extends AbstractList<Atom<T>> implements Predicate<T> {
+public final class Conjunction<T extends Comparable<? super T>> extends AbstractList<Atom<T>> implements Predicate<T> {
     private Conjunction(final ArrayList<Atom<T>> atoms) {
         this.atoms = Collections.unmodifiableList(atoms);
 
@@ -76,12 +76,12 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
         }
     }
 
-    public static <T extends Comparable<T>> Conjunction<T> of(final Collection<Atom<T>> atoms) {
+    public static <T extends Comparable<? super T>> Conjunction<T> of(final Collection<Atom<T>> atoms) {
         return new Conjunction<T>(new ArrayList<>(atoms));
     }
 
     @SafeVarargs
-    public static <T extends Comparable<T>> Conjunction<T> of(final Atom<T>... atoms) {
+    public static <T extends Comparable<? super T>> Conjunction<T> of(final Atom<T>... atoms) {
         return of(Arrays.asList(atoms));
     }
 
