@@ -19,7 +19,6 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
-import org.theatime.calql.query.Atom;
 import org.theatime.calql.query.Conjunction;
 import org.theatime.calql.query.Order;
 import org.theatime.calql.query.SourceStreamer;
@@ -27,7 +26,7 @@ import org.theatime.calql.query.SourceStreamer;
 /**
  * Generates a stream of possible dates with being hinted from {@link Conjunction}.
  */
-public final class DefaultDateSourceStreamer implements SourceStreamer<LocalDate, LocalDate> {
+public final class DefaultDateSourceStreamer implements SourceStreamer<LocalDate> {
     private DefaultDateSourceStreamer() {
         this.exactDateStreamer = ExactDateSourceStreamer.of();
         this.naiveStreamer = NaiveDateSourceStreamer.of();
@@ -42,7 +41,6 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<LocalDate
             final Conjunction<LocalDate> conjunction,
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
-        requireLocalDate(conjunction);
 
         if (!conjunction.existsPossibly()) {
             return Stream.<LocalDate>empty();
@@ -61,14 +59,6 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<LocalDate
             final Conjunction<LocalDate> conjunction,
             final Order order) {
         return true;
-    }
-
-    private static void requireLocalDate(final Conjunction<LocalDate> conjunction) {
-        for (final Atom<LocalDate> atom : conjunction) {
-            if (atom.unit() != LocalDate.class) {
-                throw new IllegalArgumentException("conjunction contains non-date.");
-            }
-        }
     }
 
     private final ExactDateSourceStreamer exactDateStreamer;

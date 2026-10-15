@@ -18,8 +18,8 @@ package org.theatime.calql.query;
 
 import java.util.stream.Stream;
 
-public interface SourceStreamer<T extends Comparable<? super T>, U extends T> {
-    Stream<U> sourceStreamFrom(Conjunction<T> conjunction, Order order);
+public interface SourceStreamer<T extends Comparable<? super T>> {
+    Stream<T> sourceStreamFrom(Conjunction<T> conjunction, Order order);
 
     default boolean isApplicableTo(Conjunction<T> conjunction, Order order) {
         return false;

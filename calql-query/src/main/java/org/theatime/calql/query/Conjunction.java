@@ -43,17 +43,17 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
         boolean isUnique = true;
 
         for (final Atom<T> atom : atoms) {
-            final Optional<? extends T> atomEarliest = atom.earliest();
+            final Optional<T> atomEarliest = atom.earliest();
             if (atomEarliest.isPresent() && (totalEarliest == null || totalEarliest.compareTo(atomEarliest.get()) < 0)) {
                 totalEarliest = atomEarliest.get();
             }
 
-            final Optional<? extends T> atomLatest = atom.latest();
+            final Optional<T> atomLatest = atom.latest();
             if (atomLatest.isPresent() && (totalLatest == null || totalLatest.compareTo(atomLatest.get()) > 0)) {
                 totalLatest = atomLatest.get();
             }
 
-            final Optional<? extends T> atomUnique = atom.unique();
+            final Optional<T> atomUnique = atom.unique();
             if (isUnique && atomUnique.isPresent()) {
                 if (totalUnique == null) {
                     totalUnique = atomUnique.get();
@@ -96,8 +96,8 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
         return this.with(Arrays.asList(additionalAtoms));
     }
 
-    public <U extends T> Stream<U> streamBy(
-            final SourceStreamer<T, U> sourceStreamer,
+    public Stream<T> streamBy(
+            final SourceStreamer<T> sourceStreamer,
             final Order order) {
         // Generate the efficient "source" stream based on Conjunction (this, itself) -- sourceStreamFrom(this)
         // Finalize the "source" stream with filtering by Conjunction (this, itself) -- filter(this)

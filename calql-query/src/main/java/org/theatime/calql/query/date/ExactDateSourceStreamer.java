@@ -28,7 +28,7 @@ import org.theatime.calql.query.SourceStreamer;
 /**
  * Generates an "optimized" stream of dates, estimated from {@link Conjunction} that includes {@link EitherDate}.
  */
-public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate, LocalDate> {
+public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate> {
     private ExactDateSourceStreamer() {
     }
 
@@ -41,7 +41,6 @@ public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate, 
             final Conjunction<LocalDate> conjunction,
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
-        requireLocalDate(conjunction);
 
         if (!conjunction.existsPossibly()) {
             return Stream.<LocalDate>empty();
@@ -90,13 +89,5 @@ public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate, 
             return true;
         }
         return false;
-    }
-
-    private static void requireLocalDate(final Conjunction<LocalDate> conjunction) {
-        for (final Atom<LocalDate> atom : conjunction) {
-            if (atom.unit() != LocalDate.class) {
-                throw new IllegalArgumentException("conjunction contains non-date.");
-            }
-        }
     }
 }

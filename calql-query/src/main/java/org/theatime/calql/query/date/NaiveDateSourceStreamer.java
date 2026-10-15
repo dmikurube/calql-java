@@ -25,7 +25,6 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.theatime.calql.query.Atom;
 import org.theatime.calql.query.Conjunction;
 import org.theatime.calql.query.Order;
 import org.theatime.calql.query.SourceStreamer;
@@ -33,7 +32,7 @@ import org.theatime.calql.query.SourceStreamer;
 /**
  * Generates a naive stream of all dates.
  */
-public final class NaiveDateSourceStreamer implements SourceStreamer<LocalDate, LocalDate> {
+public final class NaiveDateSourceStreamer implements SourceStreamer<LocalDate> {
     private NaiveDateSourceStreamer() {
     }
 
@@ -46,14 +45,13 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<LocalDate, 
             final Conjunction<LocalDate> conjunction,
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
-        requireLocalDate(conjunction);
 
         if (!conjunction.existsPossibly()) {
             return Stream.<LocalDate>empty();
         }
 
-        final Optional<LocalDate> earliestLocalDate = earliestLocalDate(conjunction);
-        final Optional<LocalDate> latestLocalDate = latestLocalDate(conjunction);
+        final Optional<LocalDate> earliestLocalDate = conjunction.earliest();
+        final Optional<LocalDate> latestLocalDate = conjunction.latest();
 
         if (order == Order.FROM_EARLIEST_TO_LATEST) {
             if (!earliestLocalDate.isPresent()) {
@@ -147,41 +145,5 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<LocalDate, 
         private final Order order;
 
         private LocalDate cursor;
-    }
-
-    private static void requireLocalDate(final Conjunction<LocalDate> conjunction) {
-        for (final Atom<LocalDate> atom : conjunction) {
-            if (atom.unit() != LocalDate.class) {
-                throw new IllegalArgumentException("conjunction contains non-date.");
-            }
-        }
-    }
-
-    private static Optional<LocalDate> earliestLocalDate(final Conjunction<LocalDate> conjunction) {
-        final Optional<LocalDate> earliest = conjunction.earliest();
-        if (earliest.isPresent()) {
-            final LocalDate chronoEarliest = earliest.get();
-            if (chronoEarliest instanceof LocalDate) {
-                return Optional.<LocalDate>of((LocalDate) chronoEarliest);
-            } else {
-                throw new ClassCastException("not LocalDate");
-            }
-        } else {
-            return Optional.<LocalDate>empty();
-        }
-    }
-
-    private static Optional<LocalDate> latestLocalDate(final Conjunction<LocalDate> conjunction) {
-        final Optional<LocalDate> latest = conjunction.latest();
-        if (latest.isPresent()) {
-            final LocalDate chronoLatest = latest.get();
-            if (chronoLatest instanceof LocalDate) {
-                return Optional.<LocalDate>of((LocalDate) chronoLatest);
-            } else {
-                throw new ClassCastException("not LocalDate");
-            }
-        } else {
-            return Optional.<LocalDate>empty();
-        }
     }
 }

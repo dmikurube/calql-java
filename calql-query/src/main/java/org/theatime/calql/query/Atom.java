@@ -33,11 +33,11 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
 
     public abstract Class<? extends T> unit();
 
-    public abstract Optional<? extends T> earliest();
+    public abstract Optional<T> earliest();
 
-    public abstract Optional<? extends T> latest();
+    public abstract Optional<T> latest();
 
-    public abstract Optional<? extends T> unique();
+    public abstract Optional<T> unique();
 
     public abstract Atom<T> negate();
 }
