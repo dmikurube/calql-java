@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,17 @@ public final class Not<T extends Comparable<T>> extends Compound<T> {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == Not.class && this.formula.equals(((Not) obj).formula);
+    public boolean equals(final Object otherObject) {
+        if (otherObject == this) {
+            return true;
+        }
+
+        if (otherObject instanceof Not) {
+            final Not<?> other = (Not<?>) otherObject;
+            return Objects.equals(this.formula, other.formula);
+        }
+
+        return false;
     }
 
     @Override

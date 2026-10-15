@@ -58,8 +58,17 @@ public final class NegationNormalOr<T extends Comparable<T>> extends NegationNor
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == NegationNormalOr.class && this.negationNormalFormulae.equals(((NegationNormalOr) obj).negationNormalFormulae);
+    public boolean equals(final Object otherObject) {
+        if (otherObject == this) {
+            return true;
+        }
+
+        if (otherObject instanceof NegationNormalOr) {
+            final NegationNormalOr<?> other = (NegationNormalOr<?>) otherObject;
+            return Objects.equals(this.negationNormalFormulae, other.negationNormalFormulae);
+        }
+
+        return false;
     }
 
     @Override

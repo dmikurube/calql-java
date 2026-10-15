@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Dai MIKURUBE
+ * Copyright 2021-2026 Dai MIKURUBE
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,8 +57,17 @@ public final class And<T extends Comparable<T>> extends Compound<T> {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == And.class && this.formulae.equals(((And) obj).formulae);
+    public boolean equals(final Object otherObject) {
+        if (otherObject == this) {
+            return true;
+        }
+
+        if (otherObject instanceof And) {
+            final And<?> other = (And<?>) otherObject;
+            return Objects.equals(this.formulae, other.formulae);
+        }
+
+        return false;
     }
 
     @Override

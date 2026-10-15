@@ -73,8 +73,17 @@ public final class DisjunctiveNormalFormula<T extends Comparable<T>> extends Abs
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == DisjunctiveNormalFormula.class && this.conjunctions.equals(((DisjunctiveNormalFormula) obj).conjunctions);
+    public boolean equals(final Object otherObject) {
+        if (otherObject == this) {
+            return true;
+        }
+
+        if (otherObject instanceof DisjunctiveNormalFormula) {
+            final DisjunctiveNormalFormula<?> other = (DisjunctiveNormalFormula<?>) otherObject;
+            return Objects.equals(this.conjunctions, other.conjunctions);
+        }
+
+        return false;
     }
 
     @Override

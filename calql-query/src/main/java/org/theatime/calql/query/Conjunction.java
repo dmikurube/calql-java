@@ -146,8 +146,17 @@ public final class Conjunction<T extends Comparable<T>> extends AbstractList<Ato
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj.getClass() == Conjunction.class && this.atoms.equals(((Conjunction) obj).atoms);
+    public boolean equals(final Object otherObject) {
+        if (otherObject == this) {
+            return true;
+        }
+
+        if (otherObject instanceof Conjunction) {
+            final Conjunction<?> other = (Conjunction<?>) otherObject;
+            return Objects.equals(this.atoms, other.atoms);
+        }
+
+        return false;
     }
 
     @Override
