@@ -41,36 +41,44 @@ public final class Range<T extends Comparable<? super T>> {
     /**
      * Returns the empty range, which contains no values.
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Comparable<? super T>> Range<T> empty() {
-        return new Range<>(null, null, true);
+        return (Range<T>) EMPTY;
     }
 
     /**
      * Returns the whole range, which is unbounded at both ends, and contains all values.
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Comparable<? super T>> Range<T> whole() {
-        return new Range<>(null, null, false);
+        return (Range<T>) WHOLE;
     }
 
     /**
-     * Returns the range of values greater than or equal to {@code lower}, which is unbounded at the upper end.
+     * Returns the range of values greater than or equal to non-null {@code lower}, which is unbounded at the upper end.
+     *
+     * @throws NullPointerException  if {@code lower} is null
      */
     public static <T extends Comparable<? super T>> Range<T> atLeast(final T lower) {
         return new Range<>(Objects.requireNonNull(lower, "lower"), null, false);
     }
 
     /**
-     * Returns the range of values less than or equal to {@code upper}, which is unbounded at the lower end.
+     * Returns the range of values less than or equal to non-null {@code upper}, which is unbounded at the lower end.
+     *
+     * @throws NullPointerException  if {@code upper} is null
      */
     public static <T extends Comparable<? super T>> Range<T> atMost(final T upper) {
         return new Range<>(null, Objects.requireNonNull(upper, "upper"), false);
     }
 
     /**
-     * Returns the range of values from {@code lower} to {@code upper}, both inclusive, or the empty range if
-     * {@code lower} is greater than {@code upper}.
+     * Returns the range of values from non-null {@code lower} to non-null {@code upper}, both inclusive, or the empty range
+     * if {@code lower} is greater than {@code upper}.
      *
      * <p>Both ends are inclusive in the same way as {@code BETWEEN} in SQL.
+     *
+     * @throws NullPointerException  if {@code lower} or {@code upper} is null
      */
     public static <T extends Comparable<? super T>> Range<T> between(final T lower, final T upper) {
         return ofNullableEnds(Objects.requireNonNull(lower, "lower"), Objects.requireNonNull(upper, "upper"));
@@ -100,6 +108,11 @@ public final class Range<T extends Comparable<? super T>> {
         return Optional.ofNullable(this.upper);
     }
 
+    /**
+     * Returns true if this range contains {@code value}. {@code value} must not be null.
+     *
+     * @throws NullPointerException  if {@code value} is null
+     */
     public boolean contains(final T value) {
         Objects.requireNonNull(value, "value");
         if (this.empty) {
@@ -115,9 +128,12 @@ public final class Range<T extends Comparable<? super T>> {
     }
 
     /**
-     * Returns the range of values contained in both this range and {@code other}.
+     * Returns the range of values contained in both this range and {@code other}. {@code other} must not be null.
+     *
+     * @throws NullPointerException  if {@code other} is null
      */
     public Range<T> intersection(final Range<T> other) {
+        Objects.requireNonNull(other, "other");
         if (this.empty || other.empty) {
             return empty();
         }
@@ -125,14 +141,17 @@ public final class Range<T extends Comparable<? super T>> {
     }
 
     /**
-     * Returns the minimal range that contains both this range and {@code other}.
+     * Returns the minimal range that contains both this range and {@code other}. {@code other} must not be null.
      *
      * <p>For example, the span of {@code [1, 3]} and {@code [6, 9]} is {@code [1, 9]}.
      *
      * <p>If the two ranges overlap, or one of them is empty, the span is their union. Otherwise, the span also contains
      * the values between the two ranges, which are contained in neither of them, such as 4 and 5 in the example above.
+     *
+     * @throws NullPointerException  if {@code other} is null
      */
     public Range<T> span(final Range<T> other) {
+        Objects.requireNonNull(other, "other");
         if (this.empty) {
             return other;
         }
@@ -180,6 +199,9 @@ public final class Range<T extends Comparable<? super T>> {
      * range if {@code lower} is greater than {@code upper}.
      */
     private static <T extends Comparable<? super T>> Range<T> ofNullableEnds(final T lower, final T upper) {
+        if (lower == null && upper == null) {
+            return whole();
+        }
         if (lower != null && upper != null && lower.compareTo(upper) > 0) {
             return empty();
         }
@@ -225,6 +247,10 @@ public final class Range<T extends Comparable<? super T>> {
             throw new IllegalStateException("an empty range has no ends");
         }
     }
+
+    // The empty range and the whole range are shared for any T.
+    private static final Range<?> EMPTY = new Range<>(null, null, true);
+    private static final Range<?> WHOLE = new Range<>(null, null, false);
 
     // true if this range contains no values. Note that it cannot be represented only by lower == null and upper == null.
     //

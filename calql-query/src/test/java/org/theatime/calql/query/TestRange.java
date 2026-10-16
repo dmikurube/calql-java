@@ -19,6 +19,7 @@ package org.theatime.calql.query;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -157,12 +158,24 @@ public class TestRange {
     }
 
     @Test
-    public void testNullEnds() {
+    public void testNullArguments() {
         assertThrows(NullPointerException.class, () -> Range.atLeast(null));
         assertThrows(NullPointerException.class, () -> Range.atMost(null));
         assertThrows(NullPointerException.class, () -> Range.between(null, 3));
         assertThrows(NullPointerException.class, () -> Range.between(3, null));
         assertThrows(NullPointerException.class, () -> Range.between(3, 5).contains(null));
+        assertThrows(NullPointerException.class, () -> Range.between(3, 5).intersection(null));
+        assertThrows(NullPointerException.class, () -> Range.<Integer>empty().intersection(null));
+        assertThrows(NullPointerException.class, () -> Range.between(3, 5).span(null));
+        assertThrows(NullPointerException.class, () -> Range.<Integer>empty().span(null));
+    }
+
+    @Test
+    public void testSharedInstances() {
+        assertSame(Range.empty(), Range.between(5, 3));
+        assertSame(Range.empty(), Range.between(3, 5).intersection(Range.between(6, 7)));
+        assertSame(Range.whole(), Range.<Integer>whole().intersection(Range.whole()));
+        assertSame(Range.whole(), Range.atLeast(5).span(Range.atMost(3)));
     }
 
     @Test
