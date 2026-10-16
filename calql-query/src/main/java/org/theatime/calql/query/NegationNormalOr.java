@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 public final class NegationNormalOr<T extends Comparable<? super T>> extends NegationNormalCompound<T> {
     private NegationNormalOr(final ArrayList<NegationNormalFormula<T>> negationNormalFormulae) {
         this.negationNormalFormulae = Collections.unmodifiableList(negationNormalFormulae);
-        this.disjunctiveNormalForm = toDisjunctiveNormalForm(negationNormalFormulae);
     }
 
     public static <T extends Comparable<? super T>> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
@@ -67,9 +66,18 @@ public final class NegationNormalOr<T extends Comparable<? super T>> extends Neg
         return NegationNormalAnd.of(this.negationNormalFormulae.stream().map(f -> f.negateInNegationNormalForm()).collect(Collectors.toList()));
     }
 
+    /**
+     * Expands this Negation Normal Form (NNF) to a Disjunctive Normal Form (DNF).
+     *
+     * <p>The number of conjunctions in the DNF of an "or" is the sum of the numbers for its formulae. It does not grow
+     * exponentially by this "or" itself, but it can by its formulae. See
+     * {@link NegationNormalFormula#expandToDisjunctiveNormalForm()} for when it grows.
+     *
+     * @return the DNF of this NNF
+     */
     @Override
-    public DisjunctiveNormalFormula<T> getDisjunctiveNormalForm() {
-        return this.disjunctiveNormalForm;
+    public DisjunctiveNormalFormula<T> expandToDisjunctiveNormalForm() {
+        return concatenateToDisjunctiveNormalForm(this.negationNormalFormulae);
     }
 
     @Override
@@ -96,9 +104,9 @@ public final class NegationNormalOr<T extends Comparable<? super T>> extends Neg
         return this.negationNormalFormulae.stream().map(Object::toString).collect(Collectors.joining(" OR ", "(", ")"));
     }
 
-    private static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> toDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
+    private static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> concatenateToDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
         final ArrayList<Conjunction<T>> conjunctions = new ArrayList<>();
-        final List<DisjunctiveNormalFormula<T>> dnfs = negationNormalFormulae.stream().map(NegationNormalFormula<T>::getDisjunctiveNormalForm).collect(Collectors.toList());
+        final List<DisjunctiveNormalFormula<T>> dnfs = negationNormalFormulae.stream().map(NegationNormalFormula<T>::expandToDisjunctiveNormalForm).collect(Collectors.toList());
         for (final DisjunctiveNormalFormula<T> dnf : dnfs) {
             for (final Conjunction<T> conjunction : dnf) {
                 conjunctions.add(conjunction);
@@ -108,6 +116,4 @@ public final class NegationNormalOr<T extends Comparable<? super T>> extends Neg
     }
 
     private final List<NegationNormalFormula<T>> negationNormalFormulae;
-
-    private final DisjunctiveNormalFormula<T> disjunctiveNormalForm;
 }

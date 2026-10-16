@@ -24,9 +24,13 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
         return this.negate();
     }
 
+    /**
+     * Expands this atom to a Disjunctive Normal Form (DNF), which is a disjunction of only one conjunction of this atom.
+     *
+     * @return the DNF of this atom
+     */
     @Override
-    public final DisjunctiveNormalFormula<T> getDisjunctiveNormalForm() {
-        // TODO: Cache?
+    public final DisjunctiveNormalFormula<T> expandToDisjunctiveNormalForm() {
         return DisjunctiveNormalFormula.<T>of(Conjunction.<T>of(this));
     }
 

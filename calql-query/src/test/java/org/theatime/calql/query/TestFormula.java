@@ -72,8 +72,8 @@ public class TestFormula {
     @TestFactory
     public Stream<DynamicTest> testDisjunctiveNormalFormIsEquivalent() {
         return formulae().map(formula -> DynamicTest.dynamicTest(formula.toString(), () -> {
-            final DisjunctiveNormalFormula<LocalDate> dnf = formula.toNegationNormalForm().getDisjunctiveNormalForm();
-            final DisjunctiveNormalFormula<LocalDate> negatedDnf = formula.negateInNegationNormalForm().getDisjunctiveNormalForm();
+            final DisjunctiveNormalFormula<LocalDate> dnf = formula.toNegationNormalForm().expandToDisjunctiveNormalForm();
+            final DisjunctiveNormalFormula<LocalDate> negatedDnf = formula.negateInNegationNormalForm().expandToDisjunctiveNormalForm();
             for (final LocalDate date : sampleDates()) {
                 assertEquals(formula.test(date), testDisjunctiveNormalForm(dnf, date), date.toString());
                 assertEquals(!formula.test(date), testDisjunctiveNormalForm(negatedDnf, date), date.toString());
@@ -88,7 +88,7 @@ public class TestFormula {
             assertThrows(NullPointerException.class, () -> formula.toNegationNormalForm().test(null));
             assertThrows(NullPointerException.class, () -> formula.negateInNegationNormalForm().test(null));
             assertThrows(NullPointerException.class, () -> Not.of(formula).test(null));
-            for (final Conjunction<LocalDate> conjunction : formula.toNegationNormalForm().getDisjunctiveNormalForm()) {
+            for (final Conjunction<LocalDate> conjunction : formula.toNegationNormalForm().expandToDisjunctiveNormalForm()) {
                 assertThrows(NullPointerException.class, () -> conjunction.test(null));
             }
         }));
@@ -100,7 +100,7 @@ public class TestFormula {
         for (final LocalDate date : sampleDates()) {
             assertTrue(and.test(date), date.toString());
         }
-        assertEquals(DisjunctiveNormalFormula.of(Conjunction.<LocalDate>of()), and.toNegationNormalForm().getDisjunctiveNormalForm());
+        assertEquals(DisjunctiveNormalFormula.of(Conjunction.<LocalDate>of()), and.toNegationNormalForm().expandToDisjunctiveNormalForm());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TestFormula {
         for (final LocalDate date : sampleDates()) {
             assertFalse(or.test(date), date.toString());
         }
-        assertEquals(DisjunctiveNormalFormula.<LocalDate>of(), or.toNegationNormalForm().getDisjunctiveNormalForm());
+        assertEquals(DisjunctiveNormalFormula.<LocalDate>of(), or.toNegationNormalForm().expandToDisjunctiveNormalForm());
     }
 
     @Test

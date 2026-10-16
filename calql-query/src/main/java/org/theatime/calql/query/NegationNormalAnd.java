@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 public final class NegationNormalAnd<T extends Comparable<? super T>> extends NegationNormalCompound<T> {
     private NegationNormalAnd(final ArrayList<NegationNormalFormula<T>> negationNormalFormulae) {
         this.negationNormalFormulae = Collections.unmodifiableList(negationNormalFormulae);
-        this.disjunctiveNormalForm = distributeToDisjunctiveNormalForm(negationNormalFormulae);
     }
 
     public static <T extends Comparable<? super T>> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
@@ -63,18 +62,21 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
     }
 
     /**
-     * Gets a Disjunctive Normal Form (DNF) of this Negation Normal Form (NNF).
+     * Expands this Negation Normal Form (NNF) to a Disjunctive Normal Form (DNF).
      *
      * <p>CalQL converts a given WHERE clause in a given query to DNF to process the WHERE clause easily and mechanically.
      *
      * <p>Ex. {@code (f1 AND f2) OR (f3 AND f4 AND f5) OR (f6) OR (f7 AND f8 AND f9)}
      *
+     * <p>Note that the number of conjunctions in the DNF of an "and" is the product of the numbers for its formulae,
+     * which can grow exponentially. See {@link NegationNormalFormula#expandToDisjunctiveNormalForm()} for when it grows.
+     *
      * @see <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">Disjunctive normal form</a>
      * @see <a href="https://github.com/aimacode/aima-java/blob/aima3e-v1.9.1/aima-core/src/main/java/aima/core/logic/propositional/visitors/ConvertToDNF.java">Example from Artificial Intelligence: A Modern Approach</a>
      */
     @Override
-    public DisjunctiveNormalFormula<T> getDisjunctiveNormalForm() {
-        return this.disjunctiveNormalForm;
+    public DisjunctiveNormalFormula<T> expandToDisjunctiveNormalForm() {
+        return distributeToDisjunctiveNormalForm(this.negationNormalFormulae);
     }
 
     @Override
@@ -113,12 +115,18 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
             return DisjunctiveNormalFormula.<T>of(Conjunction.<T>of());
         }
 
+        final List<DisjunctiveNormalFormula<T>> dnfs =
+                negationNormalFormulae.stream().map(NegationNormalFormula<T>::expandToDisjunctiveNormalForm).collect(Collectors.toList());
+        for (final DisjunctiveNormalFormula<T> dnf : dnfs) {
+            if (dnf.isEmpty()) {
+                // A false formula makes the whole "and" false, which has no conjunctions. Return early without
+                // distributing the other formulae, which could be exponentially many before reaching the false one.
+                return DisjunctiveNormalFormula.<T>of();
+            }
+        }
+
         final ArrayList<Conjunction<T>> conjunctions = new ArrayList<>();
-        iter(
-                0,
-                negationNormalFormulae.stream().map(NegationNormalFormula<T>::getDisjunctiveNormalForm).collect(Collectors.toList()),
-                new ArrayList<Atom<T>>(),
-                conjunctions);
+        iter(0, dnfs, new ArrayList<Atom<T>>(), conjunctions);
         return DisjunctiveNormalFormula.<T>of(conjunctions);
     }
 
@@ -142,6 +150,4 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
     }
 
     private final List<NegationNormalFormula<T>> negationNormalFormulae;
-
-    private final DisjunctiveNormalFormula<T> disjunctiveNormalForm;
 }
