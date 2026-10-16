@@ -42,6 +42,26 @@ public final class NegationNormalOr<T extends Comparable<? super T>> extends Neg
         return of(Arrays.asList(negationNormalFormulae));
     }
 
+    /**
+     * Tests whether non-null {@code target} satisfies any of the formulae in this "or".
+     *
+     * <p>It returns false if this "or" has no formulae, as the empty disjunction is false.
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} satisfies any of the formulae
+     * @throws NullPointerException  if {@code target} is null
+     */
+    @Override
+    public boolean test(final T target) {
+        Objects.requireNonNull(target, "target");
+        for (final NegationNormalFormula<T> formula : this.negationNormalFormulae) {
+            if (formula.test(target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public NegationNormalFormula<T> negateInNegationNormalForm() {
         return NegationNormalAnd.of(this.negationNormalFormulae.stream().map(f -> f.negateInNegationNormalForm()).collect(Collectors.toList()));

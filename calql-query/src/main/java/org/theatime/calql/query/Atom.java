@@ -30,6 +30,17 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
         return DisjunctiveNormalFormula.<T>of(Conjunction.<T>of(this));
     }
 
+    /**
+     * Tests whether non-null {@code target} satisfies this atom.
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} satisfies this atom
+     * @throws NullPointerException  if {@code target} is null
+     */
+    // Declared again because Atom inherits test() from both Formula and Predicate, whose erasures differ.
+    @Override
+    public abstract boolean test(T target);
+
     public abstract Class<? extends T> unit();
 
     /**

@@ -18,6 +18,7 @@ package org.theatime.calql.query.date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.DayOfWeek;
@@ -68,6 +69,13 @@ public class TestDateAtomProperties {
                 }
                 assertTrue(range.contains(date), "range " + range + " does not contain " + date);
             }
+        }));
+    }
+
+    @TestFactory
+    public Stream<DynamicTest> testTestingNullThrows() {
+        return atomsAndNegations().map(atom -> DynamicTest.dynamicTest(atom.toString(), () -> {
+            assertThrows(NullPointerException.class, () -> atom.test(null));
         }));
     }
 

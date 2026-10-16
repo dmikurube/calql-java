@@ -51,8 +51,16 @@ abstract class OrderingDateAtom extends DateAtom {
         return this.inclusive;
     }
 
+    /**
+     * Tests whether the column of non-null {@code target} satisfies this atom.
+     *
+     * @param target  the date to test, not null
+     * @return true if the column of {@code target} satisfies this atom
+     * @throws NullPointerException  if {@code target} is null
+     */
     @Override
     public final boolean test(final LocalDate target) {
+        Objects.requireNonNull(target, "target");
         final int compared = Integer.compare(this.columnValueOf(target), this.value);
         if (compared == 0) {
             return this.inclusive;

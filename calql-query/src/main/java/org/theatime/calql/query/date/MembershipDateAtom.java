@@ -51,8 +51,16 @@ abstract class MembershipDateAtom<V> extends DateAtom {
         return this.includes;
     }
 
+    /**
+     * Tests whether the column of non-null {@code target} satisfies this atom.
+     *
+     * @param target  the date to test, not null
+     * @return true if the column of {@code target} satisfies this atom
+     * @throws NullPointerException  if {@code target} is null
+     */
     @Override
     public final boolean test(final LocalDate target) {
+        Objects.requireNonNull(target, "target");
         final boolean contains = this.values.contains(this.columnValueOf(target));
         if (this.includes) {
             return contains;

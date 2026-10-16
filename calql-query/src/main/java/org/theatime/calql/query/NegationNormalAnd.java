@@ -43,6 +43,26 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
     }
 
     /**
+     * Tests whether non-null {@code target} satisfies all the formulae in this "and".
+     *
+     * <p>It returns true if this "and" has no formulae, as the empty conjunction is true.
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} satisfies all the formulae
+     * @throws NullPointerException  if {@code target} is null
+     */
+    @Override
+    public boolean test(final T target) {
+        Objects.requireNonNull(target, "target");
+        for (final NegationNormalFormula<T> formula : this.negationNormalFormulae) {
+            if (!formula.test(target)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Gets a Disjunctive Normal Form (DNF) of this Negation Normal Form (NNF).
      *
      * <p>CalQL converts a given WHERE clause in a given query to DNF to process the WHERE clause easily and mechanically.
@@ -88,6 +108,11 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
     }
 
     private static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> distributeToDisjunctiveNormalForm(final List<NegationNormalFormula<T>> negationNormalFormulae) {
+        if (negationNormalFormulae.isEmpty()) {
+            // The empty "and" is true, which is a disjunction of the empty conjunction.
+            return DisjunctiveNormalFormula.<T>of(Conjunction.<T>of());
+        }
+
         final ArrayList<Conjunction<T>> conjunctions = new ArrayList<>();
         iter(
                 0,

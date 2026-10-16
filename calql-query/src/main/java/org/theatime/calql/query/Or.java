@@ -41,6 +41,26 @@ public final class Or<T extends Comparable<? super T>> extends Compound<T> {
         return of(Arrays.asList(formulae));
     }
 
+    /**
+     * Tests whether non-null {@code target} satisfies any of the formulae in this "or".
+     *
+     * <p>It returns false if this "or" has no formulae, as the empty disjunction is false.
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} satisfies any of the formulae
+     * @throws NullPointerException  if {@code target} is null
+     */
+    @Override
+    public boolean test(final T target) {
+        Objects.requireNonNull(target, "target");
+        for (final Formula<T> formula : this.formulae) {
+            if (formula.test(target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public NegationNormalFormula<T> toNegationNormalForm() {
         return NegationNormalOr.of(this.formulae.stream().map(f -> f.toNegationNormalForm()).collect(Collectors.toList()));

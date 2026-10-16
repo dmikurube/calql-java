@@ -30,6 +30,19 @@ public final class Not<T extends Comparable<? super T>> extends Compound<T> {
         return new Not<T>(formula);
     }
 
+    /**
+     * Tests whether non-null {@code target} does not satisfy the formula in this "not".
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} does not satisfy the formula
+     * @throws NullPointerException  if {@code target} is null
+     */
+    @Override
+    public boolean test(final T target) {
+        Objects.requireNonNull(target, "target");
+        return !this.formula.test(target);
+    }
+
     @Override
     public NegationNormalFormula<T> toNegationNormalForm() {
         return this.formula.negateInNegationNormalForm();

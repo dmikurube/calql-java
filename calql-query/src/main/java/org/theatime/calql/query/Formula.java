@@ -25,6 +25,21 @@ package org.theatime.calql.query;
  *   {@code Comparable<ChronoLocalDate>}, not {@code Comparable<LocalDate>}.
  */
 public abstract class Formula<T extends Comparable<? super T>> {
+    /**
+     * Tests whether non-null {@code target} satisfies this formula.
+     *
+     * <p>{@link Formula} does not implement {@link java.util.function.Predicate}, because
+     * {@link java.util.function.Predicate}'s {@code and()} and {@code or()} would accept any {@code Predicate},
+     * and return a {@code Predicate} that is no longer a formula.
+     *
+     * <p>Use {@code formula::test} instead where a {@link java.util.function.Predicate} is needed.
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} satisfies this formula
+     * @throws NullPointerException  if {@code target} is null
+     */
+    public abstract boolean test(T target);
+
     public abstract NegationNormalFormula<T> toNegationNormalForm();
 
     /**

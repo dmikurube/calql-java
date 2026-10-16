@@ -93,8 +93,18 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
         return this.atoms.get(index);
     }
 
+    /**
+     * Tests whether non-null {@code target} satisfies all the atoms in this conjunction.
+     *
+     * <p>It returns true if this conjunction has no atoms, as the empty conjunction is true.
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} satisfies all the atoms
+     * @throws NullPointerException  if {@code target} is null
+     */
     @Override
     public boolean test(final T target) {
+        Objects.requireNonNull(target, "target");
         for (final Atom<T> atom : this.atoms) {
             if (!atom.test(target)) {
                 return false;

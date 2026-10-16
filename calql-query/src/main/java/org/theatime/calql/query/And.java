@@ -41,6 +41,26 @@ public final class And<T extends Comparable<? super T>> extends Compound<T> {
         return of(Arrays.asList(formulae));
     }
 
+    /**
+     * Tests whether non-null {@code target} satisfies all the formulae in this "and".
+     *
+     * <p>It returns true if this "and" has no formulae, as the empty conjunction is true.
+     *
+     * @param target  the value to test, not null
+     * @return true if {@code target} satisfies all the formulae
+     * @throws NullPointerException  if {@code target} is null
+     */
+    @Override
+    public boolean test(final T target) {
+        Objects.requireNonNull(target, "target");
+        for (final Formula<T> formula : this.formulae) {
+            if (!formula.test(target)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public NegationNormalFormula<T> toNegationNormalForm() {
         return NegationNormalAnd.of(this.formulae.stream().map(f -> f.toNegationNormalForm()).collect(Collectors.toList()));
