@@ -24,11 +24,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.theatime.calql.query.Atom;
+import org.theatime.calql.query.Range;
 
 /**
  * Tests the properties that every date atom must satisfy, both for itself and for its negation.
@@ -59,18 +59,14 @@ public class TestDateAtomProperties {
     }
 
     @TestFactory
-    public Stream<DynamicTest> testBoundsContainAllMatchingDates() {
+    public Stream<DynamicTest> testRangeContainsAllMatchingDates() {
         return atomsAndNegations().map(atom -> DynamicTest.dynamicTest(atom.toString(), () -> {
-            final Optional<? extends LocalDate> earliest = atom.earliest();
-            final Optional<? extends LocalDate> latest = atom.latest();
-            final Optional<? extends LocalDate> unique = atom.unique();
+            final Range<LocalDate> range = atom.range();
             for (final LocalDate date : sampleDates()) {
                 if (!atom.test(date)) {
                     continue;
                 }
-                assertTrue(earliest.map(e -> !date.isBefore(e)).orElse(true), "earliest " + earliest + " is after " + date);
-                assertTrue(latest.map(l -> !date.isAfter(l)).orElse(true), "latest " + latest + " is before " + date);
-                assertTrue(unique.map(u -> date.isEqual(u)).orElse(true), "unique " + unique + " is not " + date);
+                assertTrue(range.contains(date), "range " + range + " does not contain " + date);
             }
         }));
     }

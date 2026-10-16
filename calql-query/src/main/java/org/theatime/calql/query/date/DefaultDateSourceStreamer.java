@@ -42,7 +42,7 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<LocalDate
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
 
-        if (!conjunction.existsPossibly()) {
+        if (conjunction.range().isEmpty()) {
             return Stream.<LocalDate>empty();
         }
 

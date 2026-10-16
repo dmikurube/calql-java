@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,43 +36,11 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
     private Conjunction(final ArrayList<Atom<T>> atoms) {
         this.atoms = Collections.unmodifiableList(atoms);
 
-        T totalEarliest = null;
-        T totalLatest = null;
-        T totalUnique = null;
-        boolean isUnique = true;
-
+        Range<T> range = Range.whole();
         for (final Atom<T> atom : atoms) {
-            final Optional<T> atomEarliest = atom.earliest();
-            if (atomEarliest.isPresent() && (totalEarliest == null || totalEarliest.compareTo(atomEarliest.get()) < 0)) {
-                totalEarliest = atomEarliest.get();
-            }
-
-            final Optional<T> atomLatest = atom.latest();
-            if (atomLatest.isPresent() && (totalLatest == null || totalLatest.compareTo(atomLatest.get()) > 0)) {
-                totalLatest = atomLatest.get();
-            }
-
-            final Optional<T> atomUnique = atom.unique();
-            if (isUnique && atomUnique.isPresent()) {
-                if (totalUnique == null) {
-                    totalUnique = atomUnique.get();
-                } else if (!totalUnique.equals(atomUnique.get())) {
-                    isUnique = false;
-                }
-            }
+            range = range.intersection(atom.range());
         }
-
-        if (totalEarliest != null && totalLatest != null && totalEarliest.compareTo(totalLatest) > 0) {
-            this.earliest = Optional.empty();
-            this.latest = Optional.empty();
-            this.unique = Optional.empty();
-            this.existsPossibly = false;
-        } else {
-            this.earliest = Optional.ofNullable(totalEarliest);
-            this.latest = Optional.ofNullable(totalLatest);
-            this.unique = isUnique ? Optional.ofNullable(totalUnique) : Optional.empty();
-            this.existsPossibly = true;
-        }
+        this.range = range;
     }
 
     public static <T extends Comparable<? super T>> Conjunction<T> of(final Collection<Atom<T>> atoms) {
@@ -104,20 +71,16 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
         return sourceStreamer.sourceStreamFrom(this, order).filter(this);
     }
 
-    public Optional<T> earliest() {
-        return this.earliest;
-    }
-
-    public Optional<T> latest() {
-        return this.latest;
-    }
-
-    public Optional<T> unique() {
-        return this.unique;
-    }
-
-    public boolean existsPossibly() {
-        return this.existsPossibly;
+    /**
+     * Returns a range that contains all the values that this conjunction should match.
+     *
+     * <p>It is the intersection of the ranges of its atoms. Note that it may also contain values that this conjunction
+     * does not match, like {@link Atom#range()}.
+     *
+     * @return a range that contains all the values that this conjunction should match
+     */
+    public Range<T> range() {
+        return this.range;
     }
 
     @Override
@@ -166,9 +129,5 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
 
     private final List<Atom<T>> atoms;
 
-    private final Optional<T> earliest;
-    private final Optional<T> latest;
-    private final Optional<T> unique;
-
-    private final boolean existsPossibly;
+    private final Range<T> range;
 }

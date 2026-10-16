@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.theatime.calql.query.Conjunction;
 import org.theatime.calql.query.Order;
+import org.theatime.calql.query.Range;
 import org.theatime.calql.query.SourceStreamer;
 
 /**
@@ -46,27 +47,28 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<LocalDate> 
             final Order order) {
         Objects.requireNonNull(conjunction, "conjunction is null.");
 
-        if (!conjunction.existsPossibly()) {
+        final Range<LocalDate> range = conjunction.range();
+        if (range.isEmpty()) {
             return Stream.<LocalDate>empty();
         }
 
-        final Optional<LocalDate> earliestLocalDate = conjunction.earliest();
-        final Optional<LocalDate> latestLocalDate = conjunction.latest();
+        final Optional<LocalDate> lower = range.lower();
+        final Optional<LocalDate> upper = range.upper();
 
         if (order == Order.FROM_EARLIEST_TO_LATEST) {
-            if (!earliestLocalDate.isPresent()) {
-                throw new IllegalArgumentException("conjunction does not have the earliest date.");
+            if (!lower.isPresent()) {
+                throw new IllegalArgumentException("the range of conjunction is unbounded at the lower end: " + range);
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, earliestLocalDate.get(), latestLocalDate, order),
+                         new NaiveDateIterator(conjunction, lower.get(), upper, order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
         } else if (order == Order.FROM_LATEST_TO_EARLIEST) {
-            if (!latestLocalDate.isPresent()) {
-                throw new IllegalArgumentException("conjunction does not have the latest date.");
+            if (!upper.isPresent()) {
+                throw new IllegalArgumentException("the range of conjunction is unbounded at the upper end: " + range);
             }
             return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                         new NaiveDateIterator(conjunction, latestLocalDate.get(), earliestLocalDate, order),
+                         new NaiveDateIterator(conjunction, upper.get(), lower, order),
                          Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.NONNULL | Spliterator.IMMUTABLE),
                      false);
         } else {

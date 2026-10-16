@@ -17,8 +17,8 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import org.theatime.calql.query.Atom;
+import org.theatime.calql.query.Range;
 
 /**
  * An atomic formula over {@link LocalDate}.
@@ -32,18 +32,13 @@ public abstract class DateAtom extends Atom<LocalDate> {
         return LocalDate.class;
     }
 
+    /**
+     * Returns {@link Range#whole()} by default, which does not narrow down the dates to search.
+     *
+     * <p>Subclasses override it if they can narrow down the dates, such as {@link EitherYear}.
+     */
     @Override
-    public Optional<LocalDate> earliest() {
-        return Optional.<LocalDate>empty();
-    }
-
-    @Override
-    public Optional<LocalDate> latest() {
-        return Optional.<LocalDate>empty();
-    }
-
-    @Override
-    public Optional<LocalDate> unique() {
-        return Optional.<LocalDate>empty();
+    public Range<LocalDate> range() {
+        return Range.whole();
     }
 }

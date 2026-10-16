@@ -16,7 +16,6 @@
 
 package org.theatime.calql.query;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public abstract class Atom<T extends Comparable<? super T>> extends NegationNormalFormula<T> implements Predicate<T> {
@@ -33,11 +32,17 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
 
     public abstract Class<? extends T> unit();
 
-    public abstract Optional<T> earliest();
-
-    public abstract Optional<T> latest();
-
-    public abstract Optional<T> unique();
+    /**
+     * Returns a range that contains all the values that this atom should match.
+     *
+     * <p>Note that the range may also contain values that this atom does not match. It is to narrow down the values
+     * to search, and every value in the range is still tested by this atom afterwards.
+     *
+     * <p>It returns {@link Range#whole()} if this atom cannot narrow them down.
+     *
+     * @return a range that contains all the values that this atom should match
+     */
+    public abstract Range<T> range();
 
     /**
      * Returns an atom that negates this atom.

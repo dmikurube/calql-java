@@ -17,7 +17,7 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import org.theatime.calql.query.Range;
 
 public final class BeforeYear extends OrderingDateAtom {
     private BeforeYear(final int year, final boolean inclusive) {
@@ -37,11 +37,11 @@ public final class BeforeYear extends OrderingDateAtom {
     }
 
     @Override
-    public Optional<LocalDate> latest() {
+    public Range<LocalDate> range() {
         if (this.inclusive()) {
-            return Optional.of(LocalDate.of(this.value(), 12, 31));
+            return Range.atMost(LocalDate.of(this.value(), 12, 31));
         } else {
-            return Optional.of(LocalDate.of(this.value() - 1, 12, 31));
+            return Range.atMost(LocalDate.of(this.value() - 1, 12, 31));
         }
     }
 

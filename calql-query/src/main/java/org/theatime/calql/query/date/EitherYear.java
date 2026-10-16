@@ -20,9 +20,9 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.theatime.calql.query.Range;
 
 @SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
 public final class EitherYear extends MembershipDateAtom<Integer> {
@@ -59,27 +59,15 @@ public final class EitherYear extends MembershipDateAtom<Integer> {
     }
 
     @Override
-    public Optional<LocalDate> earliest() {
+    public Range<LocalDate> range() {
         if (!this.includes()) {
-            return Optional.empty();
+            return Range.whole();
         }
         if (this.values().isEmpty()) {
-            // Nothing matches. Return an earliest date after the latest date in the same way as EitherDate.
-            return Optional.of(LocalDate.MAX);
+            return Range.empty();
         }
-        return Optional.of(LocalDate.of(Collections.min(this.values()), 1, 1));
-    }
-
-    @Override
-    public Optional<LocalDate> latest() {
-        if (!this.includes()) {
-            return Optional.empty();
-        }
-        if (this.values().isEmpty()) {
-            // Nothing matches. Return a latest date before the earliest date in the same way as EitherDate.
-            return Optional.of(LocalDate.MIN);
-        }
-        return Optional.of(LocalDate.of(Collections.max(this.values()), 12, 31));
+        return Range.between(LocalDate.of(Collections.min(this.values()), 1, 1),
+                             LocalDate.of(Collections.max(this.values()), 12, 31));
     }
 
     @Override
