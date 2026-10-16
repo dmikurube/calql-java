@@ -41,12 +41,12 @@ public final class BeforeDayOfMonth extends OrderingDateAtom {
     }
 
     @Override
-    protected String columnName() {
+    String columnName() {
         return "dayOfMonth";
     }
 
     @Override
-    protected int columnValueOf(final LocalDate date) {
+    int columnValueOf(final LocalDate date) {
         return date.getDayOfMonth();
     }
 }

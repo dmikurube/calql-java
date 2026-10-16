@@ -51,12 +51,12 @@ public final class BeforeYear extends OrderingDateAtom {
     }
 
     @Override
-    protected String columnName() {
+    String columnName() {
         return "year";
     }
 
     @Override
-    protected int columnValueOf(final LocalDate date) {
+    int columnValueOf(final LocalDate date) {
         return date.getYear();
     }
 }

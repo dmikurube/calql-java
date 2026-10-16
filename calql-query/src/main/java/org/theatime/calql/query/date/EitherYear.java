@@ -88,12 +88,12 @@ public final class EitherYear extends MembershipDateAtom<Integer> {
     }
 
     @Override
-    protected String columnName() {
+    String columnName() {
         return "year";
     }
 
     @Override
-    protected Integer columnValueOf(final LocalDate date) {
+    Integer columnValueOf(final LocalDate date) {
         return date.getYear();
     }
 }

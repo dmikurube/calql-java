@@ -61,12 +61,12 @@ public final class EitherDayOfWeek extends MembershipDateAtom<DayOfWeek> {
     }
 
     @Override
-    protected String columnName() {
+    String columnName() {
         return "dayOfWeek";
     }
 
     @Override
-    protected DayOfWeek columnValueOf(final LocalDate date) {
+    DayOfWeek columnValueOf(final LocalDate date) {
         return date.getDayOfWeek();
     }
 }

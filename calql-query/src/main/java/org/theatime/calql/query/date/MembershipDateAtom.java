@@ -36,12 +36,12 @@ abstract class MembershipDateAtom<V> extends DateAtom {
     /**
      * Returns the name of the column, such as {@code "month"}.
      */
-    protected abstract String columnName();
+    abstract String columnName();
 
     /**
      * Returns the value of the column for the date, such as its month.
      */
-    protected abstract V columnValueOf(LocalDate date);
+    abstract V columnValueOf(LocalDate date);
 
     final Set<V> values() {
         return this.values;

@@ -109,12 +109,12 @@ public final class EitherDate extends MembershipDateAtom<LocalDate> {
     }
 
     @Override
-    protected String columnName() {
+    String columnName() {
         return "date";
     }
 
     @Override
-    protected LocalDate columnValueOf(final LocalDate date) {
+    LocalDate columnValueOf(final LocalDate date) {
         return date;
     }
 }

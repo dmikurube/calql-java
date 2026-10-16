@@ -36,12 +36,12 @@ abstract class OrderingDateAtom extends DateAtom {
     /**
      * Returns the name of the column, such as {@code "month"}.
      */
-    protected abstract String columnName();
+    abstract String columnName();
 
     /**
      * Returns the value of the column for the date, such as its month.
      */
-    protected abstract int columnValueOf(LocalDate date);
+    abstract int columnValueOf(LocalDate date);
 
     final int value() {
         return this.value;

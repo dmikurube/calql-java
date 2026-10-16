@@ -41,12 +41,12 @@ public final class AfterMonth extends OrderingDateAtom {
     }
 
     @Override
-    protected String columnName() {
+    String columnName() {
         return "month";
     }
 
     @Override
-    protected int columnValueOf(final LocalDate date) {
+    int columnValueOf(final LocalDate date) {
         return date.getMonthValue();
     }
 }

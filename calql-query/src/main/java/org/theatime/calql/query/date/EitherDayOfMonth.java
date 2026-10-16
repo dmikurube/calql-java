@@ -62,12 +62,12 @@ public final class EitherDayOfMonth extends MembershipDateAtom<Integer> {
     }
 
     @Override
-    protected String columnName() {
+    String columnName() {
         return "dayOfMonth";
     }
 
     @Override
-    protected Integer columnValueOf(final LocalDate date) {
+    Integer columnValueOf(final LocalDate date) {
         return date.getDayOfMonth();
     }
 }
