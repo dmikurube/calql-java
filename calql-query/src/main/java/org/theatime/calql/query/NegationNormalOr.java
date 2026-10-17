@@ -80,6 +80,23 @@ public final class NegationNormalOr<T extends Comparable<? super T>> extends Neg
         return concatenateToDisjunctiveNormalForm(this.negationNormalFormulae);
     }
 
+    /**
+     * Returns a range that contains all the values that this "or" should match.
+     *
+     * <p>It is the span of the ranges of its formulae, or the empty range if this "or" has no formulae. Note that the
+     * span may also contain values between the ranges, which none of its formulae match. See {@link Range#span(Range)}.
+     *
+     * @return a range that contains all the values that this "or" should match
+     */
+    @Override
+    public Range<T> range() {
+        Range<T> range = Range.empty();
+        for (final NegationNormalFormula<T> formula : this.negationNormalFormulae) {
+            range = range.span(formula.range());
+        }
+        return range;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(NegationNormalOr.class, this.negationNormalFormulae);

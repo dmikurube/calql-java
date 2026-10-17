@@ -51,4 +51,16 @@ public abstract class NegationNormalFormula<T extends Comparable<? super T>> ext
      * @return the DNF of this NNF
      */
     public abstract DisjunctiveNormalFormula<T> expandToDisjunctiveNormalForm();
+
+    /**
+     * Returns a range that contains all the values that this Negation Normal Form (NNF) should match.
+     *
+     * <p>Note that the range may also contain values that this NNF does not match. It is to narrow down
+     * the values to search, and every value in the range should still be tested by this NNF afterwards.
+     *
+     * <p>It is computed from the ranges of the atoms without expanding it to DNF.
+     *
+     * @return a range that contains all the values that this NNF should match
+     */
+    public abstract Range<T> range();
 }

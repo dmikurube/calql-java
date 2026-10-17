@@ -30,13 +30,16 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.theatime.calql.query.date.AfterDayOfMonth;
+import org.theatime.calql.query.date.AfterYear;
+import org.theatime.calql.query.date.BeforeYear;
 import org.theatime.calql.query.date.EitherDayOfMonth;
 import org.theatime.calql.query.date.EitherDayOfWeek;
 import org.theatime.calql.query.date.EitherMonth;
 import org.theatime.calql.query.date.EitherYear;
 
 /**
- * Tests that a formula, its negation normal form, and its disjunctive normal form match the same dates.
+ * Tests that a formula, its negation normal form, and its disjunctive normal form match the same dates, and that the
+ * range of its negation normal form contains all the dates it matches.
  */
 public class TestFormula {
     @TestFactory
@@ -79,6 +82,20 @@ public class TestFormula {
                 assertEquals(!formula.test(date), testDisjunctiveNormalForm(negatedDnf, date), date.toString());
             }
         }));
+    }
+
+    @TestFactory
+    public Stream<DynamicTest> testRangeContainsAllMatchingDates() {
+        return formulae().flatMap(formula -> Stream.of(formula.toNegationNormalForm(), formula.negateInNegationNormalForm()))
+                .map(nnf -> DynamicTest.dynamicTest(nnf.toString(), () -> {
+                    final Range<LocalDate> range = nnf.range();
+                    for (final LocalDate date : sampleDates()) {
+                        if (!nnf.test(date)) {
+                            continue;
+                        }
+                        assertTrue(range.contains(date), "range " + range + " does not contain " + date);
+                    }
+                }));
     }
 
     @TestFactory
@@ -162,6 +179,8 @@ public class TestFormula {
         formulae.add(Or.<LocalDate>of());
         formulae.add(And.of(EitherMonth.of(2), Or.<LocalDate>of()));
         formulae.add(Or.of(EitherMonth.of(2), And.<LocalDate>of()));
+        formulae.add(Or.of(And.of(AfterYear.of(1999), EitherMonth.of(2)), BeforeYear.orEqualTo(1999)));
+        formulae.add(And.of(Or.of(EitherYear.of(1999), EitherYear.of(2021)), Not.of(BeforeYear.of(2000))));
 
         return formulae.stream();
     }

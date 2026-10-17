@@ -57,6 +57,7 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
      *
      * @return a range that contains all the values that this atom should match
      */
+    @Override
     public abstract Range<T> range();
 
     /**

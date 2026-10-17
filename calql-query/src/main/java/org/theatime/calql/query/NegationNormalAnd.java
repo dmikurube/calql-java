@@ -79,6 +79,22 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
         return distributeToDisjunctiveNormalForm(this.negationNormalFormulae);
     }
 
+    /**
+     * Returns a range that contains all the values that this "and" should match.
+     *
+     * <p>It is the intersection of the ranges of its formulae, or the whole range if this "and" has no formulae.
+     *
+     * @return a range that contains all the values that this "and" should match
+     */
+    @Override
+    public Range<T> range() {
+        Range<T> range = Range.whole();
+        for (final NegationNormalFormula<T> formula : this.negationNormalFormulae) {
+            range = range.intersection(formula.range());
+        }
+        return range;
+    }
+
     @Override
     public NegationNormalFormula<T> negateInNegationNormalForm() {
         return NegationNormalOr.of(
