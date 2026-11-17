@@ -19,15 +19,16 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A base of the date atoms that test whether a column of a date is one of the given values, such as {@link EitherMonth}.
  *
  * <p>Its negation is an atom of the same class with the same values, which tests whether the column is none of them.
  *
- * @param <V> the type of the values of the column
+ * @param <V> the type of the values of the column, which are comparable so that {@link #toString()} can sort them
  */
-abstract class MembershipDateAtom<V> extends DateAtom {
+abstract class MembershipDateAtom<V extends Comparable<? super V>> extends DateAtom {
     MembershipDateAtom(final Set<V> values, final boolean includes) {
         this.values = values;
         this.includes = includes;
@@ -94,7 +95,9 @@ abstract class MembershipDateAtom<V> extends DateAtom {
         if (this.values.size() == 1) {
             return String.format("%s %s %s", this.columnName(), this.includes ? "=" : "<>", this.values.iterator().next());
         } else {
-            return String.format("%s %s %s", this.columnName(), this.includes ? "in" : "not in", this.values);
+            // The values are sorted, as the iteration order of the set is not stable, even between runs of the same program.
+            final String values = this.values.stream().sorted().map(String::valueOf).collect(Collectors.joining(", ", "[", "]"));
+            return String.format("%s %s %s", this.columnName(), this.includes ? "in" : "not in", values);
         }
     }
 

@@ -38,8 +38,9 @@ public class TestEitherDate {
 
     @Test
     public void testToStringMultiple() {
-        final List<LocalDate> dates = List.of(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 2));
-        assertEquals("date in " + EitherDate.of(dates).dates(), EitherDate.of(dates).toString());
-        assertEquals("date not in " + EitherDate.notOf(dates).dates(), EitherDate.notOf(dates).toString());
+        // The dates are sorted regardless of the given order.
+        final List<LocalDate> dates = List.of(LocalDate.of(2024, 1, 2), LocalDate.of(2024, 1, 1), LocalDate.of(2023, 12, 31));
+        assertEquals("date in [2023-12-31, 2024-01-01, 2024-01-02]", EitherDate.of(dates).toString());
+        assertEquals("date not in [2023-12-31, 2024-01-01, 2024-01-02]", EitherDate.notOf(dates).toString());
     }
 }
