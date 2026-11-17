@@ -112,6 +112,21 @@ public class TestFormula {
     }
 
     @Test
+    public void testNullFormulaeAreRejected() {
+        final Formula<LocalDate> year = EitherYear.of(2000);
+        final Atom<LocalDate> atom = EitherYear.of(2000);
+        assertThrows(NullPointerException.class, () -> And.of(year, null));
+        assertThrows(NullPointerException.class, () -> Or.of(year, null));
+        assertThrows(NullPointerException.class, () -> Not.of(null));
+        assertThrows(NullPointerException.class, () -> NegationNormalAnd.of(atom, null));
+        assertThrows(NullPointerException.class, () -> NegationNormalOr.of(atom, null));
+        assertThrows(NullPointerException.class, () -> Conjunction.of(atom, null));
+        assertThrows(NullPointerException.class, () -> Conjunction.of(atom).with(atom, null));
+        assertThrows(NullPointerException.class, () -> DisjunctiveNormalFormula.of(Conjunction.of(atom), null));
+        assertThrows(NullPointerException.class, () -> DisjunctiveNormalFormula.of(Conjunction.of(atom)).with(Conjunction.of(atom), null));
+    }
+
+    @Test
     public void testEmptyAndIsTrue() {
         final Formula<LocalDate> and = And.<LocalDate>of();
         for (final LocalDate date : sampleDates()) {

@@ -23,7 +23,7 @@ import java.util.Objects;
  */
 public final class Not<T extends Comparable<? super T>> extends Compound<T> {
     public Not(final Formula<T> formula) {
-        this.formula = formula;
+        this.formula = Objects.requireNonNull(formula, "formula");
     }
 
     public static <T extends Comparable<? super T>> Formula<T> of(final Formula<T> formula) {

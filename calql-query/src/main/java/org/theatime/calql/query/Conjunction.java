@@ -20,7 +20,6 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -33,18 +32,19 @@ import java.util.stream.Stream;
  * <p>Ex. {@code f1 AND f2 AND f3 AND f4}
  */
 public final class Conjunction<T extends Comparable<? super T>> extends AbstractList<Atom<T>> implements Predicate<T> {
-    private Conjunction(final ArrayList<Atom<T>> atoms) {
-        this.atoms = Collections.unmodifiableList(atoms);
+    private Conjunction(final Collection<Atom<T>> atoms) {
+        // List.copyOf() rejects null elements, so that a null atom fails early here, not when it is evaluated.
+        this.atoms = List.copyOf(atoms);
 
         Range<T> range = Range.whole();
-        for (final Atom<T> atom : atoms) {
+        for (final Atom<T> atom : this.atoms) {
             range = range.intersection(atom.range());
         }
         this.range = range;
     }
 
     public static <T extends Comparable<? super T>> Conjunction<T> of(final Collection<Atom<T>> atoms) {
-        return new Conjunction<T>(new ArrayList<>(atoms));
+        return new Conjunction<T>(atoms);
     }
 
     @SafeVarargs

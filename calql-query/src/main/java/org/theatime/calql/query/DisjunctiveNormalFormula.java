@@ -20,7 +20,6 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,12 +32,13 @@ import java.util.stream.Collectors;
  * @see <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">Disjunctive normal form</a>
  */
 public final class DisjunctiveNormalFormula<T extends Comparable<? super T>> extends AbstractList<Conjunction<T>> {
-    private DisjunctiveNormalFormula(final ArrayList<Conjunction<T>> conjunctions) {
-        this.conjunctions = Collections.unmodifiableList(conjunctions);
+    private DisjunctiveNormalFormula(final Collection<Conjunction<T>> conjunctions) {
+        // List.copyOf() rejects null elements, so that a null conjunction fails early here, not when it is evaluated.
+        this.conjunctions = List.copyOf(conjunctions);
     }
 
     public static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> of(final Collection<Conjunction<T>> conjunctions) {
-        return new DisjunctiveNormalFormula<T>(new ArrayList<Conjunction<T>>(conjunctions));
+        return new DisjunctiveNormalFormula<T>(conjunctions);
     }
 
     @SafeVarargs

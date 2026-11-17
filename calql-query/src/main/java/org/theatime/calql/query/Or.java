@@ -16,10 +16,8 @@
 
 package org.theatime.calql.query;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,12 +26,13 @@ import java.util.stream.Collectors;
  * An "or" operator, which may not be in negation normal form.
  */
 public final class Or<T extends Comparable<? super T>> extends Compound<T> {
-    private Or(final ArrayList<Formula<T>> formulae) {
-        this.formulae = Collections.unmodifiableList(formulae);
+    private Or(final Collection<Formula<T>> formulae) {
+        // List.copyOf() rejects null elements, so that a null formula fails early here, not when it is evaluated.
+        this.formulae = List.copyOf(formulae);
     }
 
     public static <T extends Comparable<? super T>> Formula<T> of(final Collection<Formula<T>> formulae) {
-        return new Or<T>(new ArrayList<>(formulae));
+        return new Or<T>(formulae);
     }
 
     @SafeVarargs

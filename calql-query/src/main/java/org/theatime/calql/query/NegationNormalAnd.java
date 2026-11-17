@@ -19,7 +19,6 @@ package org.theatime.calql.query;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,12 +27,13 @@ import java.util.stream.Collectors;
  * An "and" operator in negation normal form.
  */
 public final class NegationNormalAnd<T extends Comparable<? super T>> extends NegationNormalCompound<T> {
-    private NegationNormalAnd(final ArrayList<NegationNormalFormula<T>> negationNormalFormulae) {
-        this.negationNormalFormulae = Collections.unmodifiableList(negationNormalFormulae);
+    private NegationNormalAnd(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
+        // List.copyOf() rejects null elements, so that a null formula fails early here, not when it is evaluated.
+        this.negationNormalFormulae = List.copyOf(negationNormalFormulae);
     }
 
     public static <T extends Comparable<? super T>> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
-        return new NegationNormalAnd<T>(new ArrayList<>(negationNormalFormulae));
+        return new NegationNormalAnd<T>(negationNormalFormulae);
     }
 
     @SafeVarargs
