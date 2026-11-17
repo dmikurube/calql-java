@@ -16,7 +16,7 @@ Imagine a virtual table like the one below.
 
 This `calql` is a (work-in-progress) query library / language to such a table.
 
-The intented design by examples
+The intended design by examples
 --------------------------------
 
 The default `dates` table and its default columns would be based on the [proleptic Gregorian calendar](https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar) and [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601).

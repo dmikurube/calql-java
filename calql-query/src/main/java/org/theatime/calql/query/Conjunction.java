@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A logical conjuction is the "and" of a set of atoms.
+ * A logical conjunction is the "and" of a set of atoms.
  *
  * <p>Ex. {@code f1 AND f2 AND f3 AND f4}
  */
