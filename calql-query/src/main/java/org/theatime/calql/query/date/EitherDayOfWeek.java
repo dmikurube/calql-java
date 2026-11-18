@@ -18,6 +18,7 @@ package org.theatime.calql.query.date;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
@@ -48,11 +49,11 @@ public final class EitherDayOfWeek extends MembershipDateAtom<DayOfWeek> {
     }
 
     public static EitherDayOfWeek of(final DayOfWeek... daysOfWeek) {
-        return new EitherDayOfWeek(Set.of(daysOfWeek), true);
+        return of(Arrays.asList(daysOfWeek), true);
     }
 
     public static EitherDayOfWeek notOf(final DayOfWeek... daysOfWeek) {
-        return new EitherDayOfWeek(Set.of(daysOfWeek), false);
+        return of(Arrays.asList(daysOfWeek), false);
     }
 
     @Override

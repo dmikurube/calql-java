@@ -17,6 +17,7 @@
 package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -57,11 +58,11 @@ public final class EitherDate extends MembershipDateAtom<LocalDate> {
     }
 
     public static EitherDate of(final LocalDate... dates) {
-        return of(Set.of(dates), true);
+        return of(Arrays.asList(dates), true);
     }
 
     public static EitherDate notOf(final LocalDate... dates) {
-        return of(Set.of(dates), false);
+        return of(Arrays.asList(dates), false);
     }
 
     public Set<LocalDate> dates() {

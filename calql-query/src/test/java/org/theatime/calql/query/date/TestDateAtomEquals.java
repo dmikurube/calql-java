@@ -38,6 +38,16 @@ public class TestDateAtomEquals {
     }
 
     @Test
+    public void testDuplicatedMemberships() {
+        // Every factory accepts duplicated values, as the int varargs and the Collection factories have done.
+        assertEqualAtoms(EitherMonth.of(2), EitherMonth.of(2, 2));
+        assertEqualAtoms(EitherDayOfWeek.of(DayOfWeek.MONDAY), EitherDayOfWeek.of(DayOfWeek.MONDAY, DayOfWeek.MONDAY));
+        assertEqualAtoms(EitherDayOfWeek.notOf(DayOfWeek.MONDAY), EitherDayOfWeek.notOf(DayOfWeek.MONDAY, DayOfWeek.MONDAY));
+        assertEqualAtoms(EitherDate.of(2024, 1, 1), EitherDate.of(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1)));
+        assertEqualAtoms(EitherDate.notOf(2024, 1, 1), EitherDate.notOf(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1)));
+    }
+
+    @Test
     public void testEqualOrderings() {
         assertEqualAtoms(AfterYear.orEqualTo(2020), AfterYear.of(2020, true));
         assertEqualAtoms(BeforeMonth.of(6), AfterMonth.orEqualTo(6).negate());
