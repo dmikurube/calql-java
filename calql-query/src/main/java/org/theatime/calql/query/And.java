@@ -52,6 +52,8 @@ public final class And<T extends Comparable<? super T>> extends Compound<T> {
     @Override
     public boolean test(final T target) {
         Objects.requireNonNull(target, "target");
+        // Possible optimization: testing the formulae that are cheap and likely to be false first would return false
+        // earlier. It is left to an optimizer, as reordering the formulae here would change the structure as written.
         for (final Formula<T> formula : this.formulae) {
             if (!formula.test(target)) {
                 return false;

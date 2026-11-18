@@ -16,9 +16,7 @@
 
 package org.theatime.calql.query;
 
-import java.util.function.Predicate;
-
-public abstract class Atom<T extends Comparable<? super T>> extends NegationNormalFormula<T> implements Predicate<T> {
+public abstract class Atom<T extends Comparable<? super T>> extends NegationNormalFormula<T> {
     @Override
     public final NegationNormalFormula<T> negateInNegationNormalForm() {
         return this.negate();
@@ -33,17 +31,6 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
     public final DisjunctiveNormalFormula<T> expandToDisjunctiveNormalForm() {
         return DisjunctiveNormalFormula.<T>of(Conjunction.<T>of(this));
     }
-
-    /**
-     * Tests whether non-null {@code target} satisfies this atom.
-     *
-     * @param target  the value to test, not null
-     * @return true if {@code target} satisfies this atom
-     * @throws NullPointerException  if {@code target} is null
-     */
-    // Declared again because Atom inherits test() from both Formula and Predicate, whose erasures differ.
-    @Override
-    public abstract boolean test(T target);
 
     public abstract Class<? extends T> unit();
 
@@ -68,5 +55,6 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
      *
      * @return the negated atom
      */
+    @Override
     public abstract Atom<T> negate();
 }

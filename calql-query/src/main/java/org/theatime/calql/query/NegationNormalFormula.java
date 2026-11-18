@@ -63,4 +63,20 @@ public abstract class NegationNormalFormula<T extends Comparable<? super T>> ext
      * @return a range that contains all the values that this NNF should match
      */
     public abstract Range<T> range();
+
+    /**
+     * Returns the negation of this Negation Normal Form (NNF), which is still an NNF.
+     *
+     * <p>It is the same as {@link #negateInNegationNormalForm()}, which takes time linear in the size of this NNF,
+     * unlike {@link Formula#negate()} that just wraps a formula with {@link Not}.
+     *
+     * @return the negation of this NNF in NNF
+     */
+    @Override
+    public NegationNormalFormula<T> negate() {
+        // Possible optimization: it builds a new NNF every time, in time linear in the size of this NNF. The negation
+        // could be kept in this instance, or the negation could keep this NNF so that negating it again returns this
+        // instance, at the cost of memory.
+        return this.negateInNegationNormalForm();
+    }
 }

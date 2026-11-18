@@ -53,6 +53,10 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
     @Override
     public boolean test(final T target) {
         Objects.requireNonNull(target, "target");
+        // Possible optimization: testing the formulae that are cheap and likely to be false first would return false
+        // earlier. Atoms of the same column could also be merged, such as "month in (1, 2) and month in (2, 3)" into
+        // "month = 2", and an "and" that contains an empty "or" is always false. They are left to an optimizer, as they
+        // would change the structure as written.
         for (final NegationNormalFormula<T> formula : this.negationNormalFormulae) {
             if (!formula.test(target)) {
                 return false;

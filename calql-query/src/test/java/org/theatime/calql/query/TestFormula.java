@@ -25,6 +25,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -73,6 +75,24 @@ public class TestFormula {
     }
 
     @TestFactory
+    public Stream<DynamicTest> testNegateIsNot() {
+        return formulae().map(formula -> DynamicTest.dynamicTest(formula.toString(), () -> {
+            assertEquals(Not.of(formula), formula.negate());
+        }));
+    }
+
+    @TestFactory
+    public Stream<DynamicTest> testNegateOfNegationNormalFormIsComplement() {
+        return formulae().map(formula -> DynamicTest.dynamicTest(formula.toString(), () -> {
+            final NegationNormalFormula<LocalDate> nnf = formula.toNegationNormalForm();
+            final NegationNormalFormula<LocalDate> negated = nnf.negate();
+            for (final LocalDate date : sampleDates()) {
+                assertEquals(!nnf.test(date), negated.test(date), date.toString());
+            }
+        }));
+    }
+
+    @TestFactory
     public Stream<DynamicTest> testDisjunctiveNormalFormIsEquivalent() {
         return formulae().map(formula -> DynamicTest.dynamicTest(formula.toString(), () -> {
             final DisjunctiveNormalFormula<LocalDate> dnf = formula.toNegationNormalForm().expandToDisjunctiveNormalForm();
@@ -115,6 +135,8 @@ public class TestFormula {
     public void testNullFormulaeAreRejected() {
         final Formula<LocalDate> year = EitherYear.of(2000);
         final Atom<LocalDate> atom = EitherYear.of(2000);
+        assertThrows(NullPointerException.class, () -> year.and(null));
+        assertThrows(NullPointerException.class, () -> year.or(null));
         assertThrows(NullPointerException.class, () -> And.of(year, null));
         assertThrows(NullPointerException.class, () -> Or.of(year, null));
         assertThrows(NullPointerException.class, () -> Not.of(null));
@@ -158,6 +180,35 @@ public class TestFormula {
         assertTrue(or.test(LocalDate.of(2000, 2, 28)));
         assertTrue(or.test(LocalDate.of(2000, 3, 29)));
         assertFalse(or.test(LocalDate.of(2000, 3, 28)));
+    }
+
+    @Test
+    public void testAndOrOfFormulae() {
+        final Formula<LocalDate> february = EitherMonth.of(2);
+        final Formula<LocalDate> twentyNinth = EitherDayOfMonth.of(29);
+        assertEquals(And.of(february, twentyNinth), february.and(twentyNinth));
+        assertEquals(Or.of(february, twentyNinth), february.or(twentyNinth));
+    }
+
+    @Test
+    public void testAndOrWithLambda() {
+        final Formula<LocalDate> february = EitherMonth.of(2);
+        // A lambda expression is not a formula, so Predicate#and() and Predicate#or() are called instead.
+        final Predicate<LocalDate> and = february.and(date -> date.getYear() == 2000);
+        final Predicate<LocalDate> or = february.or(date -> date.getYear() == 2000);
+        assertFalse(and instanceof Formula);
+        assertFalse(or instanceof Formula);
+        assertTrue(and.test(LocalDate.of(2000, 2, 1)));
+        assertFalse(and.test(LocalDate.of(2021, 2, 1)));
+        assertTrue(or.test(LocalDate.of(2000, 3, 1)));
+        assertFalse(or.test(LocalDate.of(2021, 3, 1)));
+    }
+
+    @Test
+    public void testFilterByFormula() {
+        // A formula is a Predicate, so it can be given to Stream#filter() as is.
+        final Formula<LocalDate> leapDay = And.of(EitherMonth.of(2), EitherDayOfMonth.of(29));
+        assertEquals(List.of(LocalDate.of(2000, 2, 29)), sampleDates().stream().filter(leapDay).collect(Collectors.toList()));
     }
 
     @Test

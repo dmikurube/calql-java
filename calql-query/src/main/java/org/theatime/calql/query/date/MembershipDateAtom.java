@@ -62,6 +62,9 @@ abstract class MembershipDateAtom<V extends Comparable<? super V>> extends DateA
     @Override
     public final boolean test(final LocalDate target) {
         Objects.requireNonNull(target, "target");
+        // Possible optimization: columnValueOf() boxes the value of the column for every target. A year such as 2024 is
+        // out of the Integer cache (-128 to 127), so it may allocate an Integer every time unless the JIT eliminates it.
+        // Months and days of month could be tested by bit masks, and days of week by an EnumSet, without boxing.
         final boolean contains = this.values.contains(this.columnValueOf(target));
         if (this.includes) {
             return contains;
