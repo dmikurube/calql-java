@@ -42,6 +42,8 @@ import java.util.stream.Stream;
  * <p>Note that an empty {@link Conjunction} "equals" an empty {@link DisjunctiveNormalFormula}, which means
  * {@code Conjunction.of().equals(DisjunctiveNormalFormula.of())} is {@code true} as both are empty {@link Set}s,
  * while an empty conjunction is evaluated as {@code true}, and an empty DNF logically represents {@code false}.
+ *
+ * @param <T> the type of values that this conjunction is evaluated on
  */
 public final class Conjunction<T extends Comparable<? super T>> extends AbstractSet<Atom<T>> implements Predicate<T> {
     private Conjunction(final Collection<Atom<T>> atoms) {
@@ -64,26 +66,74 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
         this.range = range;
     }
 
+    /**
+     * Returns the conjunction of {@code atoms}.
+     *
+     * <p>Duplicated atoms are removed. The conjunction of no atoms is true.
+     *
+     * @param <T>  the type of values that the conjunction is evaluated on
+     * @param atoms  the atoms to "and", not null, and not containing null
+     * @return the conjunction of {@code atoms}
+     * @throws NullPointerException  if {@code atoms} is null, or contains null
+     */
     public static <T extends Comparable<? super T>> Conjunction<T> of(final Collection<Atom<T>> atoms) {
         return new Conjunction<T>(atoms);
     }
 
+    /**
+     * Returns the conjunction of {@code atoms}.
+     *
+     * <p>Duplicated atoms are removed. The conjunction of no atoms is true.
+     *
+     * @param <T>  the type of values that the conjunction is evaluated on
+     * @param atoms  the atoms to "and", not null, and not containing null
+     * @return the conjunction of {@code atoms}
+     * @throws NullPointerException  if {@code atoms} is null, or contains null
+     */
     @SafeVarargs
     public static <T extends Comparable<? super T>> Conjunction<T> of(final Atom<T>... atoms) {
         return of(Arrays.asList(atoms));
     }
 
+    /**
+     * Returns a new conjunction of the atoms of this conjunction and {@code additionalAtoms}.
+     *
+     * <p>This conjunction is not changed. Duplicated atoms are removed, and the atoms of this conjunction come first.
+     *
+     * @param additionalAtoms  the atoms to add, not null, and not containing null
+     * @return a new conjunction of the atoms of this conjunction and {@code additionalAtoms}
+     * @throws NullPointerException  if {@code additionalAtoms} is null, or contains null
+     */
     public Conjunction<T> with(final Collection<Atom<T>> additionalAtoms) {
         final ArrayList<Atom<T>> newAtoms = new ArrayList<>(this.atoms);
         newAtoms.addAll(additionalAtoms);
         return new Conjunction<T>(newAtoms);
     }
 
+    /**
+     * Returns a new conjunction of the atoms of this conjunction and {@code additionalAtoms}.
+     *
+     * <p>This conjunction is not changed. Duplicated atoms are removed, and the atoms of this conjunction come first.
+     *
+     * @param additionalAtoms  the atoms to add, not null, and not containing null
+     * @return a new conjunction of the atoms of this conjunction and {@code additionalAtoms}
+     * @throws NullPointerException  if {@code additionalAtoms} is null, or contains null
+     */
     @SafeVarargs
     public final Conjunction<T> with(final Atom<T>... additionalAtoms) {
         return this.with(Arrays.asList(additionalAtoms));
     }
 
+    /**
+     * Streams the values that satisfy this conjunction, in {@code order}.
+     *
+     * <p>It streams the candidates of the values from {@code sourceStreamer}, and filters them by this conjunction.
+     * The result is correct as long as {@code sourceStreamer} does not miss any values that satisfy this conjunction.
+     *
+     * @param sourceStreamer  the streamer of the candidates of the values, not null
+     * @param order  the order of the values to stream, not null
+     * @return the values that satisfy this conjunction, in {@code order}
+     */
     public Stream<T> streamBy(
             final SourceStreamer<T> sourceStreamer,
             final Order order) {

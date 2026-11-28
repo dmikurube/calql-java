@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
  * {@code DisjunctiveNormalFormula.of().equals(Conjunction.of())} is {@code true} as both are empty {@link Set}s,
  * while an empty DNF logically represents {@code false}, and an empty conjunction is evaluated as {@code true}.
  *
+ * @param <T> the type of values that the atoms in this DNF are evaluated on
  * @see <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">Disjunctive normal form</a>
  */
 public final class DisjunctiveNormalFormula<T extends Comparable<? super T>> extends AbstractSet<Conjunction<T>> {
@@ -60,21 +61,59 @@ public final class DisjunctiveNormalFormula<T extends Comparable<? super T>> ext
         this.conjunctions = Collections.unmodifiableSet(copiedConjunctions);
     }
 
+    /**
+     * Returns the DNF of {@code conjunctions}.
+     *
+     * <p>Duplicated conjunctions are removed. The DNF of no conjunctions is false.
+     *
+     * @param <T>  the type of values that the atoms in the DNF are evaluated on
+     * @param conjunctions  the conjunctions to "or", not null, and not containing null
+     * @return the DNF of {@code conjunctions}
+     * @throws NullPointerException  if {@code conjunctions} is null, or contains null
+     */
     public static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> of(final Collection<Conjunction<T>> conjunctions) {
         return new DisjunctiveNormalFormula<T>(conjunctions);
     }
 
+    /**
+     * Returns the DNF of {@code conjunctions}.
+     *
+     * <p>Duplicated conjunctions are removed. The DNF of no conjunctions is false.
+     *
+     * @param <T>  the type of values that the atoms in the DNF are evaluated on
+     * @param conjunctions  the conjunctions to "or", not null, and not containing null
+     * @return the DNF of {@code conjunctions}
+     * @throws NullPointerException  if {@code conjunctions} is null, or contains null
+     */
     @SafeVarargs
     public static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> of(final Conjunction<T>... conjunctions) {
         return of(Arrays.asList(conjunctions));
     }
 
+    /**
+     * Returns a new DNF of the conjunctions of this DNF and {@code additionalConjunctions}.
+     *
+     * <p>This DNF is not changed. Duplicated conjunctions are removed, and the conjunctions of this DNF come first.
+     *
+     * @param additionalConjunctions  the conjunctions to add, not null, and not containing null
+     * @return a new DNF of the conjunctions of this DNF and {@code additionalConjunctions}
+     * @throws NullPointerException  if {@code additionalConjunctions} is null, or contains null
+     */
     public DisjunctiveNormalFormula<T> with(final Collection<Conjunction<T>> additionalConjunctions) {
         final ArrayList<Conjunction<T>> newConjunctions = new ArrayList<>(this.conjunctions);
         newConjunctions.addAll(additionalConjunctions);
         return new DisjunctiveNormalFormula<T>(newConjunctions);
     }
 
+    /**
+     * Returns a new DNF of the conjunctions of this DNF and {@code additionalConjunctions}.
+     *
+     * <p>This DNF is not changed. Duplicated conjunctions are removed, and the conjunctions of this DNF come first.
+     *
+     * @param additionalConjunctions  the conjunctions to add, not null, and not containing null
+     * @return a new DNF of the conjunctions of this DNF and {@code additionalConjunctions}
+     * @throws NullPointerException  if {@code additionalConjunctions} is null, or contains null
+     */
     @SafeVarargs
     public final DisjunctiveNormalFormula<T> with(final Conjunction<T>... additionalConjunctions) {
         return this.with(Arrays.asList(additionalConjunctions));
