@@ -18,10 +18,12 @@ package org.theatime.calql.query.date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -55,6 +57,35 @@ public class TestMembershipDateAtom {
         assertEquals(EitherDayOfWeek.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY), NeitherDayOfWeek.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY).negate());
         assertEquals(NeitherDate.of(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)), EitherDate.of(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)).negate());
         assertEquals(EitherDate.of(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)), NeitherDate.of(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)).negate());
+    }
+
+    @Test
+    public void testValues() {
+        assertEquals(Set.of(2020, 2022), EitherYear.of(2022, 2020).years());
+        assertEquals(Set.of(2020, 2022), NeitherYear.of(2022, 2020).years());
+        assertEquals(Set.of(2, 12), EitherMonth.of(12, 2).months());
+        assertEquals(Set.of(2, 12), NeitherMonth.of(12, 2).months());
+        assertEquals(Set.of(1, 31), EitherDayOfMonth.of(31, 1).daysOfMonth());
+        assertEquals(Set.of(1, 31), NeitherDayOfMonth.of(31, 1).daysOfMonth());
+        assertEquals(Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY), EitherDayOfWeek.of(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY).daysOfWeek());
+        assertEquals(Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY), NeitherDayOfWeek.of(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY).daysOfWeek());
+        assertEquals(Set.of(LocalDate.of(2020, 2, 29)), EitherDate.of(2020, 2, 29).dates());
+        assertEquals(Set.of(LocalDate.of(2020, 2, 29)), NeitherDate.of(2020, 2, 29).dates());
+    }
+
+    @Test
+    public void testValuesAreKeptByNegation() {
+        assertEquals(Set.of(2, 12), ((NeitherMonth) EitherMonth.of(2, 12).negate()).months());
+        assertEquals(Set.of(2, 12), ((EitherMonth) NeitherMonth.of(2, 12).negate()).months());
+    }
+
+    @Test
+    public void testValuesAreUnmodifiable() {
+        assertThrows(UnsupportedOperationException.class, () -> EitherYear.of(2020).years().add(2021));
+        assertThrows(UnsupportedOperationException.class, () -> NeitherMonth.of(2, 12).months().clear());
+        assertThrows(UnsupportedOperationException.class, () -> EitherDayOfMonth.of(1).daysOfMonth().remove(1));
+        assertThrows(UnsupportedOperationException.class, () -> NeitherDayOfWeek.of(DayOfWeek.MONDAY).daysOfWeek().add(DayOfWeek.FRIDAY));
+        assertThrows(UnsupportedOperationException.class, () -> EitherDate.of(2020, 2, 29).dates().clear());
     }
 
     @Test

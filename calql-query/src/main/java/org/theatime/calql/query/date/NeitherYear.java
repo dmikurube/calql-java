@@ -45,6 +45,17 @@ public final class NeitherYear extends MembershipDateAtom<Integer> {
         return of(Arrays.stream(years).boxed().collect(Collectors.toSet()));
     }
 
+    /**
+     * Returns the years that this atom tests the year of a date against.
+     *
+     * <p>A date matches this atom if its year is none of them.
+     *
+     * @return the years, an unmodifiable set in no particular order
+     */
+    public Set<Integer> years() {
+        return this.values();
+    }
+
     @Override
     public DateAtom negate() {
         return EitherYear.of(this.values());

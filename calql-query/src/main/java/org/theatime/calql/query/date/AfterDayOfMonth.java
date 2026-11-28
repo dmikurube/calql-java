@@ -35,9 +35,21 @@ public final class AfterDayOfMonth extends OrderingDateAtom {
         return new AfterDayOfMonth(dayOfMonth, true);
     }
 
+    /**
+     * Returns the day of month that this atom compares the day of month of a date with.
+     *
+     * <p>A date matches this atom if its day of month is greater than it, or if its day of month equals it and
+     * {@link #isInclusive()} is true.
+     *
+     * @return the day of month
+     */
+    public int dayOfMonth() {
+        return this.value();
+    }
+
     @Override
     public DateAtom negate() {
-        return BeforeDayOfMonth.of(this.value(), !this.inclusive());
+        return BeforeDayOfMonth.of(this.value(), !this.isInclusive());
     }
 
     @Override

@@ -47,7 +47,14 @@ abstract class OrderingDateAtom extends DateAtom {
         return this.value;
     }
 
-    final boolean inclusive() {
+    /**
+     * Returns whether this atom also matches the dates whose column equals its value.
+     *
+     * <p>For example, it is true for {@code month >= 6}, and false for {@code month > 6}.
+     *
+     * @return true if this atom also matches the dates whose column equals its value
+     */
+    public final boolean isInclusive() {
         return this.inclusive;
     }
 

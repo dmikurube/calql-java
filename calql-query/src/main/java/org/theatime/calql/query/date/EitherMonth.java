@@ -45,6 +45,17 @@ public final class EitherMonth extends MembershipDateAtom<Integer> {
         return of(Arrays.stream(months).boxed().collect(Collectors.toSet()));
     }
 
+    /**
+     * Returns the months that this atom tests the month of a date against.
+     *
+     * <p>A date matches this atom if its month is one of them.
+     *
+     * @return the months, an unmodifiable set in no particular order
+     */
+    public Set<Integer> months() {
+        return this.values();
+    }
+
     @Override
     public DateAtom negate() {
         return NeitherMonth.of(this.values());

@@ -45,6 +45,17 @@ public final class NeitherDayOfMonth extends MembershipDateAtom<Integer> {
         return of(Arrays.stream(daysOfMonth).boxed().collect(Collectors.toSet()));
     }
 
+    /**
+     * Returns the days of month that this atom tests the day of month of a date against.
+     *
+     * <p>A date matches this atom if its day of month is none of them.
+     *
+     * @return the days of month, an unmodifiable set in no particular order
+     */
+    public Set<Integer> daysOfMonth() {
+        return this.values();
+    }
+
     @Override
     public DateAtom negate() {
         return EitherDayOfMonth.of(this.values());

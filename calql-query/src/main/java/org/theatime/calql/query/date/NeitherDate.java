@@ -48,6 +48,13 @@ public final class NeitherDate extends MembershipDateAtom<LocalDate> {
         return of(Arrays.asList(dates));
     }
 
+    /**
+     * Returns the dates that this atom tests a date against.
+     *
+     * <p>A date matches this atom if it is none of them.
+     *
+     * @return the dates, an unmodifiable set in no particular order
+     */
     public Set<LocalDate> dates() {
         return this.values();
     }

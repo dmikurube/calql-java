@@ -35,9 +35,21 @@ public final class BeforeMonth extends OrderingDateAtom {
         return new BeforeMonth(month, true);
     }
 
+    /**
+     * Returns the month that this atom compares the month of a date with.
+     *
+     * <p>A date matches this atom if its month is less than it, or if its month equals it and
+     * {@link #isInclusive()} is true.
+     *
+     * @return the month
+     */
+    public int month() {
+        return this.value();
+    }
+
     @Override
     public DateAtom negate() {
-        return AfterMonth.of(this.value(), !this.inclusive());
+        return AfterMonth.of(this.value(), !this.isInclusive());
     }
 
     @Override

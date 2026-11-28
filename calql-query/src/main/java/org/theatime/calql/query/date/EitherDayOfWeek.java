@@ -45,6 +45,17 @@ public final class EitherDayOfWeek extends MembershipDateAtom<DayOfWeek> {
         return of(Arrays.asList(daysOfWeek));
     }
 
+    /**
+     * Returns the days of week that this atom tests the day of week of a date against.
+     *
+     * <p>A date matches this atom if its day of week is one of them.
+     *
+     * @return the days of week, an unmodifiable set in no particular order
+     */
+    public Set<DayOfWeek> daysOfWeek() {
+        return this.values();
+    }
+
     @Override
     public DateAtom negate() {
         return NeitherDayOfWeek.of(this.values());

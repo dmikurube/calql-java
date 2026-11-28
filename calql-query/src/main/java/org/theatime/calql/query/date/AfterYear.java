@@ -36,9 +36,21 @@ public final class AfterYear extends OrderingDateAtom {
         return new AfterYear(year, true);
     }
 
+    /**
+     * Returns the year that this atom compares the year of a date with.
+     *
+     * <p>A date matches this atom if its year is greater than it, or if its year equals it and
+     * {@link #isInclusive()} is true.
+     *
+     * @return the year
+     */
+    public int year() {
+        return this.value();
+    }
+
     @Override
     public Range<LocalDate> range() {
-        if (this.inclusive()) {
+        if (this.isInclusive()) {
             return Range.atLeast(LocalDate.of(this.value(), 1, 1));
         } else {
             return Range.atLeast(LocalDate.of(this.value() + 1, 1, 1));
@@ -47,7 +59,7 @@ public final class AfterYear extends OrderingDateAtom {
 
     @Override
     public DateAtom negate() {
-        return BeforeYear.of(this.value(), !this.inclusive());
+        return BeforeYear.of(this.value(), !this.isInclusive());
     }
 
     @Override
