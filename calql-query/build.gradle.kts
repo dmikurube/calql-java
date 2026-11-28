@@ -135,11 +135,16 @@ publishing {
         maven {  // publishMavenPublicationToMavenCentralRepository
             name = "mavenCentral"
             if (project.version.toString().endsWith("-SNAPSHOT")) {
-                url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+                // See: https://central.sonatype.org/publish/publish-portal-snapshots/
+                url = uri("https://central.sonatype.com/repository/maven-snapshots/")
             } else {
-                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+                // A release published here is not visible in the Central Portal until it is transferred
+                // by "POST /manual/upload/defaultRepository/<namespace>" from the same IP address.
+                // See: https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/
+                url = uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
             }
 
+            // A user token of the Central Portal. A token of the old OSSRH is rejected.
             credentials {
                 username = project.findProperty("ossrhUsername")?.toString() ?: ""
                 password = project.findProperty("ossrhPassword")?.toString() ?: ""
