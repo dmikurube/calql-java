@@ -24,7 +24,7 @@ import java.util.Objects;
  * @param <T> the type of values that this formula is evaluated on
  */
 public final class Not<T extends Comparable<? super T>> extends Compound<T> {
-    public Not(final Formula<T> formula) {
+    private Not(final Formula<T> formula) {
         this.formula = Objects.requireNonNull(formula, "formula");
     }
 
