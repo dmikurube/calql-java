@@ -44,16 +44,16 @@ public abstract class NegationNormalFormula<T extends Comparable<? super T>> ext
      *
      * <ul>
      * <li>one for an atom,
-     * <li>the sum of the numbers for its formulae for an "or", and
-     * <li>the product of the numbers for its formulae for an "and".
+     * <li>the sum of the numbers for its operands for an "or", and
+     * <li>the product of the numbers for its operands for an "and".
      * </ul>
      *
      * <p>The expanded DNF can have fewer conjunctions, as duplicated atoms in a conjunction, and duplicated conjunctions,
-     * are removed. The duplicates in the DNF of an "and" are removed only after all the combinations of its formulae are built,
-     * so removing them does not save the time and memory to build the combinations.
+     * are removed. The duplicates in the DNF of an "and" are removed only after all the combinations of its operands
+     * are built, so removing them does not save the time and memory to build the combinations.
      * See {@link Conjunction} and {@link DisjunctiveNormalFormula}.
      *
-     * <p>It grows exponentially when an "and" has many formulae of two or more conjunctions each, typically "or"s.
+     * <p>It grows exponentially when an "and" has many operands of two or more conjunctions each, typically "or"s.
      * For example, {@code (a1 OR a2) AND (a3 OR a4) AND ... AND (a39 OR a40)}, an "and" of 20 "or"s of 2 atoms each,
      * has 2^20 = 1,048,576 conjunctions in DNF.
      *
@@ -63,7 +63,7 @@ public abstract class NegationNormalFormula<T extends Comparable<? super T>> ext
      * number of conjunctions in DNF.
      *
      * <p>On the other hand, the number grows only linearly in the size of this NNF if every "and" has at most one
-     * formula of two or more conjunctions.
+     * operand of two or more conjunctions.
      *
      * <p>Note that this {@link NegationNormalFormula} instance does not cache the expanded DNF in it.
      *

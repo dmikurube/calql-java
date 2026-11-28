@@ -16,6 +16,8 @@
 
 package org.theatime.calql.query;
 
+import java.util.List;
+
 /**
  * A compound formula in Negation Normal Form (NNF), such as {@link NegationNormalAnd} and {@link NegationNormalOr}.
  *
@@ -27,4 +29,14 @@ public abstract class NegationNormalCompound<T extends Comparable<? super T>> ex
      */
     protected NegationNormalCompound() {
     }
+
+    /**
+     * Returns the operands of this compound formula, which are its direct children as written.
+     *
+     * <p>The operands are not flattened. For example, the operands of {@code (f1 AND f2) AND f3}
+     * are {@code f1 AND f2} and {@code f3}.
+     *
+     * @return the operands, an unmodifiable list in the order as written, with duplicates if any
+     */
+    public abstract List<NegationNormalFormula<T>> operands();
 }
