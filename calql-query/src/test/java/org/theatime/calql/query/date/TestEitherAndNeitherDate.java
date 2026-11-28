@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-public class TestEitherDate {
+public class TestEitherAndNeitherDate {
     @Test
     public void testToStringSingle() {
         assertEquals("date = 2024-01-01", EitherDate.of(2024, 1, 1).toString());
@@ -31,7 +31,7 @@ public class TestEitherDate {
 
     @Test
     public void testToStringSingleInCollection() {
-        // The earliest and the latest dates are taken from the collection, not from a single argument.
+        // A collection of only one date is printed in the same way as a single date.
         assertEquals("date = 2024-01-01", EitherDate.of(List.of(LocalDate.of(2024, 1, 1))).toString());
         assertEquals("date <> 2024-01-01", NeitherDate.of(List.of(LocalDate.of(2024, 1, 1))).toString());
     }
