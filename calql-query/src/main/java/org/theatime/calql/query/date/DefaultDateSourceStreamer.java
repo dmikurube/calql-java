@@ -32,6 +32,12 @@ public final class DefaultDateSourceStreamer implements SourceStreamer<LocalDate
         this.naiveStreamer = NaiveDateSourceStreamer.of();
     }
 
+    /**
+     * Returns a new streamer, which streams the dates from {@link ExactDateSourceStreamer} if it is applicable,
+     * or from {@link NaiveDateSourceStreamer} otherwise.
+     *
+     * @return a new streamer
+     */
     public static DefaultDateSourceStreamer of() {
         return new DefaultDateSourceStreamer();
     }

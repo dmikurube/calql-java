@@ -37,6 +37,11 @@ public final class NaiveDateSourceStreamer implements SourceStreamer<LocalDate> 
     private NaiveDateSourceStreamer() {
     }
 
+    /**
+     * Returns a new streamer, which streams all the dates in the range of a conjunction, one by one.
+     *
+     * @return a new streamer
+     */
     public static NaiveDateSourceStreamer of() {
         return new NaiveDateSourceStreamer();
     }

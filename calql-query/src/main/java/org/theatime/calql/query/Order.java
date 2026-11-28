@@ -28,7 +28,13 @@ public class Order {
         // No instantiation.
     }
 
+    /**
+     * The order from the earliest to the latest, which is the ascending order.
+     */
     public static final Order FROM_EARLIEST_TO_LATEST = new Order();
 
+    /**
+     * The order from the latest to the earliest, which is the descending order.
+     */
     public static final Order FROM_LATEST_TO_EARLIEST = new Order();
 }

@@ -32,6 +32,11 @@ public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate> 
     private ExactDateSourceStreamer() {
     }
 
+    /**
+     * Returns a new streamer, which streams only the dates of {@link EitherDate} in a conjunction.
+     *
+     * @return a new streamer
+     */
     public static ExactDateSourceStreamer of() {
         return new ExactDateSourceStreamer();
     }
