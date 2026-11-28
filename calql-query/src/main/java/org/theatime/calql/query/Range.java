@@ -40,6 +40,9 @@ public final class Range<T extends Comparable<? super T>> {
 
     /**
      * Returns the empty range, which contains no values.
+     *
+     * @param <T>  the type of values in the range
+     * @return the empty range
      */
     @SuppressWarnings("unchecked")
     public static <T extends Comparable<? super T>> Range<T> empty() {
@@ -48,6 +51,9 @@ public final class Range<T extends Comparable<? super T>> {
 
     /**
      * Returns the whole range, which is unbounded at both ends, and contains all values.
+     *
+     * @param <T>  the type of values in the range
+     * @return the whole range
      */
     @SuppressWarnings("unchecked")
     public static <T extends Comparable<? super T>> Range<T> whole() {
@@ -57,6 +63,9 @@ public final class Range<T extends Comparable<? super T>> {
     /**
      * Returns the range of values greater than or equal to non-null {@code lower}, which is unbounded at the upper end.
      *
+     * @param <T>  the type of values in the range
+     * @param lower  the lower end of the range, inclusive, not null
+     * @return the range of values greater than or equal to {@code lower}
      * @throws NullPointerException  if {@code lower} is null
      */
     public static <T extends Comparable<? super T>> Range<T> atLeast(final T lower) {
@@ -66,6 +75,9 @@ public final class Range<T extends Comparable<? super T>> {
     /**
      * Returns the range of values less than or equal to non-null {@code upper}, which is unbounded at the lower end.
      *
+     * @param <T>  the type of values in the range
+     * @param upper  the upper end of the range, inclusive, not null
+     * @return the range of values less than or equal to {@code upper}
      * @throws NullPointerException  if {@code upper} is null
      */
     public static <T extends Comparable<? super T>> Range<T> atMost(final T upper) {
@@ -78,12 +90,24 @@ public final class Range<T extends Comparable<? super T>> {
      *
      * <p>Both ends are inclusive in the same way as {@code BETWEEN} in SQL.
      *
+     * @param <T>  the type of values in the range
+     * @param lower  the lower end of the range, inclusive, not null
+     * @param upper  the upper end of the range, inclusive, not null
+     * @return the range of values from {@code lower} to {@code upper},
+     *   or the empty range if {@code lower} is greater than {@code upper}
      * @throws NullPointerException  if {@code lower} or {@code upper} is null
      */
     public static <T extends Comparable<? super T>> Range<T> between(final T lower, final T upper) {
         return ofNullableEnds(Objects.requireNonNull(lower, "lower"), Objects.requireNonNull(upper, "upper"));
     }
 
+    /**
+     * Returns true if this range is empty, which contains no values.
+     *
+     * <p>Note that the whole range, which is unbounded at both ends, is not empty.
+     *
+     * @return true if this range is empty
+     */
     public boolean isEmpty() {
         return this.empty;
     }
@@ -91,6 +115,8 @@ public final class Range<T extends Comparable<? super T>> {
     /**
      * Returns the lower end of this range, or {@link Optional#empty()} if this range is unbounded at the lower end.
      *
+     * @return the lower end of this range, inclusive,
+     *   or {@link Optional#empty()} if this range is unbounded at the lower end
      * @throws IllegalStateException  if this range is empty, which has no ends
      */
     public Optional<T> lower() {
@@ -101,6 +127,8 @@ public final class Range<T extends Comparable<? super T>> {
     /**
      * Returns the upper end of this range, or {@link Optional#empty()} if this range is unbounded at the upper end.
      *
+     * @return the upper end of this range, inclusive,
+     *   or {@link Optional#empty()} if this range is unbounded at the upper end
      * @throws IllegalStateException  if this range is empty, which has no ends
      */
     public Optional<T> upper() {
@@ -111,6 +139,8 @@ public final class Range<T extends Comparable<? super T>> {
     /**
      * Returns true if this range contains {@code value}. {@code value} must not be null.
      *
+     * @param value  the value to test, not null
+     * @return true if this range contains {@code value}
      * @throws NullPointerException  if {@code value} is null
      */
     public boolean contains(final T value) {
@@ -130,6 +160,8 @@ public final class Range<T extends Comparable<? super T>> {
     /**
      * Returns the range of values contained in both this range and {@code other}. {@code other} must not be null.
      *
+     * @param other  the range to intersect with this range, not null
+     * @return the range of values contained in both this range and {@code other}
      * @throws NullPointerException  if {@code other} is null
      */
     public Range<T> intersection(final Range<T> other) {
@@ -148,6 +180,8 @@ public final class Range<T extends Comparable<? super T>> {
      * <p>If the two ranges overlap, or one of them is empty, the span is their union. Otherwise, the span also contains
      * the values between the two ranges, which are contained in neither of them, such as 4 and 5 in the example above.
      *
+     * @param other  the range to span with this range, not null
+     * @return the minimal range that contains both this range and {@code other}
      * @throws NullPointerException  if {@code other} is null
      */
     public Range<T> span(final Range<T> other) {
