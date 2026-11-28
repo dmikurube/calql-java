@@ -16,7 +16,21 @@
 
 package org.theatime.calql.query;
 
+/**
+ * An atomic formula, which has no formulae in it, such as {@code month = 6}.
+ *
+ * <p>Its negation is always an atom, so that a formula in Negation Normal Form (NNF) never needs "not".
+ * See {@link #negate()}.
+ *
+ * @param <T> the type of values that this atom is evaluated on
+ */
 public abstract class Atom<T extends Comparable<? super T>> extends NegationNormalFormula<T> {
+    /**
+     * Sole constructor. (For invocation by subclass constructors, typically implicit.)
+     */
+    protected Atom() {
+    }
+
     @Override
     public final NegationNormalFormula<T> negateInNegationNormalForm() {
         return this.negate();
@@ -32,6 +46,15 @@ public abstract class Atom<T extends Comparable<? super T>> extends NegationNorm
         return DisjunctiveNormalFormula.<T>of(Conjunction.<T>of(this));
     }
 
+    /**
+     * Returns the class of values that this atom is evaluated on,
+     * such as {@link java.time.LocalDate} for the date atoms.
+     *
+     * <p>It declares the space of values that this atom belongs to,
+     * so that atoms of different spaces can be told apart when spaces other than dates are added.
+     *
+     * @return the class of values that this atom is evaluated on
+     */
     public abstract Class<? extends T> unit();
 
     /**

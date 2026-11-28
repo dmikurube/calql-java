@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 
 /**
  * An "or" operator, which may not be in negation normal form.
+ *
+ * @param <T> the type of values that this formula is evaluated on
  */
 public final class Or<T extends Comparable<? super T>> extends Compound<T> {
     private Or(final Collection<Formula<T>> formulae) {
@@ -31,10 +33,30 @@ public final class Or<T extends Comparable<? super T>> extends Compound<T> {
         this.formulae = List.copyOf(formulae);
     }
 
+    /**
+     * Returns the "or" of {@code formulae}.
+     *
+     * <p>The "or" of no formulae is false.
+     *
+     * @param <T>  the type of values that the formula is evaluated on
+     * @param formulae  the formulae to "or", not null, and not containing null
+     * @return the "or" of {@code formulae}
+     * @throws NullPointerException  if {@code formulae} is null, or contains null
+     */
     public static <T extends Comparable<? super T>> Formula<T> of(final Collection<Formula<T>> formulae) {
         return new Or<T>(formulae);
     }
 
+    /**
+     * Returns the "or" of {@code formulae}.
+     *
+     * <p>The "or" of no formulae is false.
+     *
+     * @param <T>  the type of values that the formula is evaluated on
+     * @param formulae  the formulae to "or", not null, and not containing null
+     * @return the "or" of {@code formulae}
+     * @throws NullPointerException  if {@code formulae} is null, or contains null
+     */
     @SafeVarargs
     public static <T extends Comparable<? super T>> Formula<T> of(final Formula<T>... formulae) {
         return of(Arrays.asList(formulae));

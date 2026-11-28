@@ -16,5 +16,18 @@
 
 package org.theatime.calql.query;
 
+/**
+ * A compound formula, which may not be in Negation Normal Form (NNF), such as {@link And}, {@link Or}, and {@link Not}.
+ *
+ * <p>Its {@link #toNegationNormalForm()} converts it to a formula in NNF,
+ * such as {@link NegationNormalAnd} for {@link And}.
+ *
+ * @param <T> the type of values that this formula is evaluated on
+ */
 public abstract class Compound<T extends Comparable<? super T>> extends Formula<T> {
+    /**
+     * Sole constructor. (For invocation by subclass constructors, typically implicit.)
+     */
+    protected Compound() {
+    }
 }

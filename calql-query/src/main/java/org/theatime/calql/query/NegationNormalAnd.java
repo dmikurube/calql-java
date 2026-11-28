@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 
 /**
  * An "and" operator in negation normal form.
+ *
+ * @param <T> the type of values that this formula is evaluated on
  */
 public final class NegationNormalAnd<T extends Comparable<? super T>> extends NegationNormalCompound<T> {
     private NegationNormalAnd(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
@@ -32,10 +34,30 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
         this.negationNormalFormulae = List.copyOf(negationNormalFormulae);
     }
 
+    /**
+     * Returns the "and" of {@code negationNormalFormulae}, in negation normal form.
+     *
+     * <p>The "and" of no formulae is true.
+     *
+     * @param <T>  the type of values that the formula is evaluated on
+     * @param negationNormalFormulae  the formulae to "and", not null, and not containing null
+     * @return the "and" of {@code negationNormalFormulae}
+     * @throws NullPointerException  if {@code negationNormalFormulae} is null, or contains null
+     */
     public static <T extends Comparable<? super T>> NegationNormalFormula<T> of(final Collection<NegationNormalFormula<T>> negationNormalFormulae) {
         return new NegationNormalAnd<T>(negationNormalFormulae);
     }
 
+    /**
+     * Returns the "and" of {@code negationNormalFormulae}, in negation normal form.
+     *
+     * <p>The "and" of no formulae is true.
+     *
+     * @param <T>  the type of values that the formula is evaluated on
+     * @param negationNormalFormulae  the formulae to "and", not null, and not containing null
+     * @return the "and" of {@code negationNormalFormulae}
+     * @throws NullPointerException  if {@code negationNormalFormulae} is null, or contains null
+     */
     @SafeVarargs
     public static <T extends Comparable<? super T>> NegationNormalFormula<T> of(final NegationNormalFormula<T>... negationNormalFormulae) {
         return of(Arrays.asList(negationNormalFormulae));

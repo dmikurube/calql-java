@@ -16,7 +16,21 @@
 
 package org.theatime.calql.query;
 
+/**
+ * A formula in Negation Normal Form (NNF), which consists only of "and"s, "or"s, and atoms.
+ *
+ * <p>It has no "not", as the negation of an atom is always an atom. See {@link Atom#negate()}.
+ *
+ * @param <T> the type of values that this formula is evaluated on
+ * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
+ */
 public abstract class NegationNormalFormula<T extends Comparable<? super T>> extends Formula<T> {
+    /**
+     * Sole constructor. (For invocation by subclass constructors, typically implicit.)
+     */
+    protected NegationNormalFormula() {
+    }
+
     @Override
     public final NegationNormalFormula<T> toNegationNormalForm() {
         return this;

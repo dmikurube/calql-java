@@ -29,6 +29,12 @@ import java.util.function.Predicate;
  */
 public abstract class Formula<T extends Comparable<? super T>> implements Predicate<T> {
     /**
+     * Sole constructor. (For invocation by subclass constructors, typically implicit.)
+     */
+    protected Formula() {
+    }
+
+    /**
      * Tests whether non-null {@code target} satisfies this formula.
      *
      * <p>{@link Formula} implements {@link Predicate}, so that a formula can be used directly where a {@link Predicate}
@@ -100,6 +106,15 @@ public abstract class Formula<T extends Comparable<? super T>> implements Predic
         return Not.of(this);
     }
 
+    /**
+     * Converts this formula to Negation Normal Form (NNF), which consists only of "and"s, "or"s, and atoms,
+     * by pushing the negations down into the atoms.
+     *
+     * <p>It takes time linear in the size of this formula. It returns this formula itself if it is already in NNF.
+     *
+     * @return this formula in Negation Normal Form (NNF)
+     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
+     */
     public abstract NegationNormalFormula<T> toNegationNormalForm();
 
     /**
@@ -107,9 +122,8 @@ public abstract class Formula<T extends Comparable<? super T>> implements Predic
      *
      * <p>It negates the formula in Negation Normal Form (NNF).
      *
-     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
-     *
      * @return the negated formula in Negation Normal Form (NNF)
+     * @see <a href="https://en.wikipedia.org/wiki/Negation_normal_form">Negation normal form</a>
      */
     public abstract NegationNormalFormula<T> negateInNegationNormalForm();
 }

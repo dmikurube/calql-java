@@ -20,12 +20,24 @@ import java.util.Objects;
 
 /**
  * A "not" operator, which may not be in negation normal form.
+ *
+ * @param <T> the type of values that this formula is evaluated on
  */
 public final class Not<T extends Comparable<? super T>> extends Compound<T> {
     public Not(final Formula<T> formula) {
         this.formula = Objects.requireNonNull(formula, "formula");
     }
 
+    /**
+     * Returns the "not" of non-null {@code formula}, which wraps {@code formula} as is.
+     *
+     * <p>It does not convert {@code formula} to negation normal form. See {@link #toNegationNormalForm()}.
+     *
+     * @param <T>  the type of values that the formula is evaluated on
+     * @param formula  the formula to negate, not null
+     * @return the "not" of {@code formula}
+     * @throws NullPointerException  if {@code formula} is null
+     */
     public static <T extends Comparable<? super T>> Formula<T> of(final Formula<T> formula) {
         return new Not<T>(formula);
     }
