@@ -3,8 +3,6 @@ on: [ push ]
 jobs:
   check:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
     - uses: actions/checkout@v7
     - name: Set up OpenJDK 17 and 25, with 25 as default
