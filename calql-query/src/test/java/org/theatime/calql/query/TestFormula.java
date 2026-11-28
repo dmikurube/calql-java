@@ -25,6 +25,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -164,6 +165,17 @@ public class TestFormula {
             assertFalse(or.test(date), date.toString());
         }
         assertEquals(DisjunctiveNormalFormula.<LocalDate>of(), or.toNegationNormalForm().expandToDisjunctiveNormalForm());
+    }
+
+    @Test
+    public void testExpansionRemovesDuplicates() {
+        final Atom<LocalDate> year = EitherYear.of(1970);
+        final Atom<LocalDate> month = EitherMonth.of(6);
+        // (year OR month) AND (month OR year) distributes to (year AND month), (year AND year), (month AND month), and
+        // (month AND year). (year AND year) is (year), and (month AND year) is a duplicate of (year AND month).
+        final DisjunctiveNormalFormula<LocalDate> dnf =
+                NegationNormalAnd.of(NegationNormalOr.of(year, month), NegationNormalOr.of(month, year)).expandToDisjunctiveNormalForm();
+        assertEquals(Set.of(Conjunction.of(year, month), Conjunction.of(year), Conjunction.of(month)), dnf);
     }
 
     @Test

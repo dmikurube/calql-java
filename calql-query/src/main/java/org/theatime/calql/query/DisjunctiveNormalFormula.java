@@ -16,25 +16,48 @@
 
 package org.theatime.calql.query;
 
-import java.util.AbstractList;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * A formula in Disjunctive Normal Form (DNF) is a logical formula consisting of a disjunction of conjunctions.
+ * The DNF is represented as a {@link Set} of conjunctions.
  *
  * <p>Ex. {@code (f1 AND f2) OR (f3 AND f4 AND f5) OR (f6) OR (f7 AND f8 AND f9)}
  *
+ * <p>Duplicated conjunctions are removed when the DNF is built.
+ * For example, {@code (f1 AND f2) OR (f2 AND f1)} is reduced to only one conjunction.
+ *
+ * <p>The order of its conjunctions does not matter to its equality, as it is a {@link Set}.
+ * On the other hand, it iterates over its conjunctions in the order in which they first appear.
+ *
+ * <p>Note that an empty {@link DisjunctiveNormalFormula} "equals" an empty {@link Conjunction}, which means
+ * {@code DisjunctiveNormalFormula.of().equals(Conjunction.of())} is {@code true} as both are empty {@link Set}s,
+ * while an empty DNF logically represents {@code false}, and an empty conjunction is evaluated as {@code true}.
+ *
  * @see <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">Disjunctive normal form</a>
  */
-public final class DisjunctiveNormalFormula<T extends Comparable<? super T>> extends AbstractList<Conjunction<T>> {
+public final class DisjunctiveNormalFormula<T extends Comparable<? super T>> extends AbstractSet<Conjunction<T>> {
     private DisjunctiveNormalFormula(final Collection<Conjunction<T>> conjunctions) {
-        // List.copyOf() rejects null elements, so that a null conjunction fails early here, not when it is evaluated.
-        this.conjunctions = List.copyOf(conjunctions);
+        Objects.requireNonNull(conjunctions, "conjunctions");
+
+        // LinkedHashSet removes duplicated conjunctions, and keeps the order in which they first appear,
+        // so that iterating over the conjunctions, and toString(), are stable.
+        //
+        // Set.copyOf() is not used, as its iteration order is unspecified.
+        final LinkedHashSet<Conjunction<T>> copiedConjunctions = new LinkedHashSet<>();
+        for (final Conjunction<T> conjunction : conjunctions) {
+            copiedConjunctions.add(Objects.requireNonNull(conjunction, "conjunctions contains null"));
+        }
+        this.conjunctions = Collections.unmodifiableSet(copiedConjunctions);
     }
 
     public static <T extends Comparable<? super T>> DisjunctiveNormalFormula<T> of(final Collection<Conjunction<T>> conjunctions) {
@@ -58,32 +81,18 @@ public final class DisjunctiveNormalFormula<T extends Comparable<? super T>> ext
     }
 
     @Override
+    public Iterator<Conjunction<T>> iterator() {
+        return this.conjunctions.iterator();
+    }
+
+    @Override
     public int size() {
         return this.conjunctions.size();
     }
 
     @Override
-    public Conjunction<T> get(final int index) {
-        return this.conjunctions.get(index);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(DisjunctiveNormalFormula.class, this.conjunctions);
-    }
-
-    @Override
-    public boolean equals(final Object otherObject) {
-        if (otherObject == this) {
-            return true;
-        }
-
-        if (otherObject instanceof DisjunctiveNormalFormula) {
-            final DisjunctiveNormalFormula<?> other = (DisjunctiveNormalFormula<?>) otherObject;
-            return Objects.equals(this.conjunctions, other.conjunctions);
-        }
-
-        return false;
+    public boolean contains(final Object object) {
+        return this.conjunctions.contains(object);
     }
 
     @Override
@@ -91,5 +100,5 @@ public final class DisjunctiveNormalFormula<T extends Comparable<? super T>> ext
         return this.conjunctions.stream().map(Object::toString).collect(Collectors.joining(" OR ", "(", ")"));
     }
 
-    private final List<Conjunction<T>> conjunctions;
+    private final Set<Conjunction<T>> conjunctions;
 }

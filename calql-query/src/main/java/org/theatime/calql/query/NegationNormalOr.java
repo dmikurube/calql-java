@@ -73,7 +73,7 @@ public final class NegationNormalOr<T extends Comparable<? super T>> extends Neg
     /**
      * Expands this Negation Normal Form (NNF) to a Disjunctive Normal Form (DNF).
      *
-     * <p>The number of conjunctions in the DNF of an "or" is the sum of the numbers for its formulae. It does not grow
+     * <p>The number of conjunctions in the DNF of an "or" is at most the sum of the numbers for its formulae. It does not grow
      * exponentially by this "or" itself, but it can by its formulae. See
      * {@link NegationNormalFormula#expandToDisjunctiveNormalForm()} for when it grows.
      *

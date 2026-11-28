@@ -17,10 +17,14 @@
 package org.theatime.calql.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.theatime.calql.query.date.AfterYear;
 import org.theatime.calql.query.date.BeforeYear;
@@ -104,7 +108,7 @@ public class TestConjunction {
     @Test
     public void testWith() {
         final Conjunction<LocalDate> c = Conjunction.<LocalDate>of(AfterYear.orEqualTo(1970)).with(BeforeYear.orEqualTo(1972));
-        assertEquals(List.of(AfterYear.orEqualTo(1970), BeforeYear.orEqualTo(1972)), new ArrayList<>(c));
+        assertEquals(Set.of(AfterYear.orEqualTo(1970), BeforeYear.orEqualTo(1972)), c);
         assertEquals(Range.between(LocalDate.of(1970, 1, 1), LocalDate.of(1972, 12, 31)), c.range());
     }
 
@@ -112,7 +116,60 @@ public class TestConjunction {
     public void testWithMultiple() {
         final Conjunction<LocalDate> c = Conjunction.<LocalDate>of(EitherYear.of(1970))
                 .with(List.of(EitherMonth.of(6), EitherDate.of(1970, 6, 1)));
-        assertEquals(List.of(EitherYear.of(1970), EitherMonth.of(6), EitherDate.of(1970, 6, 1)), new ArrayList<>(c));
+        assertEquals(Set.of(EitherYear.of(1970), EitherMonth.of(6), EitherDate.of(1970, 6, 1)), c);
         assertEquals(Range.between(LocalDate.of(1970, 6, 1), LocalDate.of(1970, 6, 1)), c.range());
+    }
+
+    @Test
+    public void testEqualsRegardlessOfOrder() {
+        final Conjunction<LocalDate> c1 = Conjunction.of(EitherYear.of(1970), EitherMonth.of(6));
+        final Conjunction<LocalDate> c2 = Conjunction.of(EitherMonth.of(6), EitherYear.of(1970));
+        assertEquals(c1, c2);
+        assertEquals(c1.hashCode(), c2.hashCode());
+    }
+
+    @Test
+    public void testDuplicatedAtomsAreRemoved() {
+        final Conjunction<LocalDate> c = Conjunction.of(EitherYear.of(1970), EitherMonth.of(6), EitherYear.of(1970));
+        assertEquals(2, c.size());
+        assertEquals(Conjunction.of(EitherYear.of(1970), EitherMonth.of(6)), c);
+        assertEquals("(year = 1970 AND month = 6)", c.toString());
+    }
+
+    @Test
+    public void testDuplicatedAtomsAreRemovedByWith() {
+        final Conjunction<LocalDate> c = Conjunction.<LocalDate>of(EitherYear.of(1970)).with(EitherMonth.of(6), EitherYear.of(1970));
+        assertEquals(2, c.size());
+        assertEquals(Conjunction.of(EitherYear.of(1970), EitherMonth.of(6)), c);
+    }
+
+    @Test
+    public void testIteratesInOrderOfFirstAppearance() {
+        final Conjunction<LocalDate> c = Conjunction.of(
+                EitherMonth.of(6), EitherYear.of(1970), EitherMonth.of(6), EitherDate.of(1970, 6, 1));
+        assertEquals(List.of(EitherMonth.of(6), EitherYear.of(1970), EitherDate.of(1970, 6, 1)), List.copyOf(c));
+        assertEquals("(month = 6 AND year = 1970 AND date = 1970-06-01)", c.toString());
+    }
+
+    @Test
+    public void testEqualsOtherSets() {
+        final Conjunction<LocalDate> c = Conjunction.of(EitherYear.of(1970), EitherMonth.of(6));
+        final Set<Atom<LocalDate>> set = Set.of(EitherMonth.of(6), EitherYear.of(1970));
+        assertEquals(set, c);
+        assertEquals(c, set);
+        assertEquals(set.hashCode(), c.hashCode());
+        assertTrue(new HashSet<>(List.of(set)).contains(c));
+        assertTrue(new HashSet<>(List.of(c)).contains(set));
+
+        // A set never equals a list, even of the same elements.
+        assertNotEquals(List.of(EitherYear.of(1970), EitherMonth.of(6)), c);
+    }
+
+    @Test
+    public void testContains() {
+        final Conjunction<LocalDate> c = Conjunction.of(EitherYear.of(1970), EitherMonth.of(6));
+        assertTrue(c.contains(EitherYear.of(1970)));
+        assertFalse(c.contains(EitherYear.of(1971)));
+        assertFalse(c.contains(EitherYear.notOf(1970)));
     }
 }

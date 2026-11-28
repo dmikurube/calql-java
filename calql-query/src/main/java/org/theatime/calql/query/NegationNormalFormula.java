@@ -26,13 +26,18 @@ public abstract class NegationNormalFormula<T extends Comparable<? super T>> ext
      * Expands this Negation Normal Form (NNF) to a Disjunctive Normal Form (DNF).
      *
      * <p>Note that the DNF can grow exponentially larger than this NNF, and building it can exhaust time and memory.
-     * The DNF is built by distributing "and"s over "or"s, and the number of conjunctions in the DNF is:
+     * The DNF is built by distributing "and"s over "or"s, and the number of conjunctions in the DNF is at most:
      *
      * <ul>
      * <li>one for an atom,
      * <li>the sum of the numbers for its formulae for an "or", and
      * <li>the product of the numbers for its formulae for an "and".
      * </ul>
+     *
+     * <p>The expanded DNF can have fewer conjunctions, as duplicated atoms in a conjunction, and duplicated conjunctions,
+     * are removed. The duplicates in the DNF of an "and" are removed only after all the combinations of its formulae are built,
+     * so removing them does not save the time and memory to build the combinations.
+     * See {@link Conjunction} and {@link DisjunctiveNormalFormula}.
      *
      * <p>It grows exponentially when an "and" has many formulae of two or more conjunctions each, typically "or"s.
      * For example, {@code (f1 OR f2) AND (f3 OR f4) AND ... AND (f39 OR f40)}, an "and" of 20 "or"s of 2 atoms each,

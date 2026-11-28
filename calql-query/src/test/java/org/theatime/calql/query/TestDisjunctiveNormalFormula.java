@@ -19,8 +19,8 @@ package org.theatime.calql.query;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.theatime.calql.query.date.EitherMonth;
 import org.theatime.calql.query.date.EitherYear;
@@ -31,7 +31,7 @@ public class TestDisjunctiveNormalFormula {
         final Conjunction<LocalDate> c1 = Conjunction.of(EitherYear.of(1970));
         final Conjunction<LocalDate> c2 = Conjunction.of(EitherMonth.of(6));
         final DisjunctiveNormalFormula<LocalDate> dnf = DisjunctiveNormalFormula.of(c1).with(c2);
-        assertEquals(List.of(c1, c2), new ArrayList<>(dnf));
+        assertEquals(Set.of(c1, c2), dnf);
     }
 
     @Test
@@ -40,6 +40,35 @@ public class TestDisjunctiveNormalFormula {
         final Conjunction<LocalDate> c2 = Conjunction.of(EitherMonth.of(6));
         final Conjunction<LocalDate> c3 = Conjunction.of(EitherMonth.of(7));
         final DisjunctiveNormalFormula<LocalDate> dnf = DisjunctiveNormalFormula.of(c1).with(List.of(c2, c3));
-        assertEquals(List.of(c1, c2, c3), new ArrayList<>(dnf));
+        assertEquals(Set.of(c1, c2, c3), dnf);
+    }
+
+    @Test
+    public void testEqualsRegardlessOfOrder() {
+        final DisjunctiveNormalFormula<LocalDate> dnf1 = DisjunctiveNormalFormula.of(
+                Conjunction.of(EitherYear.of(1970), EitherMonth.of(6)), Conjunction.of(EitherMonth.of(7)));
+        final DisjunctiveNormalFormula<LocalDate> dnf2 = DisjunctiveNormalFormula.of(
+                Conjunction.of(EitherMonth.of(7)), Conjunction.of(EitherMonth.of(6), EitherYear.of(1970)));
+        assertEquals(dnf1, dnf2);
+        assertEquals(dnf1.hashCode(), dnf2.hashCode());
+    }
+
+    @Test
+    public void testDuplicatedConjunctionsAreRemoved() {
+        // The conjunctions of the same atoms in different orders are duplicates.
+        final DisjunctiveNormalFormula<LocalDate> dnf = DisjunctiveNormalFormula.of(
+                Conjunction.of(EitherYear.of(1970), EitherMonth.of(6)),
+                Conjunction.of(EitherMonth.of(7)),
+                Conjunction.of(EitherMonth.of(6), EitherYear.of(1970)));
+        assertEquals(2, dnf.size());
+        assertEquals(List.of(Conjunction.of(EitherYear.of(1970), EitherMonth.of(6)), Conjunction.of(EitherMonth.of(7))), List.copyOf(dnf));
+        assertEquals("((year = 1970 AND month = 6) OR (month = 7))", dnf.toString());
+    }
+
+    @Test
+    public void testEmptyEqualsEmptyConjunction() {
+        // The empty DNF is false, and the empty conjunction is true, but they are equal as empty sets.
+        assertEquals(Set.of(), DisjunctiveNormalFormula.<LocalDate>of());
+        assertEquals(DisjunctiveNormalFormula.<LocalDate>of(), Conjunction.<LocalDate>of());
     }
 }
