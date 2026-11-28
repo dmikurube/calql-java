@@ -61,8 +61,8 @@ public abstract class Formula<T extends Comparable<? super T>> implements Predic
      */
     public Formula<T> and(final Formula<T> other) {
         Objects.requireNonNull(other, "other");
-        // Possible optimization: chaining and() nests the "and"s, such as And(And(a, b), c), which is not equal to
-        // And.of(a, b, c), and makes the recursion deeper. It could flatten the formulae that are And, but it would
+        // Possible optimization: chaining and() nests the "and"s, such as And(And(f1, f2), f3), which is not equal to
+        // And.of(f1, f2, f3), and makes the recursion deeper. It could flatten the formulae that are And, but it would
         // change the structure as written, and copying the formulae every time would make chaining n formulae O(n^2).
         // An overload for NegationNormalFormula could also return a NegationNormalAnd, to save converting it to
         // negation normal form later, at the cost of another public method.
@@ -82,8 +82,8 @@ public abstract class Formula<T extends Comparable<? super T>> implements Predic
      */
     public Formula<T> or(final Formula<T> other) {
         Objects.requireNonNull(other, "other");
-        // Possible optimization: chaining or() nests the "or"s, such as Or(Or(a, b), c), which is not equal to
-        // Or.of(a, b, c), and makes the recursion deeper. It could flatten the formulae that are Or, but it would
+        // Possible optimization: chaining or() nests the "or"s, such as Or(Or(f1, f2), f3), which is not equal to
+        // Or.of(f1, f2, f3), and makes the recursion deeper. It could flatten the formulae that are Or, but it would
         // change the structure as written, and copying the formulae every time would make chaining n formulae O(n^2).
         // An overload for NegationNormalFormula could also return a NegationNormalOr, to save converting it to
         // negation normal form later, at the cost of another public method.
