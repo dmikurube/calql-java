@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 /**
  * A logical conjunction is the "and" of a set of atoms. The conjunction is represented as a {@link Set} of atoms.
  *
- * <p>Ex. {@code f1 AND f2 AND f3 AND f4}
+ * <p>Example: {@code a1 AND a2 AND a3 AND a4}
  *
  * <p>Duplicated atoms are removed when the conjunction is built.
  *

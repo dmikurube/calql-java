@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
  * A formula in Disjunctive Normal Form (DNF) is a logical formula consisting of a disjunction of conjunctions.
  * The DNF is represented as a {@link Set} of conjunctions.
  *
- * <p>Ex. {@code (f1 AND f2) OR (f3 AND f4 AND f5) OR (f6) OR (f7 AND f8 AND f9)}
+ * <p>Example: {@code (a1 AND a2) OR (a3 AND a4 AND a5) OR (a6) OR (a7 AND a8 AND a9)}
  *
  * <p>Duplicated conjunctions are removed when the DNF is built.
- * For example, {@code (f1 AND f2) OR (f2 AND f1)} is reduced to only one conjunction.
+ * For example, {@code (a1 AND a2) OR (a2 AND a1)} is reduced to only one conjunction.
  *
  * <p>The order of its conjunctions does not matter to its equality, as it is a {@link Set}.
  * On the other hand, it iterates over its conjunctions in the order in which they first appear.

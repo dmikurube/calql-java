@@ -70,7 +70,7 @@ public final class NegationNormalAnd<T extends Comparable<? super T>> extends Ne
      *
      * <p>CalQL converts a given WHERE clause in a given query to DNF to process the WHERE clause easily and mechanically.
      *
-     * <p>Ex. {@code (f1 AND f2) OR (f3 AND f4 AND f5) OR (f6) OR (f7 AND f8 AND f9)}
+     * <p>For example, {@code (a1 OR a2) AND a3} is expanded to {@code (a1 AND a3) OR (a2 AND a3)}.
      *
      * <p>Note that the number of conjunctions in the DNF of an "and" is at most the product of the numbers for its formulae,
      * which can grow exponentially. See {@link NegationNormalFormula#expandToDisjunctiveNormalForm()} for when it grows.
