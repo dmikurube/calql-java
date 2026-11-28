@@ -57,8 +57,14 @@ tasks.javadoc {
         encoding = "UTF-8"
         (this as StandardJavadocDocletOptions).apply {
             links("https://docs.oracle.com/en/java/javase/17/docs/api/")
+            addBooleanOption("Xdoclint:all", true)
+            addBooleanOption("Xwerror", true)
         }
     }
+}
+
+tasks.check {
+    dependsOn(tasks.javadoc)
 }
 
 tasks.jar {
