@@ -139,6 +139,37 @@ public final class Conjunction<T extends Comparable<? super T>> extends Abstract
         return true;
     }
 
+    // Conjunction does not override Predicate#negate() on purpose, unlike Formula#negate().
+    // Its negate() now returns a Predicate that is neither a conjunction nor a formula.
+    //
+    // A conjunction is a term of a DNF for SourceStreamer to read,
+    // and formulae are built and negated with Formula and Atom, so that negating a conjunction is rarely needed.
+    //
+    // If it is needed, negate() would be overridden like below, as NOT (a1 AND a2) is (NOT a1) OR (NOT a2),
+    // and the empty conjunction, which is true, is negated to the empty "or", which is false.
+    // Overriding negate() later keeps compatibility, as javac generates a bridge method that returns Predicate.
+    //
+    // A DNF of conjunctions of one atom each, such as {(NOT a1), (NOT a2)}, would fit the negation better,
+    // but it cannot be the return type, as DisjunctiveNormalFormula is not a Predicate.
+    //
+    // @Override
+    // public NegationNormalFormula<T> negate() {
+    //     return NegationNormalOr.of(
+    //             this.atoms.stream().map(atom -> atom.negateInNegationNormalForm()).collect(Collectors.toList()));
+    // }
+
+    // Conjunction does not overload Predicate#and(Predicate) and Predicate#or(Predicate) either,
+    // unlike Formula#and(Formula) and Formula#or(Formula).
+    // Its and() and or() now return a Predicate that is neither a conjunction nor a formula, like its negate().
+    //
+    // The "and" of conjunctions is already available by with(), which returns a conjunction,
+    // as a conjunction is a collection of atoms.
+    // The "or" of conjunctions is available by DisjunctiveNormalFormula.of(), which returns a DNF.
+    //
+    // If they are needed, and() and or() would be overloaded to return a conjunction and a DNF.
+    // Unlike negate(), DisjunctiveNormalFormula can be the return type of or(),
+    // as an overload is not bound to the return type of Predicate#or(Predicate).
+
     @Override
     public String toString() {
         return this.atoms.stream().map(Object::toString).collect(Collectors.joining(" AND ", "(", ")"));
