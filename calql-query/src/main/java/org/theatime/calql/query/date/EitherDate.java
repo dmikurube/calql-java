@@ -23,46 +23,31 @@ import java.util.Collections;
 import java.util.Set;
 import org.theatime.calql.query.Range;
 
-@SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
+/**
+ * An atom that tests whether a date is one of the given dates,
+ * such as {@code date in [2024-01-01, 2024-12-31]}.
+ *
+ * <p>Its negation is {@link NeitherDate} of the same dates.
+ */
 public final class EitherDate extends MembershipDateAtom<LocalDate> {
-    private EitherDate(final Set<LocalDate> dates, final boolean includes) {
-        super(dates, includes);
-    }
-
-    static EitherDate of(final Collection<LocalDate> dates, final boolean includes) {
-        return new EitherDate(Set.copyOf(dates), includes);
+    private EitherDate(final Set<LocalDate> dates) {
+        super(dates, false);
     }
 
     public static EitherDate of(final int year, final int month, final int dayOfMonth) {
         return of(LocalDate.of(year, month, dayOfMonth));
     }
 
-    public static EitherDate notOf(final int year, final int month, final int dayOfMonth) {
-        return notOf(LocalDate.of(year, month, dayOfMonth));
-    }
-
     public static EitherDate of(final LocalDate date) {
-        return new EitherDate(Set.of(date), true);
-    }
-
-    public static EitherDate notOf(final LocalDate date) {
-        return new EitherDate(Set.of(date), false);
+        return new EitherDate(Set.of(date));
     }
 
     public static EitherDate of(final Collection<LocalDate> dates) {
-        return of(dates, true);
-    }
-
-    public static EitherDate notOf(final Collection<LocalDate> dates) {
-        return of(dates, false);
+        return new EitherDate(Set.copyOf(dates));
     }
 
     public static EitherDate of(final LocalDate... dates) {
-        return of(Arrays.asList(dates), true);
-    }
-
-    public static EitherDate notOf(final LocalDate... dates) {
-        return of(Arrays.asList(dates), false);
+        return of(Arrays.asList(dates));
     }
 
     public Set<LocalDate> dates() {
@@ -71,9 +56,6 @@ public final class EitherDate extends MembershipDateAtom<LocalDate> {
 
     @Override
     public Range<LocalDate> range() {
-        if (!this.includes()) {
-            return Range.whole();
-        }
         if (this.values().isEmpty()) {
             return Range.empty();
         }
@@ -82,7 +64,7 @@ public final class EitherDate extends MembershipDateAtom<LocalDate> {
 
     @Override
     public DateAtom negate() {
-        return new EitherDate(this.values(), !this.includes());
+        return NeitherDate.of(this.values());
     }
 
     @Override

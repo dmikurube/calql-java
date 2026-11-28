@@ -31,7 +31,7 @@ public class TestDateAtomEquals {
     @Test
     public void testEqualMemberships() {
         assertEqualAtoms(EitherYear.of(2020, 2022), EitherYear.of(List.of(2022, 2020)));
-        assertEqualAtoms(EitherMonth.notOf(2, 12), EitherMonth.of(12, 2).negate());
+        assertEqualAtoms(NeitherMonth.of(2, 12), EitherMonth.of(12, 2).negate());
         assertEqualAtoms(EitherDayOfMonth.of(1), EitherDayOfMonth.of(List.of(1)));
         assertEqualAtoms(EitherDayOfWeek.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY), EitherDayOfWeek.of(List.of(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY)));
         assertEqualAtoms(EitherDate.of(2020, 2, 29), EitherDate.of(LocalDate.of(2020, 2, 29)));
@@ -42,9 +42,9 @@ public class TestDateAtomEquals {
         // Every factory accepts duplicated values, as the int varargs and the Collection factories have done.
         assertEqualAtoms(EitherMonth.of(2), EitherMonth.of(2, 2));
         assertEqualAtoms(EitherDayOfWeek.of(DayOfWeek.MONDAY), EitherDayOfWeek.of(DayOfWeek.MONDAY, DayOfWeek.MONDAY));
-        assertEqualAtoms(EitherDayOfWeek.notOf(DayOfWeek.MONDAY), EitherDayOfWeek.notOf(DayOfWeek.MONDAY, DayOfWeek.MONDAY));
+        assertEqualAtoms(NeitherDayOfWeek.of(DayOfWeek.MONDAY), NeitherDayOfWeek.of(DayOfWeek.MONDAY, DayOfWeek.MONDAY));
         assertEqualAtoms(EitherDate.of(2024, 1, 1), EitherDate.of(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1)));
-        assertEqualAtoms(EitherDate.notOf(2024, 1, 1), EitherDate.notOf(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1)));
+        assertEqualAtoms(NeitherDate.of(2024, 1, 1), NeitherDate.of(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1)));
     }
 
     @Test
@@ -70,8 +70,8 @@ public class TestDateAtomEquals {
     }
 
     @Test
-    public void testDifferentInclusionOrInclusiveness() {
-        assertNotEquals(EitherMonth.of(2), EitherMonth.notOf(2));
+    public void testEitherAndNeitherOrDifferentInclusiveness() {
+        assertNotEquals(EitherMonth.of(2), NeitherMonth.of(2));
         assertNotEquals(AfterMonth.of(6), AfterMonth.orEqualTo(6));
     }
 

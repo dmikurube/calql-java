@@ -84,7 +84,7 @@ public class TestDefaultDateSourceStreamer {
 
     @Test
     public void testExceptDate() {
-        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), EitherDate.notOf(1970, 1, 3))
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), NeitherDate.of(1970, 1, 3))
                 .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST);
 
         final ArrayList<LocalDate> expected = new ArrayList<>();
@@ -97,7 +97,7 @@ public class TestDefaultDateSourceStreamer {
 
     @Test
     public void testExceptYear() {
-        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), EitherYear.notOf(1970), EitherDayOfMonth.of(1))
+        final Stream<LocalDate> stream = Conjunction.of(AfterYear.orEqualTo(1970), NeitherYear.of(1970), EitherDayOfMonth.of(1))
                 .streamBy(DefaultDateSourceStreamer.of(), Order.FROM_EARLIEST_TO_LATEST);
 
         final ArrayList<LocalDate> expected = new ArrayList<>();

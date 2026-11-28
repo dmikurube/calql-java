@@ -100,29 +100,29 @@ public class TestDateAtomProperties {
         atoms.add(BeforeDayOfMonth.orEqualTo(15));
 
         atoms.add(EitherYear.of(2020));
-        atoms.add(EitherYear.notOf(2020));
+        atoms.add(NeitherYear.of(2020));
         atoms.add(EitherYear.of(2020, 2022));
-        atoms.add(EitherYear.notOf(2020, 2022));
+        atoms.add(NeitherYear.of(2020, 2022));
 
         atoms.add(EitherMonth.of(2));
-        atoms.add(EitherMonth.notOf(2));
+        atoms.add(NeitherMonth.of(2));
         atoms.add(EitherMonth.of(2, 12));
-        atoms.add(EitherMonth.notOf(2, 12));
+        atoms.add(NeitherMonth.of(2, 12));
 
         atoms.add(EitherDayOfMonth.of(29));
-        atoms.add(EitherDayOfMonth.notOf(29));
+        atoms.add(NeitherDayOfMonth.of(29));
         atoms.add(EitherDayOfMonth.of(1, 31));
-        atoms.add(EitherDayOfMonth.notOf(1, 31));
+        atoms.add(NeitherDayOfMonth.of(1, 31));
 
         atoms.add(EitherDayOfWeek.of(DayOfWeek.WEDNESDAY));
-        atoms.add(EitherDayOfWeek.notOf(DayOfWeek.WEDNESDAY));
+        atoms.add(NeitherDayOfWeek.of(DayOfWeek.WEDNESDAY));
         atoms.add(EitherDayOfWeek.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY));
-        atoms.add(EitherDayOfWeek.notOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY));
+        atoms.add(NeitherDayOfWeek.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY));
 
         atoms.add(EitherDate.of(2020, 2, 29));
-        atoms.add(EitherDate.notOf(2020, 2, 29));
+        atoms.add(NeitherDate.of(2020, 2, 29));
         atoms.add(EitherDate.of(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)));
-        atoms.add(EitherDate.notOf(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)));
+        atoms.add(NeitherDate.of(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)));
 
         return atoms;
     }

@@ -26,14 +26,14 @@ public class TestEitherDate {
     @Test
     public void testToStringSingle() {
         assertEquals("date = 2024-01-01", EitherDate.of(2024, 1, 1).toString());
-        assertEquals("date <> 2024-01-01", EitherDate.notOf(2024, 1, 1).toString());
+        assertEquals("date <> 2024-01-01", NeitherDate.of(2024, 1, 1).toString());
     }
 
     @Test
     public void testToStringSingleInCollection() {
         // The earliest and the latest dates are taken from the collection, not from a single argument.
         assertEquals("date = 2024-01-01", EitherDate.of(List.of(LocalDate.of(2024, 1, 1))).toString());
-        assertEquals("date <> 2024-01-01", EitherDate.notOf(List.of(LocalDate.of(2024, 1, 1))).toString());
+        assertEquals("date <> 2024-01-01", NeitherDate.of(List.of(LocalDate.of(2024, 1, 1))).toString());
     }
 
     @Test
@@ -41,6 +41,6 @@ public class TestEitherDate {
         // The dates are sorted regardless of the given order.
         final List<LocalDate> dates = List.of(LocalDate.of(2024, 1, 2), LocalDate.of(2024, 1, 1), LocalDate.of(2023, 12, 31));
         assertEquals("date in [2023-12-31, 2024-01-01, 2024-01-02]", EitherDate.of(dates).toString());
-        assertEquals("date not in [2023-12-31, 2024-01-01, 2024-01-02]", EitherDate.notOf(dates).toString());
+        assertEquals("date not in [2023-12-31, 2024-01-01, 2024-01-02]", NeitherDate.of(dates).toString());
     }
 }

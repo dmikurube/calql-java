@@ -31,6 +31,8 @@ import org.theatime.calql.query.date.BeforeYear;
 import org.theatime.calql.query.date.EitherDate;
 import org.theatime.calql.query.date.EitherMonth;
 import org.theatime.calql.query.date.EitherYear;
+import org.theatime.calql.query.date.NeitherDate;
+import org.theatime.calql.query.date.NeitherYear;
 
 public class TestConjunction {
     @Test
@@ -95,13 +97,13 @@ public class TestConjunction {
 
     @Test
     public void testNotYearDoesNotNarrow() {
-        final Conjunction<LocalDate> c = Conjunction.of(AfterYear.orEqualTo(1970), EitherYear.notOf(1975));
+        final Conjunction<LocalDate> c = Conjunction.of(AfterYear.orEqualTo(1970), NeitherYear.of(1975));
         assertEquals(Range.atLeast(LocalDate.of(1970, 1, 1)), c.range());
     }
 
     @Test
     public void testNotDateDoesNotNarrow() {
-        final Conjunction<LocalDate> c = Conjunction.of(AfterYear.orEqualTo(1970), EitherDate.notOf(1970, 1, 5));
+        final Conjunction<LocalDate> c = Conjunction.of(AfterYear.orEqualTo(1970), NeitherDate.of(1970, 1, 5));
         assertEquals(Range.atLeast(LocalDate.of(1970, 1, 1)), c.range());
     }
 
@@ -170,6 +172,6 @@ public class TestConjunction {
         final Conjunction<LocalDate> c = Conjunction.of(EitherYear.of(1970), EitherMonth.of(6));
         assertTrue(c.contains(EitherYear.of(1970)));
         assertFalse(c.contains(EitherYear.of(1971)));
-        assertFalse(c.contains(EitherYear.notOf(1970)));
+        assertFalse(c.contains(NeitherYear.of(1970)));
     }
 }

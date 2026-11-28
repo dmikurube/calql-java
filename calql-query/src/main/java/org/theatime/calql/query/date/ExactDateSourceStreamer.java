@@ -46,7 +46,7 @@ public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate> 
             return Stream.<LocalDate>empty();
         }
 
-        // |dates| is null until the first EitherDate that includes dates is found.
+        // |dates| is null until the first EitherDate is found.
         // It must be distinguished from an empty set, which means that the intersection has become empty.
         TreeSet<LocalDate> dates = null;
         for (final Atom<LocalDate> atom : conjunction) {
@@ -54,9 +54,6 @@ public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate> 
                 continue;
             }
             final EitherDate eitherDate = (EitherDate) atom;
-            if (!eitherDate.includes()) {
-                continue;
-            }
             if (dates == null) {
                 dates = new TreeSet<>(eitherDate.dates());
             } else {
@@ -79,14 +76,9 @@ public final class ExactDateSourceStreamer implements SourceStreamer<LocalDate> 
     @Override
     public boolean isApplicableTo(final Conjunction<LocalDate> conjunction, final Order order) {
         for (final Atom<LocalDate> atom : conjunction) {
-            if (!(atom instanceof EitherDate)) {
-                continue;
+            if (atom instanceof EitherDate) {
+                return true;
             }
-            final EitherDate eitherDate = (EitherDate) atom;
-            if (!eitherDate.includes()) {
-                continue;
-            }
-            return true;
         }
         return false;
     }

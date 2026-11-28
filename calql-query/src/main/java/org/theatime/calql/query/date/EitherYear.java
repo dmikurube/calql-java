@@ -24,45 +24,31 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.theatime.calql.query.Range;
 
-@SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
+/**
+ * An atom that tests whether the year of a date is one of the given years,
+ * such as {@code year in [2020, 2022]}.
+ *
+ * <p>Its negation is {@link NeitherYear} of the same years.
+ */
 public final class EitherYear extends MembershipDateAtom<Integer> {
-    private EitherYear(final Set<Integer> years, final boolean includes) {
-        super(years, includes);
-    }
-
-    static EitherYear of(final Collection<Integer> years, final boolean includes) {
-        return new EitherYear(Set.copyOf(years), includes);
+    private EitherYear(final Set<Integer> years) {
+        super(years, false);
     }
 
     public static EitherYear of(final int year) {
-        return new EitherYear(Set.of(year), true);
-    }
-
-    public static EitherYear notOf(final int year) {
-        return new EitherYear(Set.of(year), false);
+        return new EitherYear(Set.of(year));
     }
 
     public static EitherYear of(final Collection<Integer> years) {
-        return of(years, true);
-    }
-
-    public static EitherYear notOf(final Collection<Integer> years) {
-        return of(years, false);
+        return new EitherYear(Set.copyOf(years));
     }
 
     public static EitherYear of(final int... years) {
         return of(Arrays.stream(years).boxed().collect(Collectors.toSet()));
     }
 
-    public static EitherYear notOf(final int... years) {
-        return notOf(Arrays.stream(years).boxed().collect(Collectors.toSet()));
-    }
-
     @Override
     public Range<LocalDate> range() {
-        if (!this.includes()) {
-            return Range.whole();
-        }
         if (this.values().isEmpty()) {
             return Range.empty();
         }
@@ -72,7 +58,7 @@ public final class EitherYear extends MembershipDateAtom<Integer> {
 
     @Override
     public DateAtom negate() {
-        return new EitherYear(this.values(), !this.includes());
+        return NeitherYear.of(this.values());
     }
 
     @Override

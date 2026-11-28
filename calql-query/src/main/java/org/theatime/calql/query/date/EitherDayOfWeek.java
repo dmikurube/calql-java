@@ -22,43 +22,32 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-@SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
+/**
+ * An atom that tests whether the day of week of a date is one of the given days of week,
+ * such as {@code dayOfWeek in [SATURDAY, SUNDAY]}.
+ *
+ * <p>Its negation is {@link NeitherDayOfWeek} of the same days of week.
+ */
 public final class EitherDayOfWeek extends MembershipDateAtom<DayOfWeek> {
-    private EitherDayOfWeek(final Set<DayOfWeek> daysOfWeek, final boolean includes) {
-        super(daysOfWeek, includes);
-    }
-
-    static EitherDayOfWeek of(final Collection<DayOfWeek> daysOfWeek, final boolean includes) {
-        return new EitherDayOfWeek(Set.copyOf(daysOfWeek), includes);
+    private EitherDayOfWeek(final Set<DayOfWeek> daysOfWeek) {
+        super(daysOfWeek, false);
     }
 
     public static EitherDayOfWeek of(final DayOfWeek dayOfWeek) {
-        return new EitherDayOfWeek(Set.of(dayOfWeek), true);
-    }
-
-    public static EitherDayOfWeek notOf(final DayOfWeek dayOfWeek) {
-        return new EitherDayOfWeek(Set.of(dayOfWeek), false);
+        return new EitherDayOfWeek(Set.of(dayOfWeek));
     }
 
     public static EitherDayOfWeek of(final Collection<DayOfWeek> daysOfWeek) {
-        return of(daysOfWeek, true);
-    }
-
-    public static EitherDayOfWeek notOf(final Collection<DayOfWeek> daysOfWeek) {
-        return of(daysOfWeek, false);
+        return new EitherDayOfWeek(Set.copyOf(daysOfWeek));
     }
 
     public static EitherDayOfWeek of(final DayOfWeek... daysOfWeek) {
-        return of(Arrays.asList(daysOfWeek), true);
-    }
-
-    public static EitherDayOfWeek notOf(final DayOfWeek... daysOfWeek) {
-        return of(Arrays.asList(daysOfWeek), false);
+        return of(Arrays.asList(daysOfWeek));
     }
 
     @Override
     public DateAtom negate() {
-        return new EitherDayOfWeek(this.values(), !this.includes());
+        return NeitherDayOfWeek.of(this.values());
     }
 
     @Override

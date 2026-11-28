@@ -22,16 +22,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A base of the date atoms that test whether a column of a date is one of the given values, such as {@link EitherMonth}.
+ * A base of the date atoms that test whether a column of a date is one of the given values,
+ * such as {@link EitherMonth}, or none of them, such as {@link NeitherMonth}.
  *
- * <p>Its negation is an atom of the same class with the same values, which tests whether the column is none of them.
+ * <p>Its negation is an atom of the opposite class with the same values. For example, the negation of
+ * {@code month in [1, 2]} ({@link EitherMonth}) is {@code month not in [1, 2]} ({@link NeitherMonth}).
  *
  * @param <V> the type of the values of the column, which are comparable so that {@link #toString()} can sort them
  */
 abstract class MembershipDateAtom<V extends Comparable<? super V>> extends DateAtom {
-    MembershipDateAtom(final Set<V> values, final boolean includes) {
+    MembershipDateAtom(final Set<V> values, final boolean neither) {
         this.values = values;
-        this.includes = includes;
+        this.neither = neither;
     }
 
     /**
@@ -48,8 +50,16 @@ abstract class MembershipDateAtom<V extends Comparable<? super V>> extends DateA
         return this.values;
     }
 
-    public final boolean includes() {
-        return this.includes;
+    /**
+     * Returns whether this atom tests that a column of a date is none of its values, or one of them.
+     *
+     * <p>It is true for the "neither" atoms, such as {@link NeitherMonth}, and false for the "either" atoms, such as
+     * {@link EitherMonth}.
+     *
+     * @return true if this atom matches the dates whose column is none of its values
+     */
+    public final boolean isNeither() {
+        return this.neither;
     }
 
     /**
@@ -66,16 +76,16 @@ abstract class MembershipDateAtom<V extends Comparable<? super V>> extends DateA
         // out of the Integer cache (-128 to 127), so it may allocate an Integer every time unless the JIT eliminates it.
         // Months and days of month could be tested by bit masks, and days of week by an EnumSet, without boxing.
         final boolean contains = this.values.contains(this.columnValueOf(target));
-        if (this.includes) {
-            return contains;
-        } else {
+        if (this.neither) {
             return !contains;
+        } else {
+            return contains;
         }
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(this.getClass(), this.values, this.includes);
+        return Objects.hash(this.getClass(), this.values);
     }
 
     @Override
@@ -84,10 +94,11 @@ abstract class MembershipDateAtom<V extends Comparable<? super V>> extends DateA
             return true;
         }
 
-        // Compares the classes, not only instanceof, so that EitherMonth.of(2) does not equal EitherDayOfMonth.of(2).
+        // Compares the classes, not only instanceof, so that EitherMonth.of(2) equals neither EitherDayOfMonth.of(2)
+        // nor NeitherMonth.of(2).
         if (otherObject != null && otherObject.getClass() == this.getClass()) {
             final MembershipDateAtom<?> other = (MembershipDateAtom<?>) otherObject;
-            return Objects.equals(this.values, other.values) && this.includes == other.includes;
+            return Objects.equals(this.values, other.values);
         }
 
         return false;
@@ -96,14 +107,14 @@ abstract class MembershipDateAtom<V extends Comparable<? super V>> extends DateA
     @Override
     public final String toString() {
         if (this.values.size() == 1) {
-            return String.format("%s %s %s", this.columnName(), this.includes ? "=" : "<>", this.values.iterator().next());
+            return String.format("%s %s %s", this.columnName(), this.neither ? "<>" : "=", this.values.iterator().next());
         } else {
             // The values are sorted, as the iteration order of the set is not stable, even between runs of the same program.
             final String values = this.values.stream().sorted().map(String::valueOf).collect(Collectors.joining(", ", "[", "]"));
-            return String.format("%s %s %s", this.columnName(), this.includes ? "in" : "not in", values);
+            return String.format("%s %s %s", this.columnName(), this.neither ? "not in" : "in", values);
         }
     }
 
     private final Set<V> values;
-    private final boolean includes;
+    private final boolean neither;
 }

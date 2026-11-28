@@ -47,13 +47,13 @@ public class TestDateAtomRange {
     public void testEitherYear() {
         assertEquals(Range.between(LocalDate.of(2020, 1, 1), LocalDate.of(2020, 12, 31)), EitherYear.of(2020).range());
         assertEquals(Range.between(LocalDate.of(2018, 1, 1), LocalDate.of(2022, 12, 31)), EitherYear.of(2022, 2018, 2020).range());
-        assertEquals(Range.whole(), EitherYear.notOf(2020).range());
+        assertEquals(Range.whole(), NeitherYear.of(2020).range());
     }
 
     @Test
     public void testEitherYearOfNone() {
         assertEquals(Range.empty(), EitherYear.of(List.of()).range());
-        assertEquals(Range.whole(), EitherYear.notOf(List.of()).range());
+        assertEquals(Range.whole(), NeitherYear.of(List.of()).range());
     }
 
     @Test
@@ -62,13 +62,13 @@ public class TestDateAtomRange {
         assertEquals(Range.between(date, date), EitherDate.of(date).range());
         assertEquals(Range.between(LocalDate.of(2019, 12, 31), LocalDate.of(2021, 3, 1)),
                      EitherDate.of(LocalDate.of(2021, 3, 1), LocalDate.of(2019, 12, 31), date).range());
-        assertEquals(Range.whole(), EitherDate.notOf(date).range());
+        assertEquals(Range.whole(), NeitherDate.of(date).range());
     }
 
     @Test
     public void testEitherDateOfNone() {
         assertEquals(Range.empty(), EitherDate.of(List.of()).range());
-        assertEquals(Range.whole(), EitherDate.notOf(List.of()).range());
+        assertEquals(Range.whole(), NeitherDate.of(List.of()).range());
     }
 
     @Test

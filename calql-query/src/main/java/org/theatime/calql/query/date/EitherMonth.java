@@ -22,43 +22,32 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("checkstyle:OverloadMethodsDeclarationOrder")
+/**
+ * An atom that tests whether the month of a date is one of the given months,
+ * such as {@code month in [1, 2]}.
+ *
+ * <p>Its negation is {@link NeitherMonth} of the same months.
+ */
 public final class EitherMonth extends MembershipDateAtom<Integer> {
-    private EitherMonth(final Set<Integer> months, final boolean includes) {
-        super(months, includes);
-    }
-
-    static EitherMonth of(final Collection<Integer> months, final boolean includes) {
-        return new EitherMonth(Set.copyOf(months), includes);
+    private EitherMonth(final Set<Integer> months) {
+        super(months, false);
     }
 
     public static EitherMonth of(final int month) {
-        return new EitherMonth(Set.of(month), true);
-    }
-
-    public static EitherMonth notOf(final int month) {
-        return new EitherMonth(Set.of(month), false);
+        return new EitherMonth(Set.of(month));
     }
 
     public static EitherMonth of(final Collection<Integer> months) {
-        return of(months, true);
-    }
-
-    public static EitherMonth notOf(final Collection<Integer> months) {
-        return of(months, false);
+        return new EitherMonth(Set.copyOf(months));
     }
 
     public static EitherMonth of(final int... months) {
         return of(Arrays.stream(months).boxed().collect(Collectors.toSet()));
     }
 
-    public static EitherMonth notOf(final int... months) {
-        return notOf(Arrays.stream(months).boxed().collect(Collectors.toSet()));
-    }
-
     @Override
     public DateAtom negate() {
-        return new EitherMonth(this.values(), !this.includes());
+        return NeitherMonth.of(this.values());
     }
 
     @Override
