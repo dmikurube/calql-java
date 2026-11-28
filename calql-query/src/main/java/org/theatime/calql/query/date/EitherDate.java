@@ -34,18 +34,56 @@ public final class EitherDate extends MembershipDateAtom<LocalDate> {
         super(dates, false);
     }
 
+    /**
+     * Returns an atom that tests whether a date is the date of {@code year}, {@code month}, and {@code dayOfMonth},
+     * such as {@code date = 2024-01-01}.
+     *
+     * @param year  the year of the date
+     * @param month  the month of the date, from 1 (January) to 12 (December)
+     * @param dayOfMonth  the day of month of the date, from 1 to 31
+     * @return the atom
+     * @throws java.time.DateTimeException  if the value of any field is out of range,
+     *   or if the day of month is invalid for the month and the year
+     */
     public static EitherDate of(final int year, final int month, final int dayOfMonth) {
         return of(LocalDate.of(year, month, dayOfMonth));
     }
 
+    /**
+     * Returns an atom that tests whether a date is {@code date}, such as {@code date = 2024-01-01}.
+     *
+     * @param date  the date, not null
+     * @return the atom
+     * @throws NullPointerException  if {@code date} is null
+     */
     public static EitherDate of(final LocalDate date) {
         return new EitherDate(Set.of(date));
     }
 
+    /**
+     * Returns an atom that tests whether a date is one of {@code dates},
+     * such as {@code date in [2024-01-01, 2024-12-31]}.
+     *
+     * <p>Duplicated dates are removed.
+     *
+     * @param dates  the dates, not null, and not containing null
+     * @return the atom
+     * @throws NullPointerException  if {@code dates} is null, or contains null
+     */
     public static EitherDate of(final Collection<LocalDate> dates) {
         return new EitherDate(Set.copyOf(dates));
     }
 
+    /**
+     * Returns an atom that tests whether a date is one of {@code dates},
+     * such as {@code date in [2024-01-01, 2024-12-31]}.
+     *
+     * <p>Duplicated dates are removed.
+     *
+     * @param dates  the dates, not null, and not containing null
+     * @return the atom
+     * @throws NullPointerException  if {@code dates} is null, or contains null
+     */
     public static EitherDate of(final LocalDate... dates) {
         return of(Arrays.asList(dates));
     }

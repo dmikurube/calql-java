@@ -33,14 +33,41 @@ public final class NeitherMonth extends MembershipDateAtom<Integer> {
         super(months, true);
     }
 
+    /**
+     * Returns an atom that tests whether the month of a date is not {@code month},
+     * such as {@code month <> 1}.
+     *
+     * @param month  the month
+     * @return the atom
+     */
     public static NeitherMonth of(final int month) {
         return new NeitherMonth(Set.of(month));
     }
 
+    /**
+     * Returns an atom that tests whether the month of a date is none of {@code months},
+     * such as {@code month not in [1, 2]}.
+     *
+     * <p>Duplicated months are removed.
+     *
+     * @param months  the months, not null, and not containing null
+     * @return the atom
+     * @throws NullPointerException  if {@code months} is null, or contains null
+     */
     public static NeitherMonth of(final Collection<Integer> months) {
         return new NeitherMonth(Set.copyOf(months));
     }
 
+    /**
+     * Returns an atom that tests whether the month of a date is none of {@code months},
+     * such as {@code month not in [1, 2]}.
+     *
+     * <p>Duplicated months are removed.
+     *
+     * @param months  the months, not null
+     * @return the atom
+     * @throws NullPointerException  if {@code months} is null
+     */
     public static NeitherMonth of(final int... months) {
         return of(Arrays.stream(months).boxed().collect(Collectors.toSet()));
     }

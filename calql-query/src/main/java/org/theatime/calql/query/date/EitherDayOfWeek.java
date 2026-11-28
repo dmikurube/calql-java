@@ -33,14 +33,42 @@ public final class EitherDayOfWeek extends MembershipDateAtom<DayOfWeek> {
         super(daysOfWeek, false);
     }
 
+    /**
+     * Returns an atom that tests whether the day of week of a date is {@code dayOfWeek},
+     * such as {@code dayOfWeek = SATURDAY}.
+     *
+     * @param dayOfWeek  the day of week, not null
+     * @return the atom
+     * @throws NullPointerException  if {@code dayOfWeek} is null
+     */
     public static EitherDayOfWeek of(final DayOfWeek dayOfWeek) {
         return new EitherDayOfWeek(Set.of(dayOfWeek));
     }
 
+    /**
+     * Returns an atom that tests whether the day of week of a date is one of {@code daysOfWeek},
+     * such as {@code dayOfWeek in [SATURDAY, SUNDAY]}.
+     *
+     * <p>Duplicated days of week are removed.
+     *
+     * @param daysOfWeek  the days of week, not null, and not containing null
+     * @return the atom
+     * @throws NullPointerException  if {@code daysOfWeek} is null, or contains null
+     */
     public static EitherDayOfWeek of(final Collection<DayOfWeek> daysOfWeek) {
         return new EitherDayOfWeek(Set.copyOf(daysOfWeek));
     }
 
+    /**
+     * Returns an atom that tests whether the day of week of a date is one of {@code daysOfWeek},
+     * such as {@code dayOfWeek in [SATURDAY, SUNDAY]}.
+     *
+     * <p>Duplicated days of week are removed.
+     *
+     * @param daysOfWeek  the days of week, not null, and not containing null
+     * @return the atom
+     * @throws NullPointerException  if {@code daysOfWeek} is null, or contains null
+     */
     public static EitherDayOfWeek of(final DayOfWeek... daysOfWeek) {
         return of(Arrays.asList(daysOfWeek));
     }

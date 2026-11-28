@@ -27,6 +27,12 @@ import org.theatime.calql.query.Range;
  * has the type parameter {@code <T extends Comparable<? super T>>}, not {@code <T extends Comparable<T>>}.
  */
 public abstract class DateAtom extends Atom<LocalDate> {
+    /**
+     * Sole constructor. (For invocation by subclass constructors, typically implicit.)
+     */
+    protected DateAtom() {
+    }
+
     @Override
     public final Class<LocalDate> unit() {
         return LocalDate.class;

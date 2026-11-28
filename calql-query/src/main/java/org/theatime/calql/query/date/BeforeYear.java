@@ -19,19 +19,48 @@ package org.theatime.calql.query.date;
 import java.time.LocalDate;
 import org.theatime.calql.query.Range;
 
+/**
+ * An atom that tests whether the year of a date is less than the given year,
+ * such as {@code year < 2020}, or less than or equal to it, such as {@code year <= 2020}.
+ *
+ * <p>Its negation is {@link AfterYear} of the same year with the opposite inclusiveness,
+ * such as {@code year >= 2020} for {@code year < 2020}.
+ */
 public final class BeforeYear extends OrderingDateAtom {
     private BeforeYear(final int year, final boolean inclusive) {
         super(year, inclusive, false);
     }
 
+    /**
+     * Returns an atom that tests whether the year of a date is less than {@code year},
+     * such as {@code year < 2020}.
+     *
+     * @param year  the year to compare the year of a date with
+     * @return the atom
+     */
     public static BeforeYear of(final int year) {
         return new BeforeYear(year, false);
     }
 
+    /**
+     * Returns an atom that tests whether the year of a date is less than {@code year},
+     * or also equal to it if {@code inclusive} is true.
+     *
+     * @param year  the year to compare the year of a date with
+     * @param inclusive  true to match also the dates whose year equals {@code year}
+     * @return the atom
+     */
     public static BeforeYear of(final int year, final boolean inclusive) {
         return new BeforeYear(year, inclusive);
     }
 
+    /**
+     * Returns an atom that tests whether the year of a date is less than or equal to {@code year},
+     * such as {@code year <= 2020}.
+     *
+     * @param year  the year to compare the year of a date with
+     * @return the atom
+     */
     public static BeforeYear orEqualTo(final int year) {
         return new BeforeYear(year, true);
     }

@@ -18,19 +18,48 @@ package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
 
+/**
+ * An atom that tests whether the day of month of a date is greater than the given day of month,
+ * such as {@code dayOfMonth > 15}, or greater than or equal to it, such as {@code dayOfMonth >= 15}.
+ *
+ * <p>Its negation is {@link BeforeDayOfMonth} of the same day of month with the opposite inclusiveness,
+ * such as {@code dayOfMonth <= 15} for {@code dayOfMonth > 15}.
+ */
 public final class AfterDayOfMonth extends OrderingDateAtom {
     private AfterDayOfMonth(final int dayOfMonth, final boolean inclusive) {
         super(dayOfMonth, inclusive, true);
     }
 
+    /**
+     * Returns an atom that tests whether the day of month of a date is greater than {@code dayOfMonth},
+     * such as {@code dayOfMonth > 15}.
+     *
+     * @param dayOfMonth  the day of month to compare the day of month of a date with
+     * @return the atom
+     */
     public static AfterDayOfMonth of(final int dayOfMonth) {
         return new AfterDayOfMonth(dayOfMonth, false);
     }
 
+    /**
+     * Returns an atom that tests whether the day of month of a date is greater than {@code dayOfMonth},
+     * or also equal to it if {@code inclusive} is true.
+     *
+     * @param dayOfMonth  the day of month to compare the day of month of a date with
+     * @param inclusive  true to match also the dates whose day of month equals {@code dayOfMonth}
+     * @return the atom
+     */
     public static AfterDayOfMonth of(final int dayOfMonth, final boolean inclusive) {
         return new AfterDayOfMonth(dayOfMonth, inclusive);
     }
 
+    /**
+     * Returns an atom that tests whether the day of month of a date is greater than or equal to {@code dayOfMonth},
+     * such as {@code dayOfMonth >= 15}.
+     *
+     * @param dayOfMonth  the day of month to compare the day of month of a date with
+     * @return the atom
+     */
     public static AfterDayOfMonth orEqualTo(final int dayOfMonth) {
         return new AfterDayOfMonth(dayOfMonth, true);
     }

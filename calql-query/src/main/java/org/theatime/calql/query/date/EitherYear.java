@@ -35,14 +35,41 @@ public final class EitherYear extends MembershipDateAtom<Integer> {
         super(years, false);
     }
 
+    /**
+     * Returns an atom that tests whether the year of a date is {@code year},
+     * such as {@code year = 2020}.
+     *
+     * @param year  the year
+     * @return the atom
+     */
     public static EitherYear of(final int year) {
         return new EitherYear(Set.of(year));
     }
 
+    /**
+     * Returns an atom that tests whether the year of a date is one of {@code years},
+     * such as {@code year in [2020, 2022]}.
+     *
+     * <p>Duplicated years are removed.
+     *
+     * @param years  the years, not null, and not containing null
+     * @return the atom
+     * @throws NullPointerException  if {@code years} is null, or contains null
+     */
     public static EitherYear of(final Collection<Integer> years) {
         return new EitherYear(Set.copyOf(years));
     }
 
+    /**
+     * Returns an atom that tests whether the year of a date is one of {@code years},
+     * such as {@code year in [2020, 2022]}.
+     *
+     * <p>Duplicated years are removed.
+     *
+     * @param years  the years, not null
+     * @return the atom
+     * @throws NullPointerException  if {@code years} is null
+     */
     public static EitherYear of(final int... years) {
         return of(Arrays.stream(years).boxed().collect(Collectors.toSet()));
     }

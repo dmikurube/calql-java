@@ -18,19 +18,48 @@ package org.theatime.calql.query.date;
 
 import java.time.LocalDate;
 
+/**
+ * An atom that tests whether the month of a date is less than the given month,
+ * such as {@code month < 6}, or less than or equal to it, such as {@code month <= 6}.
+ *
+ * <p>Its negation is {@link AfterMonth} of the same month with the opposite inclusiveness,
+ * such as {@code month >= 6} for {@code month < 6}.
+ */
 public final class BeforeMonth extends OrderingDateAtom {
     private BeforeMonth(final int month, final boolean inclusive) {
         super(month, inclusive, false);
     }
 
+    /**
+     * Returns an atom that tests whether the month of a date is less than {@code month},
+     * such as {@code month < 6}.
+     *
+     * @param month  the month to compare the month of a date with
+     * @return the atom
+     */
     public static BeforeMonth of(final int month) {
         return new BeforeMonth(month, false);
     }
 
+    /**
+     * Returns an atom that tests whether the month of a date is less than {@code month},
+     * or also equal to it if {@code inclusive} is true.
+     *
+     * @param month  the month to compare the month of a date with
+     * @param inclusive  true to match also the dates whose month equals {@code month}
+     * @return the atom
+     */
     public static BeforeMonth of(final int month, final boolean inclusive) {
         return new BeforeMonth(month, inclusive);
     }
 
+    /**
+     * Returns an atom that tests whether the month of a date is less than or equal to {@code month},
+     * such as {@code month <= 6}.
+     *
+     * @param month  the month to compare the month of a date with
+     * @return the atom
+     */
     public static BeforeMonth orEqualTo(final int month) {
         return new BeforeMonth(month, true);
     }

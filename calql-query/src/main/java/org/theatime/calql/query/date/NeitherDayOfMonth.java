@@ -33,14 +33,41 @@ public final class NeitherDayOfMonth extends MembershipDateAtom<Integer> {
         super(daysOfMonth, true);
     }
 
+    /**
+     * Returns an atom that tests whether the day of month of a date is not {@code dayOfMonth},
+     * such as {@code dayOfMonth <> 1}.
+     *
+     * @param dayOfMonth  the day of month
+     * @return the atom
+     */
     public static NeitherDayOfMonth of(final int dayOfMonth) {
         return new NeitherDayOfMonth(Set.of(dayOfMonth));
     }
 
+    /**
+     * Returns an atom that tests whether the day of month of a date is none of {@code daysOfMonth},
+     * such as {@code dayOfMonth not in [1, 15]}.
+     *
+     * <p>Duplicated days of month are removed.
+     *
+     * @param daysOfMonth  the days of month, not null, and not containing null
+     * @return the atom
+     * @throws NullPointerException  if {@code daysOfMonth} is null, or contains null
+     */
     public static NeitherDayOfMonth of(final Collection<Integer> daysOfMonth) {
         return new NeitherDayOfMonth(Set.copyOf(daysOfMonth));
     }
 
+    /**
+     * Returns an atom that tests whether the day of month of a date is none of {@code daysOfMonth},
+     * such as {@code dayOfMonth not in [1, 15]}.
+     *
+     * <p>Duplicated days of month are removed.
+     *
+     * @param daysOfMonth  the days of month, not null
+     * @return the atom
+     * @throws NullPointerException  if {@code daysOfMonth} is null
+     */
     public static NeitherDayOfMonth of(final int... daysOfMonth) {
         return of(Arrays.stream(daysOfMonth).boxed().collect(Collectors.toSet()));
     }
